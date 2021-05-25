@@ -2,6 +2,8 @@
 
 The app resides in the `a2a` folder.  Navigate into this folder to find instructions on running this application.
 
+Also, be sure to `cd a2a` before starting development.
+
 ## Project Status
 
 1. Setup project, components, routes, and basic vuetify structure. (In Progress)
