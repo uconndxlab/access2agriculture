@@ -1,12 +1,23 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-main>
+      <router-view/>
+    </v-main>
+    <bottom-navigation/>
+  </v-app>
 </template>
+
+<script>
+import BottomNavigation from '@/components/BottomNavigation.vue'
+
+export default {
+  name: 'App',
+  components: {
+    BottomNavigation
+  }
+}
+</script>
+
 
 <style lang="scss">
 #app {
@@ -28,5 +39,9 @@
       color: #42b983;
     }
   }
+}
+
+.v-item-group.v-bottom-navigation .v-btn.v-size--default {
+  height: inherit;
 }
 </style>
