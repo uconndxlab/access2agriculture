@@ -3,7 +3,8 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "hosting": {
+  "hosting": [{
+    "target": "app",
     "public": "dist",
     "ignore": [
       "firebase.json",
@@ -16,5 +17,5 @@
         "destination": "/index.html"
       }
     ]
-  }
+  }]
 }
