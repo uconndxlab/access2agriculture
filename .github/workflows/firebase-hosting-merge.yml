@@ -19,3 +19,16 @@ jobs:
           channelId: live
           projectId: access2agriculture
           entryPoint: ./a2a
+
+  admin_build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd admin && yarn install --frozen-lockfile && yarn run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ACCESS2AGRICULTURE }}'
+          channelId: live
+          projectId: access2agriculture
+          entryPoint: ./admin

@@ -5,8 +5,8 @@
   "targets": {
     "access2agriculture": {
       "hosting": {
-        "app": [
-          "access2agriculture"
+        "admin": [
+          "access2agriculture-admin"
         ]
       }
     }
