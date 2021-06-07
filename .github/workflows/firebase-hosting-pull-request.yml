@@ -16,3 +16,18 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ACCESS2AGRICULTURE }}'
           projectId: access2agriculture
           entryPoint: ./a2a
+          target: app
+
+  admin_build_and_preview:
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd admin && yarn install --frozen-lockfile && yarn run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ACCESS2AGRICULTURE }}'
+          projectId: access2agriculture
+          entryPoint: ./admin
+          target: admin
