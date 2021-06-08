@@ -21,10 +21,12 @@ const auth = firebase.auth()
 // Collection helpers.
 const productsCollection = db.collection('products')
 const waypointsCollection = db.collection('waypoints')
+const usersCollection = db.collection('users')
 
 export {
     db,
     auth,
     productsCollection,
-    waypointsCollection
+    waypointsCollection,
+    usersCollection
 }
