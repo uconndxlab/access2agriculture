@@ -8,7 +8,8 @@ import router from './router'
 Vue.use(Vuex)
 
 const initialState = {
-    user: {}
+    user: {},
+    products: []
 }
 
 const store = new Vuex.Store({
@@ -19,6 +20,9 @@ const store = new Vuex.Store({
     mutations: {
         setUser(state, val) {
             state.user = val
+        },
+        setProducts(state, val) {
+            state.products = val
         }
     },
 
@@ -58,6 +62,14 @@ const store = new Vuex.Store({
                     commit('setUser', {})
                 }
             })
+        },
+        async fetchProducts({ commit }) {
+            const products = await fb.productsCollection.get()
+            const products_extracted = products.docs.map( product => {
+                return product.data()
+            })
+
+            commit('setProducts', products_extracted)
         }
     }
 })
