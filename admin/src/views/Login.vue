@@ -1,26 +1,56 @@
 <template>
     <div class="login">
-        <p>Login Page.</p>
+        <v-container>
+            <v-row
+                justify="center"
+            >
+                <v-col
+                    md="6"
+                >
+                    <h1 class="display-2 font-weight-bold mb-3">Login</h1>
+                </v-col>
+            </v-row>
 
-        <div class="login-form">
-            <form @submit.prevent>
-                <div class="form-field">
-                    <label for="email" class="email">
-                        Email
-                        <input type="text" placeholder="your.email@example.com" v-model.trim="loginForm.email">
-                    </label>
-                    <label for="password" class="pw">
-                        Password
-                        <input type="password" placeholder="******" v-model.trim="loginForm.password">
-                    </label>
-                </div>
-                <button class="login-btn" @click="login()">Log In</button>
-            </form>
+            <v-form @submit.prevent="login">
+                <v-row
+                    justify="center"
+                    class="login-form"
+                >
+                    <v-col
+                        md="6"
+                    >
+                        <v-text-field
+                            v-model.trim="loginForm.email"
+                            label="Email"
+                            placeholder="your.email@example.com"
+                        ></v-text-field>
 
-            <div class="message">
-                <p>{{ message }}</p>
-            </div>
-        </div>
+                        <v-text-field
+                            v-model.trim="loginForm.password"
+                            placeholder="******"
+                            label="Password"
+                            type="password"
+                        >
+
+                        </v-text-field>
+
+                        <v-btn
+                            type="submit"
+                            :loading="loading"
+                            :disabled="loading"
+                            class="mb-4"
+                        >Log In</v-btn>
+
+                        <v-alert
+                            v-if="message"
+                            :type="messageType"
+                            :color="messageColor"
+                        >{{ message }}</v-alert>
+                    </v-col>
+                </v-row>
+            </v-form>
+            
+        </v-container>
     </div>
 </template>
 
@@ -33,7 +63,17 @@ export default {
                 email: '',
                 password: ''
             },
-            message: ''
+            message: '',
+            messageType: 'success',
+            loading: false
+        }
+    },
+    computed: {
+        messageColor() {
+            if ( this.messageType === 'success' ) {
+                return 'green'
+            }
+            return 'red'
         }
     },
     methods: {
@@ -42,12 +82,17 @@ export default {
                 email: this.loginForm.email,
                 password: this.loginForm.password
             }
+            this.loading = true
             this.$store.dispatch('login', login_obj).then(user => {
                 console.log('Successful login.')
                 this.message = 'Successfully logged in with a valid user.'
+                this.messageType = 'success'
+                this.loading = false
             }).catch(error => {
-                console.log('Attempted sign-in with a non-valid user.')
-                this.message = 'Attempted sign-in with a non-valid user.'
+                console.log('Credentials were incorrect or user was not authorized to log into this platform.')
+                this.message = 'Credentials were incorrect or user was not authorized to log into this platform.'
+                this.messageType = 'error'
+                this.loading = false
             })
         }
     }

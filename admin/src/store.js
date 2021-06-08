@@ -7,11 +7,13 @@ import router from './router'
 
 Vue.use(Vuex)
 
+const initialState = {
+    user: {}
+}
+
 const store = new Vuex.Store({
     // Set base state needed throughout app.
-    state: {
-        user: {}
-    },
+    state: initialState,
 
     // Set explicit mutations for changing the state.
     mutations: {
@@ -20,24 +22,42 @@ const store = new Vuex.Store({
         }
     },
 
+    getters: {
+        isLoggedIn(state) {
+            return state.user !== null && Object.prototype.hasOwnProperty.call(state.user, 'name');
+        }
+    },
+
     // Async methods that require interaction with API or Firebase
     actions: {
         async login({ dispatch }, form) {
             const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
             
-            dispatch('fetchUser', user)
+            await dispatch('fetchUser', user)
+            if ( router.currentRoute.path !== '/dashboard' ) {
+                router.push('/dashboard')
+            }
         },
         async fetchUser({ commit }, user) {
             const userProfile = await fb.usersCollection.doc(user.uid).get()
+            const userProfileData = userProfile.data();
+            userProfileData.email = user.toJSON().email
 
-            commit('setUser', userProfile.data())
-
-            router.push('/dashboard')
+            commit('setUser', userProfileData)
         },
         async logout({ commit }) {
             await fb.auth.signOut()
             commit('setUser', {})
             router.push('/')
+        },
+        async authAction({ commit }) {
+            fb.auth.onAuthStateChanged( user => {
+                if ( user ) {
+                    this.dispatch('fetchUser', user)
+                } else {
+                    commit('setUser', {})
+                }
+            })
         }
     }
 })
