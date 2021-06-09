@@ -199,6 +199,13 @@
                     </v-col>
                   </v-row>
                 </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    @click="closeViewWaypointDialog()"
+                  >Close</v-btn>
+                </v-card-actions>
               </v-card>
           </v-dialog>
             <v-data-table
@@ -303,6 +310,9 @@ export default {
       setTimeout(() => {
         this.show_not_finished_yet = true
       },100)
+    },
+    closeViewWaypointDialog() {
+      this.viewWaypointDialog = false
     }
   },
   mounted() {
