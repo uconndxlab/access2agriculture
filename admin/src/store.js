@@ -9,7 +9,8 @@ Vue.use(Vuex)
 
 const initialState = {
     user: {},
-    products: []
+    products: [],
+    waypoints: []
 }
 
 const store = new Vuex.Store({
@@ -23,6 +24,9 @@ const store = new Vuex.Store({
         },
         setProducts(state, val) {
             state.products = val
+        },
+        setWaypoints(state, val) {
+            state.waypoints = val
         }
     },
 
@@ -70,6 +74,14 @@ const store = new Vuex.Store({
             })
 
             commit('setProducts', products_extracted)
+        },
+        async fetchWaypoints({ commit }) {
+            const waypoints = await fb.waypointsCollection.get()
+            const waypoints_extracted = waypoints.docs.map( waypoint => {
+                return waypoint.data()
+            })
+
+            commit('setWaypoints', waypoints_extracted)
         }
     }
 })
