@@ -41,7 +41,7 @@
             <v-card-actions>
               <v-btn
                 text
-                @click="show_not_finished_yet = true"
+                @click="showNotFinishedMessage()"
               >Add New</v-btn>
             </v-card-actions>
           </v-card>
@@ -73,7 +73,134 @@
                 single-line
                 hide-details
               ></v-text-field>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                dark
+                class="mb-2"
+                @click="newItem()"
+              >New Waypoint</v-btn>
             </v-card-title>
+
+            <v-dialog
+              v-model="viewWaypointDialog"
+              width="600px"
+            >
+              <v-card>
+                <v-card-title>
+                  <span class="text-h5">View Waypoint</span>
+                </v-card-title>
+                <v-card-text>
+                  <div
+                    class="text-subtitle-1 font-weight-bold"
+                  >Name</div>
+                  <div
+                    class="text-body-2"
+                  >{{viewed_waypoint.name}}</div>
+                  
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-title>Location</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >Address</div>
+                      <div
+                        class="text-body-2"
+                      >{{viewed_waypoint.address}}</div>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >State</div>
+                      <div
+                        class="text-body-2"
+                      >{{viewed_waypoint.state}}</div>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >Town</div>
+                      <div
+                        class="text-body-2"
+                      >{{viewed_waypoint.town}}</div>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >Zip Code</div>
+                      <div
+                        class="text-body-2"
+                      >{{viewed_waypoint.zip}}</div>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-title>Contact</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >Phone</div>
+                      <div
+                        class="text-body-2"
+                      >{{viewed_waypoint.phone}}</div>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                    >
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >Website</div>
+                      <div
+                        class="text-body-2"
+                      ><a :href="viewed_waypoint.website">{{viewed_waypoint.website}}</a></div>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-title>Metadata</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >Type</div>
+                      <div
+                        class="text-body-2"
+                      >{{viewed_waypoint.type}}</div>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+          </v-dialog>
             <v-data-table
               :search="waypoint_search"
               :headers="waypoint_headers"
@@ -82,10 +209,28 @@
               <template
                 v-slot:[`item.website`]="{ item }"
               >
-                <v-btn
+                <v-chip
                   :href="item.website"
                   target="_blank"
-                >Visit Website</v-btn>
+                  color="primary"
+                  outlined
+                >
+                  <v-icon
+                    left
+                  >mdi-open-in-new</v-icon>
+                Visit Website</v-chip>
+              </template>
+              <template
+                v-slot:[`item.actions`]="{ item }"
+              >
+                <v-icon
+                  class="mr-2"
+                  @click="viewItem(item)"
+                >mdi-eye</v-icon>
+                <v-icon
+                  class="mr-2"
+                  @click="editItem(item)"
+                >mdi-pencil</v-icon>
               </template>
             </v-data-table>
           </v-card>
@@ -101,6 +246,8 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   data: () => ({
+    viewWaypointDialog: false,
+    viewed_waypoint: {},
     show_not_finished_yet: false,
     waypoint_search: '',
     waypoint_headers: [
@@ -124,6 +271,11 @@ export default {
       {
         text: 'Website',
         value: 'website'
+      },
+      {
+        text: 'Actions',
+        value: 'actions',
+        sortable: false
       }
     ]
   }),
@@ -134,7 +286,24 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints'])
+    ...mapActions(['fetchProducts', 'fetchWaypoints']),
+    viewItem(item) {
+      this.viewed_waypoint = item
+      this.viewWaypointDialog = true
+    },
+    editItem(item) {
+      console.log(item)
+      this.showNotFinishedMessage()
+    },
+    newItem() {
+      this.showNotFinishedMessage()
+    },
+    showNotFinishedMessage() {
+      this.show_not_finished_yet = false
+      setTimeout(() => {
+        this.show_not_finished_yet = true
+      },100)
+    }
   },
   mounted() {
     this.fetchProducts()
