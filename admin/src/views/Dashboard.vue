@@ -83,6 +83,120 @@
             </v-card-title>
 
             <v-dialog
+              v-model="add_waypoint_dialog"
+              width="600"
+            >
+              <v-card>
+                <v-card-title>
+                  <span class="text-h5 mb-2">Add Waypoint</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-text-field
+                    v-model="adding_waypoint.name"
+                    label="Name"
+                  ></v-text-field>
+                </v-card-text>
+                <!-- <v-divider></v-divider> -->
+                <v-card-title>Location</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="adding_waypoint.address"
+                        label="Street Address"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="adding_waypoint.state"
+                        label="State"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="adding_waypoint.town"
+                        label="Town"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="adding_waypoint.zip"
+                        label="Zip Code"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <!-- <v-divider></v-divider> -->
+                <v-card-title>Contact</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="adding_waypoint.phone"
+                        label="Phone"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                    >
+                      <v-text-field
+                        v-model="adding_waypoint.website"
+                        label="Website"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <!-- <v-divider></v-divider> -->
+                <v-card-title>Metadata</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="adding_waypoint.type"
+                        label="Type"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    @click="close_waypoint_dialogs()"
+                  >Close</v-btn>
+                  <v-btn
+                    text
+                    @click="addItem(adding_waypoint)"
+                  >Add New Waypoint</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <v-dialog
               v-model="edit_waypoint_dialog"
               width="600"
             >
@@ -372,8 +486,10 @@ export default {
   data: () => ({
     view_waypoint_dialog: false,
     edit_waypoint_dialog: false,
+    add_waypoint_dialog: false,
     viewed_waypoint: {},
     editing_waypoint: {},
+    adding_waypoint: {},
     show_not_finished_yet: false,
     waypoint_search: '',
     waypoint_headers: [
@@ -412,7 +528,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint']),
+    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint']),
     viewItem(item) {
       this.close_waypoint_dialogs()
       this.viewed_waypoint = item
@@ -428,6 +544,13 @@ export default {
       this.close_waypoint_dialogs()
     },
     newItem() {
+      this.close_waypoint_dialogs()
+      this.add_waypoint_dialog = true
+    },
+    addItem(item) {
+      console.log('Adding Item', item)
+      this.adding_waypoint = {}
+      this.close_waypoint_dialogs()
       this.showNotFinishedMessage()
     },
     showNotFinishedMessage() {
@@ -439,6 +562,7 @@ export default {
     close_waypoint_dialogs() {
       this.view_waypoint_dialog = false
       this.edit_waypoint_dialog = false
+      this.add_waypoint_dialog = false
     }
   },
   mounted() {

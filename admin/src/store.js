@@ -108,6 +108,9 @@ const store = new Vuex.Store({
 
             // Recommit the waypoint to the state, at last index.
             commit('setUpdatedWaypoint', waypoint)
+        },
+        async addWaypoint({ commit }, waypoint) {
+            console.log('Add Waypoint', waypoint)
         }
     }
 })
