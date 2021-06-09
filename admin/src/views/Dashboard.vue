@@ -83,7 +83,124 @@
             </v-card-title>
 
             <v-dialog
-              v-model="viewWaypointDialog"
+              v-model="edit_waypoint_dialog"
+              width="600"
+            >
+              <v-card>
+                <v-card-title>
+                  <span class="text-h5 mb-2">Edit Waypoint</span>
+                </v-card-title>
+                <v-card-subtitle>
+                  ID: {{ editing_waypoint.id }}
+                </v-card-subtitle>
+                <v-card-text>
+                  <v-text-field
+                    v-model="editing_waypoint.name"
+                    label="Name"
+                  ></v-text-field>
+                </v-card-text>
+                <!-- <v-divider></v-divider> -->
+                <v-card-title>Location</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editing_waypoint.address"
+                        label="Street Address"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editing_waypoint.state"
+                        label="State"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editing_waypoint.town"
+                        label="Town"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editing_waypoint.zip"
+                        label="Zip Code"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <!-- <v-divider></v-divider> -->
+                <v-card-title>Contact</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editing_waypoint.phone"
+                        label="Phone"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                    >
+                      <v-text-field
+                        v-model="editing_waypoint.website"
+                        label="Website"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <!-- <v-divider></v-divider> -->
+                <v-card-title>Metadata</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editing_waypoint.type"
+                        label="Type"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    @click="close_waypoint_dialogs()"
+                  >Close</v-btn>
+                  <v-btn
+                    text
+                    @click="saveItem(editing_waypoint)"
+                  >Save Changes</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <v-dialog
+              v-model="view_waypoint_dialog"
               width="600px"
             >
               <v-card>
@@ -203,7 +320,7 @@
                 <v-card-actions>
                   <v-btn
                     text
-                    @click="closeViewWaypointDialog()"
+                    @click="close_waypoint_dialogs()"
                   >Close</v-btn>
                 </v-card-actions>
               </v-card>
@@ -253,8 +370,10 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   data: () => ({
-    viewWaypointDialog: false,
+    view_waypoint_dialog: false,
+    edit_waypoint_dialog: false,
     viewed_waypoint: {},
+    editing_waypoint: {},
     show_not_finished_yet: false,
     waypoint_search: '',
     waypoint_headers: [
@@ -293,14 +412,20 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints']),
+    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint']),
     viewItem(item) {
+      this.close_waypoint_dialogs()
       this.viewed_waypoint = item
-      this.viewWaypointDialog = true
+      this.view_waypoint_dialog = true
     },
     editItem(item) {
-      console.log(item)
-      this.showNotFinishedMessage()
+      this.close_waypoint_dialogs()
+      this.editing_waypoint = item
+      this.edit_waypoint_dialog = true
+    },
+    saveItem(item) {
+      this.editWaypoint(item)
+      this.close_waypoint_dialogs()
     },
     newItem() {
       this.showNotFinishedMessage()
@@ -311,8 +436,9 @@ export default {
         this.show_not_finished_yet = true
       },100)
     },
-    closeViewWaypointDialog() {
-      this.viewWaypointDialog = false
+    close_waypoint_dialogs() {
+      this.view_waypoint_dialog = false
+      this.edit_waypoint_dialog = false
     }
   },
   mounted() {

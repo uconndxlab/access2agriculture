@@ -27,6 +27,14 @@ const store = new Vuex.Store({
         },
         setWaypoints(state, val) {
             state.waypoints = val
+        },
+        setUpdatedWaypoint(state, val) {
+            let index = state.waypoints.findIndex( wp => {
+                return wp.id == val.id
+            })
+            if ( index != -1 ) {
+                state.waypoints[index] = val
+            }
         }
     },
 
@@ -78,10 +86,28 @@ const store = new Vuex.Store({
         async fetchWaypoints({ commit }) {
             const waypoints = await fb.waypointsCollection.get()
             const waypoints_extracted = waypoints.docs.map( waypoint => {
-                return waypoint.data()
+                let waypoint_obj = waypoint.data()
+                waypoint_obj.id = waypoint.id
+                return waypoint_obj
             })
 
             commit('setWaypoints', waypoints_extracted)
+        },
+        async editWaypoint({ commit, dispatch }, waypoint) {
+            console.log('Edit Waypoint', waypoint)
+
+            // Save reference to ID as it is unnecessary for update function.
+            const waypoint_id = waypoint.id
+            delete waypoint.id
+
+            // Blindly update all properties.  Can split this out if we want.
+            const waypoint_commit = await fb.waypointsCollection.doc(waypoint_id).update(waypoint)
+
+            // Reassign id.
+            waypoint.id = waypoint_id
+
+            // Recommit the waypoint to the state, at last index.
+            commit('setUpdatedWaypoint', waypoint)
         }
     }
 })
