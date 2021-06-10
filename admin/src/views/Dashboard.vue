@@ -99,110 +99,135 @@
                 <v-card-title>
                   <span class="text-h5 mb-2">Add Waypoint</span>
                 </v-card-title>
-                <v-card-text>
-                  <v-text-field
-                    v-model="adding_waypoint.name"
-                    label="Name"
-                    required
-                  ></v-text-field>
-                </v-card-text>
-                <!-- <v-divider></v-divider> -->
-                <v-card-title>Location</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
+                <v-form
+                  ref="add_waypoint_form"
+                >
+                  <v-card-text>
+                    <v-text-field
+                      v-model="adding_waypoint.name"
+                      :rules="add_waypoint_form_rules.name"
                     >
-                      <v-text-field
-                        v-model="adding_waypoint.address"
-                        label="Street Address"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="adding_waypoint.state"
-                        label="State"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="adding_waypoint.town"
-                        label="Town"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="adding_waypoint.zip"
-                        label="Zip Code"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-                <!-- <v-divider></v-divider> -->
-                <v-card-title>Contact</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="adding_waypoint.phone"
-                        label="Phone"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                    >
-                      <v-text-field
-                        v-model="adding_waypoint.website"
-                        label="Website"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-                <!-- <v-divider></v-divider> -->
-                <v-card-title>Metadata</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="adding_waypoint.type"
-                        label="Type"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions>
-                  <v-btn
-                    text
-                    @click="closeWaypointDialogs()"
-                  >Close</v-btn>
-                  <v-btn
-                    text
-                    @click="addItem(adding_waypoint)"
-                  >Add New Waypoint</v-btn>
-                </v-card-actions>
+                      <template #label>
+                        Name <span class="red--text"><strong> *</strong></span>
+                      </template>
+                    </v-text-field>
+                  </v-card-text>
+                  <!-- <v-divider></v-divider> -->
+                  <v-card-title>Location</v-card-title>
+                  <v-card-text>
+                    <v-row>
+                      <v-col>
+                        <v-text-field
+                          v-model="adding_waypoint.address"
+                          :rules="add_waypoint_form_rules.required_text"
+                        >
+                          <template #label>
+                            Street Address <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-select
+                          :items="states"
+                          v-model="adding_waypoint.state"
+                        >
+                          <template #label>
+                            State <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-select>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="adding_waypoint.town"
+                          :rules="add_waypoint_form_rules.required_text"
+                        >
+                          <template #label>
+                            Town <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="adding_waypoint.zip"
+                          label="Zip Code"
+                          :rules="add_waypoint_form_rules.basic_input_under_1000"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <!-- <v-divider></v-divider> -->
+                  <v-card-title>Contact</v-card-title>
+                  <v-card-text>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="adding_waypoint.phone"
+                          label="Phone"
+                          :rules="add_waypoint_form_rules.basic_input_under_1000"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                      >
+                        <v-text-field
+                          v-model="adding_waypoint.website"
+                          label="Website"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <!-- <v-divider></v-divider> -->
+                  <v-card-title>Metadata</v-card-title>
+                  <v-card-text>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        md="6"
+                      >
+                        <v-select
+                          :items="business_types"
+                          v-model="adding_waypoint.type"
+                          :rules="add_waypoint_form_rules.required_text"
+                        >
+                          <template #label>
+                            Business Type <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-select>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-btn
+                      text
+                      @click="closeWaypointDialogs()"
+                    >Close</v-btn>
+                    <v-btn
+                      text
+                      @click="addItem(adding_waypoint)"
+                    >Add New Waypoint</v-btn>
+                  </v-card-actions>
+                </v-form>
+                
+                
               </v-card>
             </v-dialog>
 
@@ -217,109 +242,135 @@
                 <v-card-subtitle>
                   ID: {{ editing_waypoint.id }}
                 </v-card-subtitle>
-                <v-card-text>
-                  <v-text-field
-                    v-model="editing_waypoint.name"
-                    label="Name"
-                  ></v-text-field>
-                </v-card-text>
-                <!-- <v-divider></v-divider> -->
-                <v-card-title>Location</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
+                <v-form
+                  ref="edit_waypoint_form"
+                >
+                  <v-card-text>
+                    <v-text-field
+                      v-model="editing_waypoint.name"
+                      :rules="add_waypoint_form_rules.name"
                     >
-                      <v-text-field
-                        v-model="editing_waypoint.address"
-                        label="Street Address"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editing_waypoint.state"
-                        label="State"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editing_waypoint.town"
-                        label="Town"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editing_waypoint.zip"
-                        label="Zip Code"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-                <!-- <v-divider></v-divider> -->
-                <v-card-title>Contact</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editing_waypoint.phone"
-                        label="Phone"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                    >
-                      <v-text-field
-                        v-model="editing_waypoint.website"
-                        label="Website"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-                <!-- <v-divider></v-divider> -->
-                <v-card-title>Metadata</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editing_waypoint.type"
-                        label="Type"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions>
-                  <v-btn
-                    text
-                    @click="closeWaypointDialogs()"
-                  >Close</v-btn>
-                  <v-btn
-                    text
-                    @click="saveItem(editing_waypoint)"
-                  >Save Changes</v-btn>
-                </v-card-actions>
+                      <template #label>
+                        Name <span class="red--text"><strong> *</strong></span>
+                      </template>
+                    </v-text-field>
+                  </v-card-text>
+                  <!-- <v-divider></v-divider> -->
+                  <v-card-title>Location</v-card-title>
+                  <v-card-text>
+                    <v-row>
+                      <v-col>
+                        <v-text-field
+                          v-model="editing_waypoint.address"
+                          label="Street Address"
+                          :rules="add_waypoint_form_rules.required_text"
+                        >
+                          <template #label>
+                            Street Address <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-select
+                          :items="states"
+                          v-model="editing_waypoint.state"
+                        >
+                          <template #label>
+                            State <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-select>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editing_waypoint.town"
+                          :rules="add_waypoint_form_rules.required_text"
+                        >
+                          <template #label>
+                            Town <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editing_waypoint.zip"
+                          label="Zip Code"
+                          :rules="add_waypoint_form_rules.basic_input_under_1000"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <!-- <v-divider></v-divider> -->
+                  <v-card-title>Contact</v-card-title>
+                  <v-card-text>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editing_waypoint.phone"
+                          label="Phone"
+                          :rules="add_waypoint_form_rules.basic_input_under_1000"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                      >
+                        <v-text-field
+                          v-model="editing_waypoint.website"
+                          label="Website"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <!-- <v-divider></v-divider> -->
+                  <v-card-title>Metadata</v-card-title>
+                  <v-card-text>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        md="6"
+                      >
+                        <v-select
+                          :items="business_types"
+                          v-model="editing_waypoint.type"
+                          :rules="add_waypoint_form_rules.required_text"
+                        >
+                          <template #label>
+                            Business Type <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-select>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-btn
+                      text
+                      @click="closeWaypointDialogs()"
+                    >Close</v-btn>
+                    <v-btn
+                      text
+                      @click="saveItem(editing_waypoint)"
+                    >Save Changes</v-btn>
+                  </v-card-actions>
+                </v-form>
+                
               </v-card>
             </v-dialog>
 
@@ -344,11 +395,7 @@
                 <v-card-title>Location</v-card-title>
                 <v-card-text>
                   <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
+                    <v-col>
                       <div
                         class="text-subtitle-1 font-weight-bold"
                       >Address</div>
@@ -356,6 +403,8 @@
                         class="text-body-2"
                       >{{viewed_waypoint.address}}</div>
                     </v-col>
+                  </v-row>
+                  <v-row>
                     <v-col
                       cols="12"
                       sm="6"
@@ -391,6 +440,24 @@
                       <div
                         class="text-body-2"
                       >{{viewed_waypoint.zip}}</div>
+                    </v-col>
+                  </v-row>
+                  <v-row v-if="viewed_waypoint.coordinates">
+                    <v-col
+                      md="4"
+                    >
+                      <div class="text-subtitle-1 font-weight-bold">Latitude</div>
+                      <div
+                        class="text-body-2"
+                      >{{viewed_waypoint.coordinates._lat}}</div>
+                    </v-col>
+                    <v-col
+                      md="4"
+                    >
+                      <div class="text-subtitle-1 font-weight-bold">Longitude</div>
+                      <div
+                        class="text-body-2"
+                      >{{viewed_waypoint.coordinates._long}}</div>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -491,7 +558,7 @@
 
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 
 export default {
   data: () => ({
@@ -501,6 +568,9 @@ export default {
     viewed_waypoint: {},
     editing_waypoint: {},
     adding_waypoint: {},
+    default_adding_waypoint_object: {
+      state: 'CT'
+    },
     show_not_finished_yet: false,
     show_success_message: false,
     success_message_text: '',
@@ -534,12 +604,30 @@ export default {
         value: 'actions',
         sortable: false
       }
-    ]
+    ],
+    states: [
+      'CT','MA','RI','VT','NH','NY'
+    ],
+    add_waypoint_form_rules: {
+      name: [
+        value => !!value || 'A unique name is required.',
+        value => (value && value.length <= 1000) || 'Name is unusually long, please shorten.'
+      ],
+      required_text: [
+        value => !!value || 'This field is required.'
+      ],
+      basic_input_under_1000: [
+        value => (value ? (value.length <= 1000) : true) || 'This field should be less than 1000 characters.'
+      ]
+    }
   }),
   computed: {
     ...mapState({
       products: state => state.products,
-      waypoints: state => state.waypoints
+      business_types: state => state.business_types
+    }),
+    ...mapGetters({
+      waypoints: 'waypointObjects'
     })
   },
   methods: {
@@ -551,28 +639,35 @@ export default {
     },
     editItem(item) {
       this.closeWaypointDialogs()
-      this.editing_waypoint = item
+      this.editing_waypoint = {...item}
       this.edit_waypoint_dialog = true
     },
     saveItem(item) {
-      this.editWaypoint(item)
-      this.closeWaypointDialogs()
+      let valid = this.validateEditWaypointForm()
+      if ( valid ) {
+        console.log('Valid Edit Form')
+        this.editWaypoint(item)
+        this.showSuccessMessage('Waypoint Edited Successfully!')
+        this.closeWaypointDialogs()
+      }
     },
     newItem() {
       this.closeWaypointDialogs()
       this.add_waypoint_dialog = true
     },
     addItem(item) {
-      this.addWaypoint(item)
-        .then(() => {
-          this.adding_waypoint = {}
-          this.showSuccessMessage('Waypoint Created!')
-          this.closeWaypointDialogs()
-        }).catch(err => {
-          this.showErrorMessage(err.message)
-        })
-      this.adding_waypoint = {}
-      this.closeWaypointDialogs()
+      let valid = this.validateAddWaypointForm()
+      if ( valid ) {
+        this.addWaypoint(item)
+          .then(() => {
+            this.adding_waypoint = this.default_adding_waypoint_object
+            this.showSuccessMessage('Waypoint Created!')
+            this.closeWaypointDialogs()
+          }).catch(err => {
+            this.showErrorMessage(err.message)
+          })
+        this.closeWaypointDialogs()
+      }
     },
     showNotFinishedMessage() {
       this.clearMessages()
@@ -594,16 +689,35 @@ export default {
       this.view_waypoint_dialog = false
       this.edit_waypoint_dialog = false
       this.add_waypoint_dialog = false
+      this.addWaypointFormResetValidation()
+      this.editWaypointFormResetValidation()
     },
     clearMessages() {
       this.show_not_finished_yet = false
       this.show_success_message = false
       this.show_error_message = false
-    }
+    },
+    validateAddWaypointForm() {
+      return this.$refs.add_waypoint_form.validate()
+    },
+    addWaypointFormResetValidation() {
+      if ( this.$refs && this.$refs.add_waypoint_form ) {
+        this.$refs.add_waypoint_form.resetValidation()
+      }
+    },
+    validateEditWaypointForm() {
+      return this.$refs.edit_waypoint_form.validate()
+    },
+    editWaypointFormResetValidation() {
+      if ( this.$refs && this.$refs.edit_waypoint_form ) {
+        this.$refs.edit_waypoint_form.resetValidation()
+      }
+    },
   },
   mounted() {
     this.fetchProducts()
     this.fetchWaypoints()
+    this.adding_waypoint = this.default_adding_waypoint_object
   }
 }
 </script>

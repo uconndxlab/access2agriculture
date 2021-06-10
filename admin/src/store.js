@@ -10,7 +10,14 @@ Vue.use(Vuex)
 const initialState = {
     user: {},
     products: [],
-    waypoints: []
+    waypoints: [],
+    business_types: [
+        'Community Garden',
+        'Farm',
+        'Farm Training Program',
+        'General Food Access',
+        'Market'
+    ]
 }
 
 const store = new Vuex.Store({
@@ -33,7 +40,8 @@ const store = new Vuex.Store({
                 return wp.id == val.id
             })
             if ( index != -1 ) {
-                state.waypoints[index] = val
+                // Need to use this to trigger reactivity
+                Vue.set(state.waypoints, index, val);
             }
         },
         prependWaypoint(state, val) {
@@ -46,6 +54,9 @@ const store = new Vuex.Store({
     getters: {
         isLoggedIn(state) {
             return state.user !== null && Object.prototype.hasOwnProperty.call(state.user, 'name');
+        },
+        waypointObjects(state) {
+            return state.waypoints
         }
     },
 
