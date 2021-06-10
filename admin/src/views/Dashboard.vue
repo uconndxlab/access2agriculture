@@ -572,6 +572,18 @@
                       >{{viewed_waypoint.type}}</div>
                     </v-col>
                   </v-row>
+                  <v-row>
+                    <v-col>
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >Products</div>
+                      <v-chip
+                        v-for="product in viewed_waypoint_products"
+                        :key="product.id"
+                        class="mr-2"
+                      >{{ product.name }}</v-chip>
+                    </v-col>
+                  </v-row>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -717,6 +729,18 @@ export default {
         return 'https://maps.google.com?q=' + this.viewed_waypoint.coordinates._lat + ',' + this.viewed_waypoint.coordinates._long
       }
       return ''
+    },
+    viewed_waypoint_products() {
+      if ( this.viewed_waypoint.products && this.products ) {
+        return this.products.filter( prod => {
+          if ( this.viewed_waypoint.products.includes( prod.id ) ) {
+            return true
+          } else {
+            return false
+          }
+        })
+      }
+      return []
     }
   },
   methods: {

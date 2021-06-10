@@ -94,7 +94,9 @@ const store = new Vuex.Store({
         async fetchProducts({ commit }) {
             const products = await fb.productsCollection.get()
             const products_extracted = products.docs.map( product => {
-                return product.data()
+                let product_obj = product.data()
+                product_obj.id = product.id
+                return product_obj
             })
 
             commit('setProducts', products_extracted)
