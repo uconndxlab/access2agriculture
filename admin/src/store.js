@@ -143,6 +143,7 @@ const store = new Vuex.Store({
             } else {
                 console.log('Waypoint Does Not Exist')
                 // Create the waypoint.  Since this is not cloudfunc, it will provide simple response.
+                waypoint.coordinates = new fb.firestore.GeoPoint(waypoint.coordinates._lat, waypoint.coordinates._long)
                 const waypoint_create = await fb.waypointsCollection
                     .add(waypoint)
 

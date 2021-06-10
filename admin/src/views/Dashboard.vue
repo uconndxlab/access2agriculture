@@ -251,6 +251,19 @@
                         </v-select>
                       </v-col>
                     </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-select
+                          :items="products"
+                          v-model="adding_waypoint.products"
+                          item-value="id"
+                          item-text="name"
+                          label="Products"
+                          multiple
+                          chips
+                        ></v-select>
+                      </v-col>
+                    </v-row>
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
@@ -421,6 +434,19 @@
                             Business Type <span class="red--text"><strong> *</strong></span>
                           </template>
                         </v-select>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-select
+                          :items="products"
+                          v-model="editing_waypoint.products"
+                          item-value="id"
+                          item-text="name"
+                          label="Products"
+                          multiple
+                          chips
+                        ></v-select>
                       </v-col>
                     </v-row>
                   </v-card-text>

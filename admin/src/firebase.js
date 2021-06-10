@@ -17,6 +17,7 @@ firebase.initializeApp(firebaseConfig)
 // Generate objects for assistance connecting to store & auth
 const db = firebase.firestore()
 const auth = firebase.auth()
+const firestore = firebase.firestore
 
 // Collection helpers.
 const productsCollection = db.collection('products')
@@ -26,6 +27,7 @@ const usersCollection = db.collection('users')
 export {
     db,
     auth,
+    firestore,
     productsCollection,
     waypointsCollection,
     usersCollection
