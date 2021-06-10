@@ -48,6 +48,11 @@ const store = new Vuex.Store({
             let new_state_waypoints = state.waypoints.slice()
             new_state_waypoints.unshift(val)
             state.waypoints = new_state_waypoints
+        },
+        prependProduct(state, val) {
+            let new_state_products = state.products.slice()
+            new_state_products.unshift(val)
+            state.products = new_state_products
         }
     },
 
@@ -100,6 +105,29 @@ const store = new Vuex.Store({
             })
 
             commit('setProducts', products_extracted)
+        },
+        async addProduct({ commit }, product) {
+            const product_with_name = await fb.productsCollection
+                .where('name', '==', product.name)
+                .get()
+            let product_exists = product_with_name && product_with_name.docs && product_with_name.docs.length > 0
+
+            if ( product_exists ) {
+                throw new Error('Product Already Exists')
+            } else {
+                const product_create = await fb.productsCollection
+                    .add(product)
+
+                if ( product_create && product_create.id ) {
+                    const read_product = await fb.productsCollection.doc(product_create.id).get()
+
+                    if ( read_product ) {
+                        let new_product_obj = read_product.data()
+                        new_product_obj.id = read_product.id
+                        commit('prependProduct', new_product_obj)
+                    }
+                }
+            }
         },
         async fetchWaypoints({ commit }) {
             const waypoints = await fb.waypointsCollection.get()

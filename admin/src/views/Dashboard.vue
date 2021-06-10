@@ -41,10 +41,46 @@
             <v-card-actions>
               <v-btn
                 text
-                @click="showNotFinishedMessage()"
+                @click="newProductOpen()"
               >Add New</v-btn>
             </v-card-actions>
           </v-card>
+
+          <v-dialog
+            v-model="add_product_dialog"
+            width="600"
+          >
+            <v-card>
+              <v-card-title>
+                <span class="text-h5 mb-2">Add Product</span>
+              </v-card-title>
+              <v-form
+                ref="add_product_form"
+                lazy-validation
+              >
+                <v-card-text>
+                  <v-text-field
+                    v-model="adding_product.name"
+                    :rules="add_waypoint_form_rules.name"
+                  >
+                    <template #label>
+                      Name <span class="red--text"><strong> *</strong></span>
+                    </template>
+                  </v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    @click="closeWaypointDialogs()"
+                  >Close</v-btn>
+                  <v-btn
+                    text
+                    @click="addProductAction(adding_product)"
+                  >Add New Product</v-btn>
+                </v-card-actions>
+              </v-form>
+            </v-card>
+          </v-dialog>
         </v-col>
         <v-col
           md="5"
@@ -669,6 +705,8 @@ export default {
     view_waypoint_dialog: false,
     edit_waypoint_dialog: false,
     add_waypoint_dialog: false,
+    add_product_dialog: false,
+    adding_product: {},
     viewed_waypoint: {},
     editing_waypoint: {
       coordinates: {}
@@ -770,7 +808,25 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint']),
+    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint', 'addProduct']),
+    newProductOpen() {
+      this.closeWaypointDialogs()
+      this.add_product_dialog = true
+    },
+    addProductAction(product) {
+      let valid = this.validateAddProductForm()
+      if ( valid ) {
+        this.addProduct(product)
+          .then(() => {
+            this.adding_product = {}
+            this.showSuccessMessage('Product Created!')
+            this.closeWaypointDialogs()
+          }).catch(error => {
+            this.showErrorMessage(error.message)
+            this.closeWaypointDialogs()
+          })
+      }
+    },
     viewItem(item) {
       this.closeWaypointDialogs()
       this.viewed_waypoint = item
@@ -784,7 +840,6 @@ export default {
     saveItem(item) {
       let valid = this.validateEditWaypointForm()
       if ( valid ) {
-        console.log('Valid Edit Form')
         this.editWaypoint(item)
         this.showSuccessMessage('Waypoint Edited Successfully!')
         this.closeWaypointDialogs()
@@ -828,8 +883,10 @@ export default {
       this.view_waypoint_dialog = false
       this.edit_waypoint_dialog = false
       this.add_waypoint_dialog = false
+      this.add_product_dialog = false
       this.addWaypointFormResetValidation()
       this.editWaypointFormResetValidation()
+      this.addProductFormResetValidation()
     },
     clearMessages() {
       this.show_not_finished_yet = false
@@ -852,6 +909,14 @@ export default {
         this.$refs.edit_waypoint_form.resetValidation()
       }
     },
+    validateAddProductForm() {
+      return this.$refs.add_product_form.validate()
+    },
+    addProductFormResetValidation() {
+      if ( this.$refs && this.$refs.add_product_form ) {
+        this.$refs.add_product_form.resetValidation()
+      }
+    }
   },
   mounted() {
     this.fetchProducts()
