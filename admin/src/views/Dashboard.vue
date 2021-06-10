@@ -51,8 +51,17 @@
         >
           <v-alert
             type="warning"
+            class="mb-2"
             v-if="show_not_finished_yet"
           >Sorry, this isn't completed yet.</v-alert>
+          <v-alert
+            type="success"
+            v-if="show_success_message"
+          >{{ success_message_text }}</v-alert>
+          <v-alert
+            type="error"
+            v-if="show_error_message"
+          >{{ error_message_text }}</v-alert>
         </v-col>
       </v-row>
 
@@ -94,6 +103,7 @@
                   <v-text-field
                     v-model="adding_waypoint.name"
                     label="Name"
+                    required
                   ></v-text-field>
                 </v-card-text>
                 <!-- <v-divider></v-divider> -->
@@ -186,7 +196,7 @@
                 <v-card-actions>
                   <v-btn
                     text
-                    @click="close_waypoint_dialogs()"
+                    @click="closeWaypointDialogs()"
                   >Close</v-btn>
                   <v-btn
                     text
@@ -303,7 +313,7 @@
                 <v-card-actions>
                   <v-btn
                     text
-                    @click="close_waypoint_dialogs()"
+                    @click="closeWaypointDialogs()"
                   >Close</v-btn>
                   <v-btn
                     text
@@ -434,7 +444,7 @@
                 <v-card-actions>
                   <v-btn
                     text
-                    @click="close_waypoint_dialogs()"
+                    @click="closeWaypointDialogs()"
                   >Close</v-btn>
                 </v-card-actions>
               </v-card>
@@ -449,6 +459,7 @@
               >
                 <v-chip
                   :href="item.website"
+                  v-if="item.website"
                   target="_blank"
                   color="primary"
                   outlined
@@ -491,6 +502,10 @@ export default {
     editing_waypoint: {},
     adding_waypoint: {},
     show_not_finished_yet: false,
+    show_success_message: false,
+    success_message_text: '',
+    show_error_message: false,
+    error_message_text: '',
     waypoint_search: '',
     waypoint_headers: [
       {
@@ -530,39 +545,60 @@ export default {
   methods: {
     ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint']),
     viewItem(item) {
-      this.close_waypoint_dialogs()
+      this.closeWaypointDialogs()
       this.viewed_waypoint = item
       this.view_waypoint_dialog = true
     },
     editItem(item) {
-      this.close_waypoint_dialogs()
+      this.closeWaypointDialogs()
       this.editing_waypoint = item
       this.edit_waypoint_dialog = true
     },
     saveItem(item) {
       this.editWaypoint(item)
-      this.close_waypoint_dialogs()
+      this.closeWaypointDialogs()
     },
     newItem() {
-      this.close_waypoint_dialogs()
+      this.closeWaypointDialogs()
       this.add_waypoint_dialog = true
     },
     addItem(item) {
-      console.log('Adding Item', item)
+      this.addWaypoint(item)
+        .then(() => {
+          this.adding_waypoint = {}
+          this.showSuccessMessage('Waypoint Created!')
+          this.closeWaypointDialogs()
+        }).catch(err => {
+          this.showErrorMessage(err.message)
+        })
       this.adding_waypoint = {}
-      this.close_waypoint_dialogs()
-      this.showNotFinishedMessage()
+      this.closeWaypointDialogs()
     },
     showNotFinishedMessage() {
-      this.show_not_finished_yet = false
+      this.clearMessages()
       setTimeout(() => {
         this.show_not_finished_yet = true
       },100)
     },
-    close_waypoint_dialogs() {
+    showSuccessMessage(message) {
+      this.clearMessages()
+      this.success_message_text = message
+      this.show_success_message = true
+    },
+    showErrorMessage(error_message) {
+      this.clearMessages()
+      this.error_message_text = error_message
+      this.show_error_message = true
+    },
+    closeWaypointDialogs() {
       this.view_waypoint_dialog = false
       this.edit_waypoint_dialog = false
       this.add_waypoint_dialog = false
+    },
+    clearMessages() {
+      this.show_not_finished_yet = false
+      this.show_success_message = false
+      this.show_error_message = false
     }
   },
   mounted() {

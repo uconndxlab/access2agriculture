@@ -35,6 +35,11 @@ const store = new Vuex.Store({
             if ( index != -1 ) {
                 state.waypoints[index] = val
             }
+        },
+        prependWaypoint(state, val) {
+            let new_state_waypoints = state.waypoints.slice()
+            new_state_waypoints.unshift(val)
+            state.waypoints = new_state_waypoints
         }
     },
 
@@ -111,6 +116,38 @@ const store = new Vuex.Store({
         },
         async addWaypoint({ commit }, waypoint) {
             console.log('Add Waypoint', waypoint)
+
+            // First we need to verify that we don't have another record with the same name.  This should be moved to CloudFunctions to centralize validation.
+            const waypoint_with_name = await fb.waypointsCollection
+                .where('name', '==', waypoint.name)
+                .get()
+            let waypoint_exists = waypoint_with_name && waypoint_with_name.docs && waypoint_with_name.docs.length > 0
+            
+            
+            if ( waypoint_exists ) {
+                console.log('Waypoint Already Exists')
+                throw new Error('Waypoint Already Exists')
+            } else {
+                console.log('Waypoint Does Not Exist')
+                // Create the waypoint.  Since this is not cloudfunc, it will provide simple response.
+                const waypoint_create = await fb.waypointsCollection
+                    .add(waypoint)
+
+                // Prepare the object for injection to the UI.
+                // This could be avoided altogether if we use the input object.
+                // However, it's set up this way so we can transfer to CloudFunctions where we might need to read separately from the "create" response.
+                if ( waypoint_create && waypoint_create.id ) {
+                    const read_waypoint = await fb.waypointsCollection.doc(waypoint_create.id).get()
+
+                    if ( read_waypoint ) {
+                        let new_waypoint_obj = read_waypoint.data()
+                        new_waypoint_obj.id = read_waypoint.id
+                        commit('prependWaypoint', new_waypoint_obj)
+                    }
+                }
+
+                return waypoint_create
+            }
         }
     }
 })
