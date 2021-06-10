@@ -168,6 +168,44 @@
                         ></v-text-field>
                       </v-col>
                     </v-row>
+                    <v-row v-if="adding_waypoint.coordinates">
+                      <v-col
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="adding_waypoint.coordinates._lat"
+                          :rules="add_waypoint_form_rules.latitude_required"
+                          required
+                          placeholder="41.71403"
+                        >
+                          <template #label>
+                            Latitude <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                      <v-col
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="adding_waypoint.coordinates._long"
+                          :rules="add_waypoint_form_rules.longitude_required"
+                          required
+                          placeholder="-72.21541"
+                        >
+                          <template #label>
+                            Longitude <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                      <v-col
+                        md="4"
+                      >
+                        <a
+                          href="https://www.latlong.net/"
+                          target="_blank"
+                        >Help Finding Latitude/Longitude?</a>
+                      </v-col>
+                    </v-row>
                   </v-card-text>
                   <!-- <v-divider></v-divider> -->
                   <v-card-title>Contact</v-card-title>
@@ -312,6 +350,34 @@
                         ></v-text-field>
                       </v-col>
                     </v-row>
+                    <v-row v-if="editing_waypoint.coordinates">
+                      <v-col
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editing_waypoint.coordinates._lat"
+                          :rules="add_waypoint_form_rules.latitude_required"
+                          label="Latitude"
+                        >
+                          <template #label>
+                            Latitude <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                      <v-col
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="editing_waypoint.coordinates._long"
+                          :rules="add_waypoint_form_rules.longitude_required"
+                          label="Longitude"
+                        >
+                          <template #label>
+                            Longitude <span class="red--text"><strong> *</strong></span>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
                   </v-card-text>
                   <!-- <v-divider></v-divider> -->
                   <v-card-title>Contact</v-card-title>
@@ -380,17 +446,8 @@
             >
               <v-card>
                 <v-card-title>
-                  <span class="text-h5">View Waypoint</span>
+                  <span class="text-h5">{{viewed_waypoint.name}}</span>
                 </v-card-title>
-                <v-card-text>
-                  <div
-                    class="text-subtitle-1 font-weight-bold"
-                  >Name</div>
-                  <div
-                    class="text-body-2"
-                  >{{viewed_waypoint.name}}</div>
-                  
-                </v-card-text>
                 <v-divider></v-divider>
                 <v-card-title>Location</v-card-title>
                 <v-card-text>
@@ -458,6 +515,15 @@
                       <div
                         class="text-body-2"
                       >{{viewed_waypoint.coordinates._long}}</div>
+                    </v-col>
+                    <v-col
+                      md="4"
+                      v-if="viewed_waypoint_google_maps_link"
+                    >
+                      <a
+                        :href="viewed_waypoint_google_maps_link"
+                        target="_blank"
+                      >View on Google Maps</a>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -566,10 +632,13 @@ export default {
     edit_waypoint_dialog: false,
     add_waypoint_dialog: false,
     viewed_waypoint: {},
-    editing_waypoint: {},
+    editing_waypoint: {
+      coordinates: {}
+    },
     adding_waypoint: {},
     default_adding_waypoint_object: {
-      state: 'CT'
+      state: 'CT',
+      coordinates: {}
     },
     show_not_finished_yet: false,
     show_success_message: false,
@@ -618,6 +687,20 @@ export default {
       ],
       basic_input_under_1000: [
         value => (value ? (value.length <= 1000) : true) || 'This field should be less than 1000 characters.'
+      ],
+      latitude: [
+        value => (value ? (value >= -90 && value <= 90) : true) || 'Latitude is between -90 and 90'
+      ],
+      latitude_required: [
+        value => !!value || 'This field is required.',
+        value => (value && (value >= -90 && value <= 90)) || 'Latitude is between -90 and 90'
+      ],
+      longitude: [
+        value => (value ? (value >= -180 && value <= 180) : true) || 'Longitude is between -180 and 180'
+      ],
+      longitude_required: [
+        value => !!value || 'This field is required.',
+        value => (value && (value >= -180 && value <= 180)) || 'Longitude is between -180 and 180'
       ]
     }
   }),
@@ -628,7 +711,13 @@ export default {
     }),
     ...mapGetters({
       waypoints: 'waypointObjects'
-    })
+    }),
+    viewed_waypoint_google_maps_link() {
+      if ( this.viewed_waypoint.coordinates && this.viewed_waypoint.coordinates._lat && this.viewed_waypoint.coordinates._long ) {
+        return 'https://maps.google.com?q=' + this.viewed_waypoint.coordinates._lat + ',' + this.viewed_waypoint.coordinates._long
+      }
+      return ''
+    }
   },
   methods: {
     ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint']),
@@ -721,3 +810,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.white-space-normal {
+  white-space: normal
+}
+</style>
