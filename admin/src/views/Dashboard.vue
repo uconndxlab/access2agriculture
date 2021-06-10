@@ -63,6 +63,9 @@
               <v-card-title>
                 <span class="text-h5 mb-2">Edit Product</span>
               </v-card-title>
+              <v-card-subtitle>
+                  ID: {{ editing_product.id }}
+              </v-card-subtitle>
               <v-form
                 ref="edit_product_form"
                 lazy-validation
