@@ -33,7 +33,15 @@
               v-for="product in products"
               :key="product.name"
             >
-              <v-list-item-title>{{ product.name }}</v-list-item-title>
+              <v-list-item-content>
+                <v-list-item-title>{{ product.name }}</v-list-item-title>
+              </v-list-item-content>
+              
+              <v-list-item-icon>
+                <v-icon
+                  @click="editProductOpen(product)"
+                >mdi-pencil</v-icon>
+              </v-list-item-icon>
             </v-list-item>
 
             <v-divider></v-divider>
@@ -41,10 +49,47 @@
             <v-card-actions>
               <v-btn
                 text
+                type="primary"
                 @click="newProductOpen()"
               >Add New</v-btn>
             </v-card-actions>
           </v-card>
+
+          <v-dialog
+            v-model="edit_product_dialog"
+            width="600"
+          >
+            <v-card>
+              <v-card-title>
+                <span class="text-h5 mb-2">Edit Product</span>
+              </v-card-title>
+              <v-form
+                ref="edit_product_form"
+                lazy-validation
+              >
+                <v-card-text>
+                  <v-text-field
+                    v-model="editing_product.name"
+                    :rules="add_waypoint_form_rules.name"
+                  >
+                    <template #label>
+                      Name <span class="red--text"><strong> *</strong></span>
+                    </template>
+                  </v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    @click="closeWaypointDialogs()"
+                  >Close</v-btn>
+                  <v-btn
+                    text
+                    @click="editProductAction(editing_product)"
+                  >Save Changes</v-btn>
+                </v-card-actions>
+              </v-form>
+            </v-card>
+          </v-dialog>
 
           <v-dialog
             v-model="add_product_dialog"
@@ -706,7 +751,9 @@ export default {
     edit_waypoint_dialog: false,
     add_waypoint_dialog: false,
     add_product_dialog: false,
+    edit_product_dialog: false,
     adding_product: {},
+    editing_product: {},
     viewed_waypoint: {},
     editing_waypoint: {
       coordinates: {}
@@ -782,10 +829,11 @@ export default {
   }),
   computed: {
     ...mapState({
-      products: state => state.products,
       business_types: state => state.business_types
     }),
     ...mapGetters({
+      // This is a getter because deep object properties can be updated and need to be handled with Vue.set for reactivity
+      products: 'productObjects',
       waypoints: 'waypointObjects'
     }),
     viewed_waypoint_google_maps_link() {
@@ -808,7 +856,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint', 'addProduct']),
+    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint', 'addProduct', 'editProduct']),
     newProductOpen() {
       this.closeWaypointDialogs()
       this.add_product_dialog = true
@@ -827,6 +875,24 @@ export default {
           })
       }
     },
+    editProductOpen(product) {
+      this.closeWaypointDialogs()
+      this.editing_product = {...product}
+      this.edit_product_dialog = true
+    },
+    editProductAction(product) {
+      let valid = this.validateEditProductForm()
+      if ( valid ) {
+        this.editProduct(product)
+          .then(() => {
+            this.showSuccessMessage('Product Edited Successfully!')
+            this.closeWaypointDialogs()
+          }).catch(err => {
+            this.showErrorMessage(err.message)
+          })
+        this.closeWaypointDialogs()
+      }
+    },
     viewItem(item) {
       this.closeWaypointDialogs()
       this.viewed_waypoint = item
@@ -841,7 +907,12 @@ export default {
       let valid = this.validateEditWaypointForm()
       if ( valid ) {
         this.editWaypoint(item)
-        this.showSuccessMessage('Waypoint Edited Successfully!')
+          .then(() => {
+            this.showSuccessMessage('Waypoint Edited Successfully!')
+            this.closeWaypointDialogs()
+          }).catch(err => {
+            this.showErrorMessage(err.message)
+          })
         this.closeWaypointDialogs()
       }
     },
@@ -884,6 +955,7 @@ export default {
       this.edit_waypoint_dialog = false
       this.add_waypoint_dialog = false
       this.add_product_dialog = false
+      this.edit_product_dialog = false
       this.addWaypointFormResetValidation()
       this.editWaypointFormResetValidation()
       this.addProductFormResetValidation()
@@ -915,6 +987,14 @@ export default {
     addProductFormResetValidation() {
       if ( this.$refs && this.$refs.add_product_form ) {
         this.$refs.add_product_form.resetValidation()
+      }
+    },
+    validateEditProductForm() {
+      return this.$refs.edit_product_form.validate()
+    },
+    editProductFormResetValidation() {
+      if ( this.$refs && this.$refs.edit_product_form ) {
+        this.$refs.edit_product_form.resetValidation()
       }
     }
   },

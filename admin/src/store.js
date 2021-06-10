@@ -44,6 +44,15 @@ const store = new Vuex.Store({
                 Vue.set(state.waypoints, index, val);
             }
         },
+        setUpdatedProduct(state, val) {
+            let index = state.products.findIndex( prod => {
+                return prod.id == val.id
+            })
+            if ( index != -1 ) {
+                // Need to use this to trigger reactivity
+                Vue.set(state.products, index, val);
+            }
+        },
         prependWaypoint(state, val) {
             let new_state_waypoints = state.waypoints.slice()
             new_state_waypoints.unshift(val)
@@ -62,6 +71,9 @@ const store = new Vuex.Store({
         },
         waypointObjects(state) {
             return state.waypoints
+        },
+        productObjects(state) {
+            return state.products
         }
     },
 
@@ -129,6 +141,30 @@ const store = new Vuex.Store({
                 }
             }
         },
+        async editProduct({ commit }, product) {
+            console.log('Edit Product', product)
+
+            const product_id = product.id
+            delete product.id
+
+            const product_with_name = await fb.productsCollection
+                .where('name', '==', product.name)
+                .get()
+            let product_exists = product_with_name && product_with_name.docs && product_with_name.docs.length > 0 && product_id != product_with_name.docs[0].id
+
+            console.log('Does Product Exist?', product_exists)
+
+            if ( product_exists ) {
+                throw new Error('Product Already Exists with Name')
+            } else {
+                const product_commit = fb.productsCollection.doc(product_id).update(product)
+
+                product.id = product_id
+                commit('setUpdatedProduct', product)
+            }
+
+            
+        },
         async fetchWaypoints({ commit }) {
             const waypoints = await fb.waypointsCollection.get()
             const waypoints_extracted = waypoints.docs.map( waypoint => {
@@ -139,21 +175,31 @@ const store = new Vuex.Store({
 
             commit('setWaypoints', waypoints_extracted)
         },
-        async editWaypoint({ commit, dispatch }, waypoint) {
+        async editWaypoint({ commit }, waypoint) {
             console.log('Edit Waypoint', waypoint)
 
             // Save reference to ID as it is unnecessary for update function.
             const waypoint_id = waypoint.id
             delete waypoint.id
 
-            // Blindly update all properties.  Can split this out if we want.
-            const waypoint_commit = await fb.waypointsCollection.doc(waypoint_id).update(waypoint)
+            // First we need to verify that we don't have another record with the same name.  This should be moved to CloudFunctions to centralize validation.
+            const waypoint_with_name = await fb.waypointsCollection
+                .where('name', '==', waypoint.name)
+                .get()
+            let waypoint_exists = waypoint_with_name && waypoint_with_name.docs && waypoint_with_name.docs.length > 0 && waypoint_id != waypoint_with_name.docs[0].id
 
-            // Reassign id.
-            waypoint.id = waypoint_id
+            if ( waypoint_exists ) {
+                throw new Error('Waypoint already exists with this name')
+            } else {
+                // Blindly update all properties.  Can split this out if we want.
+                const waypoint_commit = await fb.waypointsCollection.doc(waypoint_id).update(waypoint)
 
-            // Recommit the waypoint to the state, at last index.
-            commit('setUpdatedWaypoint', waypoint)
+                // Reassign id.
+                waypoint.id = waypoint_id
+
+                // Recommit the waypoint to the state, at last index.
+                commit('setUpdatedWaypoint', waypoint)
+            }
         },
         async addWaypoint({ commit }, waypoint) {
             console.log('Add Waypoint', waypoint)
