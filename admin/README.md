@@ -1,24 +1,7 @@
-# admin
+# Admin
 
-## Project setup
-```
-yarn install
-```
+This is the folder for the admin application.
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+# Documentation
 
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[Visit the Wiki](https://github.com/uconndxlab/access2agriculture/wiki) for information on how to develop for this application.
