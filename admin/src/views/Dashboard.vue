@@ -9,143 +9,7 @@
         >
           <h1
             class="display-2 font-weight-bold mb-3"
-          >Dashboard</h1>
-        </v-col>
-      </v-row>
-
-      <v-row
-        justify="center"
-      >
-        <v-col
-          md="5"
-        >
-          <v-card>
-            <v-list-item
-              two-line
-            >
-              <v-list-item-content>
-                <v-list-item-title class="text-h5">Products / Categories</v-list-item-title>
-                <v-list-item-subtitle>Categorizations available in the app.</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-list-item
-              v-for="product in products"
-              :key="product.name"
-            >
-              <v-list-item-content>
-                <v-list-item-title>{{ product.name }}</v-list-item-title>
-              </v-list-item-content>
-              
-              <v-list-item-icon>
-                <v-icon
-                  @click="editProductOpen(product)"
-                >mdi-pencil</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-btn
-                text
-                type="primary"
-                @click="newProductOpen()"
-              >Add New</v-btn>
-            </v-card-actions>
-          </v-card>
-
-          <v-dialog
-            v-model="edit_product_dialog"
-            width="600"
-          >
-            <v-card>
-              <v-card-title>
-                <span class="text-h5 mb-2">Edit Product</span>
-              </v-card-title>
-              <v-card-subtitle>
-                  ID: {{ editing_product.id }}
-              </v-card-subtitle>
-              <v-form
-                ref="edit_product_form"
-                lazy-validation
-              >
-                <v-card-text>
-                  <v-text-field
-                    v-model="editing_product.name"
-                    :rules="add_waypoint_form_rules.name"
-                  >
-                    <template #label>
-                      Name <span class="red--text"><strong> *</strong></span>
-                    </template>
-                  </v-text-field>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    text
-                    @click="closeWaypointDialogs()"
-                  >Close</v-btn>
-                  <v-btn
-                    text
-                    @click="editProductAction(editing_product)"
-                  >Save Changes</v-btn>
-                </v-card-actions>
-              </v-form>
-            </v-card>
-          </v-dialog>
-
-          <v-dialog
-            v-model="add_product_dialog"
-            width="600"
-          >
-            <v-card>
-              <v-card-title>
-                <span class="text-h5 mb-2">Add Product</span>
-              </v-card-title>
-              <v-form
-                ref="add_product_form"
-                lazy-validation
-              >
-                <v-card-text>
-                  <v-text-field
-                    v-model="adding_product.name"
-                    :rules="add_waypoint_form_rules.name"
-                  >
-                    <template #label>
-                      Name <span class="red--text"><strong> *</strong></span>
-                    </template>
-                  </v-text-field>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    text
-                    @click="closeWaypointDialogs()"
-                  >Close</v-btn>
-                  <v-btn
-                    text
-                    @click="addProductAction(adding_product)"
-                  >Add New Product</v-btn>
-                </v-card-actions>
-              </v-form>
-            </v-card>
-          </v-dialog>
-        </v-col>
-        <v-col
-          md="5"
-        >
-          <v-alert
-            type="warning"
-            class="mb-2"
-            v-if="show_not_finished_yet"
-          >Sorry, this isn't completed yet.</v-alert>
-          <v-alert
-            type="success"
-            v-if="show_success_message"
-          >{{ success_message_text }}</v-alert>
-          <v-alert
-            type="error"
-            v-if="show_error_message"
-          >{{ error_message_text }}</v-alert>
+          >Waypoints Dashboard</h1>
         </v-col>
       </v-row>
 
@@ -703,7 +567,7 @@
                   >Close</v-btn>
                 </v-card-actions>
               </v-card>
-          </v-dialog>
+            </v-dialog>
             <v-data-table
               :search="waypoint_search"
               :headers="waypoint_headers"
@@ -740,6 +604,28 @@
           </v-card>
         </v-col>
       </v-row>
+
+      <v-row
+        justify="center"
+      >
+        <v-col
+          md="5"
+        >
+          <v-alert
+            type="warning"
+            class="mb-2"
+            v-if="show_not_finished_yet"
+          >Sorry, this isn't completed yet.</v-alert>
+          <v-alert
+            type="success"
+            v-if="show_success_message"
+          >{{ success_message_text }}</v-alert>
+          <v-alert
+            type="error"
+            v-if="show_error_message"
+          >{{ error_message_text }}</v-alert>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -753,10 +639,6 @@ export default {
     view_waypoint_dialog: false,
     edit_waypoint_dialog: false,
     add_waypoint_dialog: false,
-    add_product_dialog: false,
-    edit_product_dialog: false,
-    adding_product: {},
-    editing_product: {},
     viewed_waypoint: {},
     editing_waypoint: {
       coordinates: {}
@@ -859,43 +741,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint', 'addProduct', 'editProduct']),
-    newProductOpen() {
-      this.closeWaypointDialogs()
-      this.add_product_dialog = true
-    },
-    addProductAction(product) {
-      let valid = this.validateAddProductForm()
-      if ( valid ) {
-        this.addProduct(product)
-          .then(() => {
-            this.adding_product = {}
-            this.showSuccessMessage('Product Created!')
-            this.closeWaypointDialogs()
-          }).catch(error => {
-            this.showErrorMessage(error.message)
-            this.closeWaypointDialogs()
-          })
-      }
-    },
-    editProductOpen(product) {
-      this.closeWaypointDialogs()
-      this.editing_product = {...product}
-      this.edit_product_dialog = true
-    },
-    editProductAction(product) {
-      let valid = this.validateEditProductForm()
-      if ( valid ) {
-        this.editProduct(product)
-          .then(() => {
-            this.showSuccessMessage('Product Edited Successfully!')
-            this.closeWaypointDialogs()
-          }).catch(err => {
-            this.showErrorMessage(err.message)
-          })
-        this.closeWaypointDialogs()
-      }
-    },
+    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint']),
     viewItem(item) {
       this.closeWaypointDialogs()
       this.viewed_waypoint = item
@@ -957,11 +803,8 @@ export default {
       this.view_waypoint_dialog = false
       this.edit_waypoint_dialog = false
       this.add_waypoint_dialog = false
-      this.add_product_dialog = false
-      this.edit_product_dialog = false
       this.addWaypointFormResetValidation()
       this.editWaypointFormResetValidation()
-      this.addProductFormResetValidation()
     },
     clearMessages() {
       this.show_not_finished_yet = false
@@ -982,22 +825,6 @@ export default {
     editWaypointFormResetValidation() {
       if ( this.$refs && this.$refs.edit_waypoint_form ) {
         this.$refs.edit_waypoint_form.resetValidation()
-      }
-    },
-    validateAddProductForm() {
-      return this.$refs.add_product_form.validate()
-    },
-    addProductFormResetValidation() {
-      if ( this.$refs && this.$refs.add_product_form ) {
-        this.$refs.add_product_form.resetValidation()
-      }
-    },
-    validateEditProductForm() {
-      return this.$refs.edit_product_form.validate()
-    },
-    editProductFormResetValidation() {
-      if ( this.$refs && this.$refs.edit_product_form ) {
-        this.$refs.edit_product_form.resetValidation()
       }
     }
   },
