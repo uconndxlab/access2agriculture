@@ -2,39 +2,24 @@
     <div id="map-item-view">
         <top-button-navigation></top-button-navigation>
 
-        <p>This is a view for specific map items.  I can later convert this to a component and hook it up to data.</p>
-        <p>Figma screen 3/6</p>
-
-        <v-btn
-            @click="overlay = !overlay"
-        >Open Map Location Overlay</v-btn>
-
-        <map-location-overlay :overlay="overlay" @closeOverlay="closeCurrentOverlay" />
+        <div class="full-map-bg">
+            <iframe
+                style="border:0"
+                :src="mapEmbedLink"
+            ></iframe>
+        </div>
+        
 
         <v-card
         class="mx-auto map-item"
         max-width="100%"
         outlined
         >
-        <v-list-item >
-        <v-list-item-avatar
-            tile
-            size="80"
-            color="grey"
-        ></v-list-item-avatar>
-        <v-list-item-content>
-            <v-list-item-title class="subtitle-1">Map Item Name</v-list-item-title>
-            <v-list-item-subtitle>Address</v-list-item-subtitle>
-            <v-list-item-subtitle>Hours of Operation</v-list-item-subtitle>
-        </v-list-item-content>
-
-        <v-card-actions>
-            <v-btn icon>
-                <v-icon color="black">mdi-bookmark-outline</v-icon>
-            </v-btn>
-        </v-card-actions>
-        </v-list-item>
-
+            <map-list-item
+                v-if="$store.getters.waypointById($route.params.id)"
+                :waypoint="$store.getters.waypointById($route.params.id)"
+                link="false"
+            ></map-list-item>
         </v-card>
 
     </div>
@@ -43,30 +28,65 @@
 </template>
 
 <script>
-import MapLocationOverlay from "@/components/MapLocationOverlay.vue";
 import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
+import MapListItem from '@/components/MapListItem.vue'
+import { mapState } from 'vuex'
 
 export default {
     name: "MapItem",
     components: {
-        MapLocationOverlay,
-        TopButtonNavigation
+        TopButtonNavigation,
+        MapListItem
     },
     data: () => ({
-        overlay: false
+        overlay: false,
+        mapEmbedLink: ''
     }),
+    computed: {
+        ...mapState(['waypoints']),
+    },
     methods: {
         closeCurrentOverlay() {
             this.overlay = false
+        },
+        rebindEmbedLink() {
+            let base = "https://google.com/maps/embed/v1/place?key=AIzaSyCLjpBPrRW_-7nqlENiW1UKXVjQzBTpcUA&q="
+            let fallback_coordinates = "41.71328,-72.207748"
+            let wp = this.$store.getters.waypointById(this.$route.params.id)
+            if ( wp && wp.coordinates ) {
+                this.mapEmbedLink = `${base}${wp.coordinates._lat},${wp.coordinates._long}`
+            }
+            this.mapEmbedLink = `${base}${fallback_coordinates}`
         }
+    },
+    mounted() {
+        this.rebindEmbedLink()
     }
 }
 </script>
 
-
+<style>
+.v-main__wrap {
+    z-index: 0;
+}
+</style>
 <style lang ="css" scoped>
 .v-card.map-item{
     position: absolute;
     bottom: 0;
+}
+
+div.full-map-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+}
+
+div.full-map-bg iframe {
+    width: 100%;
+    height: 100%;
 }
 </style>

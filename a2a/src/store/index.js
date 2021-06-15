@@ -47,6 +47,13 @@ const store = new Vuex.Store({
     waypointObjects(state) {
       return state.waypoints
     },
+    waypointById: (state) => (id) => {
+      let waypoint_arr = state.waypoints.filter(x => x.id == id)
+      if ( Array.isArray(waypoint_arr) && waypoint_arr.length > 0 ) {
+        return waypoint_arr[0]
+      }
+      return {}
+    },
     productObjects(state) {
       return state.products
     },

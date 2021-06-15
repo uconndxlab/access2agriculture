@@ -1,5 +1,8 @@
 <template>
-    <v-list-item>
+    <v-list-item
+        :to="routerLink"
+        v-if="waypoint && waypoint.name"
+    >
         <v-list-item-avatar
             tile
             color="grey"
@@ -21,12 +24,19 @@
 <script>
 export default {
     name: "MapListItem",
-    props: ['waypoint'],
+    props: ['waypoint', 'link'],
     data: () => ({}),
     computed: {
         address() {
             let addr = `${this.waypoint.address}, ${this.waypoint.town} ${this.waypoint.state}, ${this.waypoint.zip}`
             return addr
+        },
+        routerLink() {
+            if ( this.link === 'false' || !this.waypoint.id ) {
+                // If undefined, the item is not linkable
+                return undefined
+            }
+            return '/map-item/' + this.waypoint.id
         }
     }
 }
