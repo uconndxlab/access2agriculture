@@ -2,13 +2,10 @@
     <div id="map-item-view">
         <top-button-navigation></top-button-navigation>
 
-        <div class="full-map-bg">
-            <iframe
-                style="border:0"
-                :src="mapEmbedLink"
-            ></iframe>
-        </div>
-        
+        <full-map-background
+            :lat="lat"
+            :long="long"
+        ></full-map-background>
 
         <v-card
         class="mx-auto map-item"
@@ -30,37 +27,40 @@
 <script>
 import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
 import MapListItem from '@/components/MapListItem.vue'
+import FullMapBackground from '@/components/FullMapBackground.vue'
 import { mapState } from 'vuex'
 
 export default {
     name: "MapItem",
     components: {
         TopButtonNavigation,
-        MapListItem
+        MapListItem,
+        FullMapBackground
     },
     data: () => ({
         overlay: false,
-        mapEmbedLink: ''
     }),
     computed: {
         ...mapState(['waypoints']),
+        lat() {
+            let wp = this.$store.getters.waypointById(this.$route.params.id)
+            if ( wp && wp.coordinates ) {
+                return wp.coordinates._lat
+            }
+            return undefined
+        },
+        long() {
+            let wp = this.$store.getters.waypointById(this.$route.params.id)
+            if ( wp && wp.coordinates ) {
+                return wp.coordinates._long
+            }
+            return undefined
+        }
     },
     methods: {
         closeCurrentOverlay() {
             this.overlay = false
-        },
-        rebindEmbedLink() {
-            let base = "https://google.com/maps/embed/v1/place?key=AIzaSyCLjpBPrRW_-7nqlENiW1UKXVjQzBTpcUA&q="
-            let fallback_coordinates = "41.71328,-72.207748"
-            let wp = this.$store.getters.waypointById(this.$route.params.id)
-            if ( wp && wp.coordinates ) {
-                this.mapEmbedLink = `${base}${wp.coordinates._lat},${wp.coordinates._long}`
-            }
-            this.mapEmbedLink = `${base}${fallback_coordinates}`
         }
-    },
-    mounted() {
-        this.rebindEmbedLink()
     }
 }
 </script>

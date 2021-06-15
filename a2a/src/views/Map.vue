@@ -2,26 +2,23 @@
     <div id="map-page">
         <top-button-navigation></top-button-navigation>
 
-        
-
-        <div id="map">
-            <iframe
-                width="600"
-                height="600"
-                style="border:0"
-                src="https://google.com/maps/embed/v1/place?key=AIzaSyCLjpBPrRW_-7nqlENiW1UKXVjQzBTpcUA&q=41.71328,-72.207748"
-            ></iframe>
-        </div>
+        <full-map-background
+            lat="41.6629199"
+            long="-72.6889928"
+            zoom="9.28"
+        ></full-map-background>
     </div>
 </template>
 
 <script>
 import TopButtonNavigation from '@/components/TopButtonNavigation.vue'
+import FullMapBackground from '@/components/FullMapBackground.vue'
 
 export default {
     name: "Map",
     components: {
-        TopButtonNavigation
+        TopButtonNavigation,
+        FullMapBackground
     }
 }
 </script>
