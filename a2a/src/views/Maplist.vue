@@ -16,6 +16,11 @@
                         :key="index"
                     ></v-divider>
                 </template>
+                <v-list-item
+                    v-if="!waypoints || waypoints.length === 0"
+                >
+                    <v-list-item-content>No locations match your current filter.</v-list-item-content>
+                </v-list-item>
             </v-list>
     </div>
 </template>
@@ -35,7 +40,7 @@ export default {
     computed: {
         ...mapGetters({ 
             products: 'productObjects',
-            waypoints: 'waypointObjects'
+            waypoints: 'waypointObjectsByFilter'
         })
     }
 }

@@ -65,6 +65,26 @@ const store = new Vuex.Store({
     },
     initialFilter() {
       return initialState().filter
+    },
+    waypointObjectsByFilter(state) {
+      return state.waypoints.filter(x => {
+        let has_products = true
+        let has_business_type = true
+
+        if ( state.filter.products && state.filter.products.length > 0 ) {
+          has_products = state.filter.products.every(y => {
+            return x.products.includes(y)
+          })
+        }
+
+        if ( state.filter.businessTypes && state.filter.businessTypes.length > 0 ) {
+          has_business_type = state.filter.businessTypes.some(y => {
+            return x.type === y
+          })
+        }
+
+        return has_products && has_business_type
+      })
     }
   },
   actions: {
