@@ -1,102 +1,42 @@
 <template>
     <div id="map-list-view">
-        <div id="">
-            <v-card
-                flat
-                class="py-6"
-            >
-                <v-toolbar
-                flat>
-                <v-row
-                    align="center"
-                    justify="space-around"
+        <top-button-navigation></top-button-navigation>
+
+            <v-list>
+                <template
+                    v-for="(waypoint, index) in waypoints"
                 >
-                    <v-btn-toggle
-                    rounded
-                    >
-                    <v-btn 
-                    elevation="2"
-                    color="white"
-                    value="map"
-                    to="/map">
-                        <v-icon color="black">mdi-map</v-icon>
-                    </v-btn>
-                    <v-btn 
-                    elevation="2"
-                    color="white"
-                    value="filter"
-                    to="/filter"> 
-                        <v-icon color="black">mdi-filter-variant</v-icon>
-                    </v-btn>
-                    </v-btn-toggle>
+                    <map-list-item
+                        :key="waypoint.id"
+                        :waypoint="waypoint"
+                    ></map-list-item>
 
-                    <v-btn-toggle
-                    rounded
-                    >
-                    <v-btn 
-                    elevation="2"
-                    color="white">
-                        <v-icon color="black">mdi-bookmark</v-icon>
-                    </v-btn>
-                    <v-btn 
-                    elevation="2"
-                    color="white">
-                        <v-icon color="black">mdi-cog</v-icon>
-                    </v-btn>
-                    </v-btn-toggle>
-                </v-row>
-                </v-toolbar>
-            </v-card>
-
-            <v-list-item >
-                <v-list-item-avatar
-                    tile
-                    color="grey"
-                ></v-list-item-avatar>
-                <v-list-item-content>
-                    <v-list-item-title class="subtitle-1">Map Item Name</v-list-item-title>
-                    <v-list-item-subtitle>Address</v-list-item-subtitle>
-                    <v-list-item-subtitle>Hours of Operation</v-list-item-subtitle>
-                </v-list-item-content>
-
-                <v-card-actions>
-                    <v-btn icon>
-                        <v-icon color="black">mdi-bookmark-outline</v-icon>
-                    </v-btn>
-                </v-card-actions>
-            </v-list-item>
-
-            <v-divider
-            inset
-            ></v-divider>
-
-            <v-list-item >
-                <v-list-item-avatar
-                    tile
-                    color="grey"
-                ></v-list-item-avatar>
-                <v-list-item-content>
-                    <v-list-item-title class="subtitle-1">Map Item Name</v-list-item-title>
-                    <v-list-item-subtitle>Address</v-list-item-subtitle>
-                    <v-list-item-subtitle>Hours of Operation</v-list-item-subtitle>
-                </v-list-item-content>
-
-                <v-card-actions>
-                    <v-btn icon>
-                        <v-icon color="black">mdi-bookmark-outline</v-icon>
-                    </v-btn>
-                </v-card-actions>
-            </v-list-item>
-
-            <v-divider
-            inset
-            ></v-divider>
-        </div>
+                    <v-divider
+                        v-if="index < waypoints.length - 1"
+                        :key="index"
+                    ></v-divider>
+                </template>
+            </v-list>
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import MapListItem from '@/components/MapListItem.vue'
+import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
+
 export default {
-    name: "Maplist"
+    name: "Maplist",
+    components: {
+        MapListItem,
+        TopButtonNavigation
+    },
+    data: () => ({}),
+    computed: {
+        ...mapGetters({ 
+            products: 'productObjects',
+            waypoints: 'waypointObjects'
+        })
+    }
 }
 </script>

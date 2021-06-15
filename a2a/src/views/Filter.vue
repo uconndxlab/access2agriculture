@@ -34,44 +34,22 @@
                 
                 <!-- Business Type Selection -->
                 <v-card-text>
-                <h2 class="subtitle-1">
-                    Business Type
-                </h2>
-                <v-chip-group
-                    column
-                    multiple
-                >
-                    <v-chip
-                    filter
-                    outlined
+                    <h2 class="subtitle-1">
+                        Business Type
+                    </h2>
+                    <v-chip-group
+                        column
+                        multiple
+                        v-model="proposedFilter.businessTypes"
                     >
-                    Community Garden
-                    </v-chip>
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Farm
-                    </v-chip>
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Farm Training Program
-                    </v-chip>
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    General Food Access
-                    </v-chip>
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Market
-                    </v-chip>
-                </v-chip-group>
+                        <v-chip
+                            v-for="businessType in businessTypes"
+                            :key="businessType.name"
+                            filter
+                            outlined
+                            :value="businessType.name"
+                        >{{ businessType.name }}</v-chip>
+                    </v-chip-group>
                 </v-card-text>
 
                 <v-divider></v-divider>
@@ -86,14 +64,14 @@
                         <v-slider
                             step="0.25" 
                             color="black"
-                            v-model="slider"
+                            v-model="proposedFilter.distance"
                             class="align-center"
                             :max="15"
                             hide-details
                         >
                             <template v-slot:append>
                             <v-text-field
-                                v-model="slider"
+                                v-model="proposedFilter.distance"
                                 class="mt-0 pt-0"
                                 hide-details
                                 single-line
@@ -113,7 +91,7 @@
                     SNAP/EBT Benefits
                 </h2>
                 <v-switch
-                    v-model="switch1"
+                    v-model="proposedFilter.snap_ebt"
                     color="black"
                  ></v-switch>
                 </v-card-text>
@@ -122,100 +100,24 @@
 
                 <!-- Products Selection -->
                 <v-card-text>
-                <h2 class="subtitle-1">
-                    Products
-                </h2>
+                    <h2 class="subtitle-1">
+                        Products
+                    </h2>
 
-                <v-chip-group
-                    column
-                    multiple
-                    class="products"
-                >
-                    <v-chip
-                    filter
-                    outlined
+                    <v-chip-group
+                        column
+                        multiple
+                        v-model="proposedFilter.products"
+                        class="products"
                     >
-                    Beef
-                    </v-chip>
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Cheese
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Eggs
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Fish
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Fruit
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Grains
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Legumes
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Milk
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Nuts
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Pork
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Poultry
-                    </v-chip>    
-
-                    <v-chip
-                    filter
-                    outlined
-                    >
-                    Veggies
-                    </v-chip>    
-
-                </v-chip-group>
+                        <v-chip
+                            v-for="product in products"
+                            :key="product.id"
+                            filter
+                            outlined
+                            :value="product.id"
+                        >{{ product.name }}</v-chip>
+                    </v-chip-group>
                 </v-card-text>
 
                 <v-divider></v-divider>
@@ -227,21 +129,18 @@
                     align="center"
                     justify="center">
                         <v-btn 
-                        depressed
-                        dark
-                        class="mx-1"
-                        >
-                        Submit
-                        </v-btn>
+                            depressed
+                            dark
+                            class="mx-1"
+                            @click="setFilter()"
+                        >Submit</v-btn>
                         <v-btn 
-                        depressed
-                        outlined
-                        class="mx-1"
-                        value="map"
-                        to="/map"
-                        >
-                        Cancel
-                        </v-btn>
+                            depressed
+                            outlined
+                            class="mx-1"
+                            value="map"
+                            @click="clearFilter()"
+                        >Clear</v-btn>
                     </v-row>
                 </v-card-text>
             </v-card>
@@ -250,7 +149,37 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-    name: "Filter"
+    name: "WaypointFilter",
+    data: () => ({
+        proposedFilter: {
+            businessTypes: [],
+            distance: 0.0,
+            snap_ebt: false,
+            products: []
+        }
+    }),
+    computed: {
+        ...mapGetters({
+            products: 'productObjects',
+            businessTypes: 'businessTypeObjects',
+            filter: 'filterObject',
+            initialFilter: 'initialFilter'
+        })
+    },
+    methods: {
+        setFilter() {
+            this.$store.commit('SET_FILTER', this.proposedFilter)
+        },
+        clearFilter() {
+            this.$store.commit('RESET_FILTER')
+            this.proposedFilter = this.initialFilter
+        }
+    },
+    mounted() {
+        this.proposedFilter = this.filter
+    }
 }
 </script>

@@ -1,52 +1,7 @@
 <template>
     <div id="map-item-view">
-        <div id="">
-            <v-card
-                flat
-                class="py-6"
-            >
-                <v-card-text>
-                <v-row
-                    align="center"
-                    justify="space-around"
-                >
-                    <v-btn-toggle
-                    rounded
-                    >
-                    <v-btn 
-                    elevation="2"
-                    color="white"
-                    value="map list"
-                    to="/map-list">
-                        <v-icon color="black">mdi-format-list-bulleted</v-icon>
-                    </v-btn>
-                    <v-btn 
-                    elevation="2"
-                    color="white"
-                    value="filter"
-                    to="/filter"> 
-                        <v-icon color="black">mdi-filter-variant</v-icon>
-                    </v-btn>
-                    </v-btn-toggle>
+        <top-button-navigation></top-button-navigation>
 
-                    <v-btn-toggle
-                    rounded
-                    >
-                    <v-btn 
-                    elevation="2"
-                    color="white">
-                        <v-icon color="black">mdi-bookmark</v-icon>
-                    </v-btn>
-                    <v-btn 
-                    elevation="2"
-                    color="white">
-                        <v-icon color="black">mdi-cog</v-icon>
-                    </v-btn>
-                    </v-btn-toggle>
-                </v-row>
-                </v-card-text>
-            </v-card>
-        </div>
         <p>This is a view for specific map items.  I can later convert this to a component and hook it up to data.</p>
         <p>Figma screen 3/6</p>
 
@@ -89,11 +44,13 @@
 
 <script>
 import MapLocationOverlay from "@/components/MapLocationOverlay.vue";
+import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
 
 export default {
-    name: "Map Item",
+    name: "MapItem",
     components: {
-        MapLocationOverlay
+        MapLocationOverlay,
+        TopButtonNavigation
     },
     data: () => ({
         overlay: false
