@@ -95,9 +95,14 @@ export default {
             to: '/'
           },
           {
-            title: "Dashboard",
+            title: "Waypoints",
             icon: 'mdi-view-dashboard',
             to: '/dashboard'
+          },
+          {
+            title: "Products",
+            icon: 'mdi-format-list-bulleted',
+            to: '/products'
           }
         ]
       }
