@@ -97,4 +97,23 @@ a.v-btn--active.v-btn--active.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--rout
   width:100%
 }
 
+.v-application #mapContainer h3{
+  margin-bottom: 3px;
+  font-family: 'Kanit', sans-serif!important;
+}
+
+.v-application #mapContainer p{
+  margin-bottom: 0px;
+  font-family: 'Kanit', sans-serif!important;
+  line-height: 16px;
+}
+
+#mapContainer .mapboxgl-popup-close-button{
+  right: 7px;
+  font-size: 20px;
+}
+
+#mapContainer .mapboxgl-popup-content{
+    padding: 20px 30px;
+}
 </style>

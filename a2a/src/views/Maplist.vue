@@ -5,8 +5,7 @@
                 flat
                 class="py-6"
             >
-                <v-toolbar
-                flat>
+                <v-card-text>
                 <v-row
                     align="center"
                     justify="space-around"
@@ -45,7 +44,7 @@
                     </v-btn>
                     </v-btn-toggle>
                 </v-row>
-                </v-toolbar>
+                </v-card-text>
             </v-card>
 
             <v-list-item >
