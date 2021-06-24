@@ -25,7 +25,7 @@
                             elevation="2"
                             color="white"
                             value="map-list"
-                            to="/map-list">
+                            to="/map">
                                 <v-icon color="black">mdi-close</v-icon>
                             </v-btn>
                         </v-col>
