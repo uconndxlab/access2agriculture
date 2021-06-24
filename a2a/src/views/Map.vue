@@ -17,7 +17,7 @@
 <script>
 import mapboxgl from "mapbox-gl";
 import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 // import FullMapBackground from '@/components/FullMapBackground.vue'
 
 export default {
@@ -37,101 +37,11 @@ export default {
       waypoints: "waypointObjectsByFilter",
     }),
   },
+  methods: {
+    ...mapActions(['fetchWaypointsConditionally'])
+  },
   mounted() {
     mapboxgl.accessToken = this.accessToken;
-
-    let geojson = {
-      type: "FeatureCollection",
-      features: [],
-    };
-
-    geojson.features = this.waypoints.map((wp) => {
-      return {
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [wp.coordinates._long, wp.coordinates._lat],
-        },
-        properties: {
-          title: wp.name,
-          description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
-        },
-      };
-    });
-
-    console.log(geojson)
-
-    // var geojson = {
-    //   type: "FeatureCollection",
-    //   features: [
-    //     {
-    //       type: "Feature",
-    //       geometry: {
-    //         type: "Point",
-    //         coordinates: [-72.21541, 41.71403],
-    //       },
-    //       properties: {
-    //         title: "Covenant Soup Kitchen",
-    //         description: "220 Valley Street Willimantic, Connecticut 06226",
-    //       },
-    //     },
-    //     {
-    //       type: "Feature",
-    //       geometry: {
-    //         type: "Point",
-    //         coordinates: [-72.207748, 41.71328],
-    //       },
-    //       properties: {
-    //         title: "Holy Family Home & Shelter",
-    //         description: "88 Jackson Street Willimantic, CT",
-    //       },
-    //     },
-    //     {
-    //       type: "Feature",
-    //       geometry: {
-    //         type: "Point",
-    //         coordinates: [-72.2287, 41.71531],
-    //       },
-    //       properties: {
-    //         title: "Access Agency",
-    //         description: "1315 Main St #2, Willimantic, CT 06226",
-    //       },
-    //     },
-    //     {
-    //       type: "Feature",
-    //       geometry: {
-    //         type: "Point",
-    //         coordinates: [-72.20129, 41.7251],
-    //       },
-    //       properties: {
-    //         title: "Lauter Park Community Gardens",
-    //         description: "557R Jackson St, Willimantic, CT 06226",
-    //       },
-    //     },
-    //     {
-    //       type: "Feature",
-    //       geometry: {
-    //         type: "Point",
-    //         coordinates: [-72.22625, 41.73392],
-    //       },
-    //       properties: {
-    //         title: "Valley Farms LLC",
-    //         description: "500 Mansfield Ave, Mansfield Center, CT 06250",
-    //       },
-    //     },
-    //     {
-    //       type: "Feature",
-    //       geometry: {
-    //         type: "Point",
-    //         coordinates: [-72.24988, 41.8119],
-    //       },
-    //       properties: {
-    //         title: "UCONN New Farmers Program",
-    //         description: "1376 Storrs Rd. Unit 4066 Storrs, CT 06269",
-    //       },
-    //     },
-    //   ],
-    // };
 
     var map = new mapboxgl.Map({
       container: "mapContainer",
@@ -143,28 +53,55 @@ export default {
     const nav = new mapboxgl.NavigationControl();
     map.addControl(nav, "top-right");
 
-    // add markers to map
-    geojson.features.forEach(function (marker) {
-      console.log('adding marker', marker)
-      // create a HTML element for each feature
-      var el = document.createElement("div");
-      el.className = "marker";
+    let geojson = {
+      type: "FeatureCollection",
+      features: [],
+    };
 
-      // make a marker for each feature and add it to the map
-      new mapboxgl.Marker(el)
-        .setLngLat(marker.geometry.coordinates)
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 }) // add popups
-            .setHTML(
-              "<h3>" +
-                marker.properties.title +
-                "</h3><p>" +
-                marker.properties.description +
-                "</p>"
-            )
-        )
-        .addTo(map);
-    });
+    /*
+    * Since we depend on the location's data, we need to wait until we have that data, especially on first page load.
+    * So, we have a custom action here that will only fetch data if it hasn't been loaded already.
+    */
+    this.fetchWaypointsConditionally().then(() => {
+      geojson.features = this.waypoints.map((wp) => {
+        return {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [wp.coordinates._long, wp.coordinates._lat],
+          },
+          properties: {
+            title: wp.name,
+            description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
+          },
+        };
+      });
+
+      // add markers to map
+      geojson.features.forEach(function (marker) {
+        console.log('adding marker', marker)
+        // create a HTML element for each feature
+        var el = document.createElement("div");
+        el.className = "marker";
+
+        // make a marker for each feature and add it to the map
+        new mapboxgl.Marker(el)
+          .setLngLat(marker.geometry.coordinates)
+          .setPopup(
+            new mapboxgl.Popup({ offset: 25 }) // add popups
+              .setHTML(
+                "<h3>" +
+                  marker.properties.title +
+                  "</h3><p>" +
+                  marker.properties.description +
+                  "</p>"
+              )
+          )
+          .addTo(map);
+      });
+    })
+
+    
   },
 };
 </script>

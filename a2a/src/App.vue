@@ -19,10 +19,13 @@ export default {
   methods: {
     ...mapActions(['fetchProducts', 'fetchWaypoints'])
   },
-  mounted() {
+  created() {
     this.fetchProducts()
     this.fetchWaypoints()
-  }
+  },
+  // mounted() {
+    
+  // }
 }
 </script>
 
