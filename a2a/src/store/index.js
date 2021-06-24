@@ -107,6 +107,14 @@ const store = new Vuex.Store({
       })
 
       commit('SET_WAYPOINTS', waypoints_extracted)
+    },
+    async fetchWaypointsConditionally({ dispatch, state }) {
+      if ( state.waypoints.length > 0 ) {
+        return true
+      } else {
+        await dispatch('fetchWaypoints')
+        return true
+      }
     }
   }
 })
