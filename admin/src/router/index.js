@@ -23,6 +23,14 @@ const routes = [
     }
   },
   {
+    path: '/products',
+    name: 'Products',
+    component: () => import(/* webpackChunkName: "products" */ '../views/Products.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')

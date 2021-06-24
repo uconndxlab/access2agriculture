@@ -1,85 +1,22 @@
 <template>
     <div id="map-item-view">
-        <div id="">
-            <v-card
-                flat
-                class="py-6"
-            >
-                <v-card-text>
-                <v-row
-                    align="center"
-                    justify="space-around"
-                >
-                    <v-btn-toggle
-                    rounded
-                    >
-                    <v-btn 
-                    elevation="2"
-                    color="white"
-                    value="map list"
-                    to="/map-list">
-                        <v-icon color="black">mdi-format-list-bulleted</v-icon>
-                    </v-btn>
-                    <v-btn 
-                    elevation="2"
-                    color="white"
-                    value="filter"
-                    to="/filter"> 
-                        <v-icon color="black">mdi-filter-variant</v-icon>
-                    </v-btn>
-                    </v-btn-toggle>
+        <top-button-navigation></top-button-navigation>
 
-                    <v-btn-toggle
-                    rounded
-                    >
-                    <v-btn 
-                    elevation="2"
-                    color="white">
-                        <v-icon color="black">mdi-bookmark</v-icon>
-                    </v-btn>
-                    <v-btn 
-                    elevation="2"
-                    color="white">
-                        <v-icon color="black">mdi-cog</v-icon>
-                    </v-btn>
-                    </v-btn-toggle>
-                </v-row>
-                </v-card-text>
-            </v-card>
-        </div>
-        <p>This is a view for specific map items.  I can later convert this to a component and hook it up to data.</p>
-        <p>Figma screen 3/6</p>
-
-        <v-btn
-            @click="overlay = !overlay"
-        >Open Map Location Overlay</v-btn>
-
-        <map-location-overlay :overlay="overlay" @closeOverlay="closeCurrentOverlay" />
+        <full-map-background
+            :lat="lat"
+            :long="long"
+        ></full-map-background>
 
         <v-card
         class="mx-auto map-item"
         max-width="100%"
         outlined
         >
-        <v-list-item >
-        <v-list-item-avatar
-            tile
-            size="80"
-            color="grey"
-        ></v-list-item-avatar>
-        <v-list-item-content>
-            <v-list-item-title class="subtitle-1">Map Item Name</v-list-item-title>
-            <v-list-item-subtitle>Address</v-list-item-subtitle>
-            <v-list-item-subtitle>Hours of Operation</v-list-item-subtitle>
-        </v-list-item-content>
-
-        <v-card-actions>
-            <v-btn icon>
-                <v-icon color="black">mdi-bookmark-outline</v-icon>
-            </v-btn>
-        </v-card-actions>
-        </v-list-item>
-
+            <map-list-item
+                v-if="$store.getters.waypointById($route.params.id)"
+                :waypoint="$store.getters.waypointById($route.params.id)"
+                link="false"
+            ></map-list-item>
         </v-card>
 
     </div>
@@ -88,16 +25,38 @@
 </template>
 
 <script>
-import MapLocationOverlay from "@/components/MapLocationOverlay.vue";
+import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
+import MapListItem from '@/components/MapListItem.vue'
+import FullMapBackground from '@/components/FullMapBackground.vue'
+import { mapState } from 'vuex'
 
 export default {
-    name: "Map Item",
+    name: "MapItem",
     components: {
-        MapLocationOverlay
+        TopButtonNavigation,
+        MapListItem,
+        FullMapBackground
     },
     data: () => ({
-        overlay: false
+        overlay: false,
     }),
+    computed: {
+        ...mapState(['waypoints']),
+        lat() {
+            let wp = this.$store.getters.waypointById(this.$route.params.id)
+            if ( wp && wp.coordinates ) {
+                return wp.coordinates._lat
+            }
+            return undefined
+        },
+        long() {
+            let wp = this.$store.getters.waypointById(this.$route.params.id)
+            if ( wp && wp.coordinates ) {
+                return wp.coordinates._long
+            }
+            return undefined
+        }
+    },
     methods: {
         closeCurrentOverlay() {
             this.overlay = false
@@ -106,10 +65,28 @@ export default {
 }
 </script>
 
-
+<style>
+.v-main__wrap {
+    z-index: 0;
+}
+</style>
 <style lang ="css" scoped>
 .v-card.map-item{
     position: absolute;
     bottom: 0;
+}
+
+div.full-map-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+}
+
+div.full-map-bg iframe {
+    width: 100%;
+    height: 100%;
 }
 </style>

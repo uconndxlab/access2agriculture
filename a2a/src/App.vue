@@ -8,12 +8,20 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import BottomNavigation from '@/components/BottomNavigation.vue'
 
 export default {
   name: 'App',
   components: {
     BottomNavigation
+  },
+  methods: {
+    ...mapActions(['fetchProducts', 'fetchWaypoints'])
+  },
+  mounted() {
+    this.fetchProducts()
+    this.fetchWaypoints()
   }
 }
 </script>
