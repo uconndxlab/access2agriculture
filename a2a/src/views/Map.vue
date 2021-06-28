@@ -46,8 +46,8 @@ export default {
     var map = new mapboxgl.Map({
       container: "mapContainer",
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [-72.21, 41.71],
-      zoom: 12,
+      center: [-72.253983, 41.807739],
+      zoom: 10,
     });
 
     const nav = new mapboxgl.NavigationControl();

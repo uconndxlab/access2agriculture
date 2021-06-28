@@ -17,11 +17,12 @@ export default {
     BottomNavigation
   },
   methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints'])
+    ...mapActions(['fetchProducts', 'fetchWaypoints', 'fetchAssistanceOptions'])
   },
   created() {
     this.fetchProducts()
     this.fetchWaypoints()
+    this.fetchAssistanceOptions()
   },
   // mounted() {
     
