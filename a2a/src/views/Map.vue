@@ -73,6 +73,7 @@ export default {
           properties: {
             title: wp.name,
             description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
+            id: wp.id
           },
         };
       });
@@ -89,13 +90,10 @@ export default {
           .setLngLat(marker.geometry.coordinates)
           .setPopup(
             new mapboxgl.Popup({ offset: 25 }) // add popups
-              .setHTML(
-                "<h3>" +
-                  marker.properties.title +
-                  "</h3><p>" +
-                  marker.properties.description +
-                  "</p>"
-              )
+              .setHTML(`<h3>${marker.properties.title}</h3>
+              <p>${marker.properties.description}</p>
+              <p><a href="/#/map-item/${marker.properties.id}">Get Info</a></p>`
+            )
           )
           .addTo(map);
       });
