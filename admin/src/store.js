@@ -11,6 +11,7 @@ const initialState = {
     user: {},
     products: [],
     waypoints: [],
+    assistance_options: [],
     business_types: [
         'Community Garden',
         'Farm',
@@ -34,6 +35,9 @@ const store = new Vuex.Store({
         },
         setWaypoints(state, val) {
             state.waypoints = val
+        },
+        setAssistanceOptions(state, val) {
+            state.assistance_options = val
         },
         setUpdatedWaypoint(state, val) {
             let index = state.waypoints.findIndex( wp => {
@@ -74,6 +78,9 @@ const store = new Vuex.Store({
         },
         productObjects(state) {
             return state.products
+        },
+        assistanceOptionsObjects(state) {
+            return state.assistance_options
         }
     },
 
@@ -107,6 +114,16 @@ const store = new Vuex.Store({
                     commit('setUser', {})
                 }
             })
+        },
+        async fetchAssistanceOptions({ commit }) {
+            const assist_options = await fb.assistanceOptionsCollection.get()
+            const assist_options_extracted = assist_options.docs.map( option => {
+                let option_obj = option.data()
+                option_obj.id = option.id
+                return option_obj
+            })
+
+            commit('setAssistanceOptions', assist_options_extracted)
         },
         async fetchProducts({ commit }) {
             const products = await fb.productsCollection.get()

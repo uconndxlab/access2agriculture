@@ -212,6 +212,19 @@
                         ></v-select>
                       </v-col>
                     </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-select
+                          :items="assistance_options"
+                          v-model="adding_waypoint.assistance_options"
+                          item-value="id"
+                          item-text="name"
+                          label="Assistance Options"
+                          multiple
+                          chips
+                        ></v-select>
+                      </v-col>
+                    </v-row>
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
@@ -397,6 +410,19 @@
                         ></v-select>
                       </v-col>
                     </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-select
+                          :items="assistance_options"
+                          v-model="editing_waypoint.assistance_options"
+                          item-value="id"
+                          item-text="name"
+                          label="Assistance Options"
+                          multiple
+                          chips
+                        ></v-select>
+                      </v-col>
+                    </v-row>
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
@@ -556,6 +582,22 @@
                         :key="product.id"
                         class="mr-2"
                       >{{ product.name }}</v-chip>
+                      <p
+                        v-if="!viewed_waypoint_products"
+                      >No products.</p>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <div class="text-subtitle-1 font-weight-bold">Assistance Options</div>
+                      <v-chip
+                        v-for="opt in viewed_waypoint_assistance_options"
+                        :key="opt.id"
+                        class="mr-2"
+                      >{{ opt.name }}</v-chip>
+                      <p
+                        v-if="!viewed_waypoint_assistance_options"
+                      >No options.</p>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -719,7 +761,8 @@ export default {
     ...mapGetters({
       // This is a getter because deep object properties can be updated and need to be handled with Vue.set for reactivity
       products: 'productObjects',
-      waypoints: 'waypointObjects'
+      waypoints: 'waypointObjects',
+      assistance_options: 'assistanceOptionsObjects'
     }),
     viewed_waypoint_google_maps_link() {
       if ( this.viewed_waypoint.coordinates && this.viewed_waypoint.coordinates._lat && this.viewed_waypoint.coordinates._long ) {
@@ -738,10 +781,22 @@ export default {
         })
       }
       return []
+    },
+    viewed_waypoint_assistance_options() {
+      if ( this.viewed_waypoint.assistance_options && this.assistance_options ) {
+        return this.assistance_options.filter( opt => {
+          if ( this.viewed_waypoint.assistance_options.includes( opt.id ) ) {
+            return true
+          } else {
+            return false
+          }
+        })
+      }
+      return []
     }
   },
   methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint']),
+    ...mapActions(['fetchProducts', 'fetchWaypoints', 'fetchAssistanceOptions', 'editWaypoint', 'addWaypoint']),
     viewItem(item) {
       this.closeWaypointDialogs()
       this.viewed_waypoint = item
@@ -834,6 +889,7 @@ export default {
   mounted() {
     this.fetchProducts()
     this.fetchWaypoints()
+    this.fetchAssistanceOptions()
     this.clearAddWaypointObject()
   }
 }
