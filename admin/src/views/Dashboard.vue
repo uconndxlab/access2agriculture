@@ -162,11 +162,23 @@
                       <v-col
                         cols="12"
                         sm="6"
-                        md="4"
+                        md="6"
                       >
                         <v-text-field
                           v-model="adding_waypoint.phone"
                           label="Phone"
+                          :rules="add_waypoint_form_rules.basic_input_under_1000"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="adding_waypoint.hours"
+                          label="Hours"
+                          placeholder="M-F: 8a-6p, Sat-Sun: 10a-4p"
                           :rules="add_waypoint_form_rules.basic_input_under_1000"
                         ></v-text-field>
                       </v-col>
@@ -370,6 +382,18 @@
                       </v-col>
                       <v-col
                         cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="editing_waypoint.hours"
+                          label="Hours"
+                          placeholder="M-F: 8a-6p, Sat-Sun: 10a-4p"
+                          :rules="add_waypoint_form_rules.basic_input_under_1000"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
                       >
                         <v-text-field
                           v-model="editing_waypoint.website"
@@ -545,6 +569,23 @@
                     </v-col>
                     <v-col
                       cols="12"
+                      sm="6"
+                      md="6"
+                    >
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >Hours</div>
+                      <div
+                        class="text-body-2"
+                        v-if="viewed_waypoint.hours"
+                      >{{viewed_waypoint.hours}}</div>
+                      <div
+                        class="text-body-2"
+                        v-if="!viewed_waypoint.hours"
+                      >No hours listed.</div>
+                    </v-col>
+                    <v-col
+                      cols="12"
                     >
                       <div
                         class="text-subtitle-1 font-weight-bold"
@@ -583,7 +624,7 @@
                         class="mr-2"
                       >{{ product.name }}</v-chip>
                       <p
-                        v-if="!viewed_waypoint_products"
+                        v-if="viewed_waypoint_products.length === 0"
                       >No products.</p>
                     </v-col>
                   </v-row>
@@ -596,7 +637,7 @@
                         class="mr-2"
                       >{{ opt.name }}</v-chip>
                       <p
-                        v-if="!viewed_waypoint_assistance_options"
+                        v-if="viewed_waypoint_assistance_options.length === 0"
                       >No options.</p>
                     </v-col>
                   </v-row>
@@ -629,6 +670,7 @@
                     left
                   >mdi-open-in-new</v-icon>
                 Visit Website</v-chip>
+                <div v-else>No website.</div>
               </template>
               <template
                 v-slot:[`item.actions`]="{ item }"

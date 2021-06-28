@@ -10,7 +10,7 @@
         <v-list-item-content>
             <v-list-item-title class="subtitle-1">{{ waypoint.name }}</v-list-item-title>
             <v-list-item-subtitle>{{ address }}</v-list-item-subtitle>
-            <v-list-item-subtitle>Hours of Operation</v-list-item-subtitle>
+            <v-list-item-subtitle v-if="waypoint.hours">{{ waypoint.hours }}</v-list-item-subtitle>
         </v-list-item-content>
 
         <v-card-actions>
