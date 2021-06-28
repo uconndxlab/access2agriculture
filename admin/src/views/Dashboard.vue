@@ -774,7 +774,7 @@ export default {
       if ( valid ) {
         this.addWaypoint(item)
           .then(() => {
-            this.adding_waypoint = this.default_adding_waypoint_object
+            this.clearAddWaypointObject()
             this.showSuccessMessage('Waypoint Created!')
             this.closeWaypointDialogs()
           }).catch(err => {
@@ -826,12 +826,15 @@ export default {
       if ( this.$refs && this.$refs.edit_waypoint_form ) {
         this.$refs.edit_waypoint_form.resetValidation()
       }
+    },
+    clearAddWaypointObject() {
+      this.adding_waypoint = { ...this.default_adding_waypoint_object, coordinates: { ...this.default_adding_waypoint_object.coordinates } }
     }
   },
   mounted() {
     this.fetchProducts()
     this.fetchWaypoints()
-    this.adding_waypoint = this.default_adding_waypoint_object
+    this.clearAddWaypointObject()
   }
 }
 </script>
