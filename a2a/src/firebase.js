@@ -22,11 +22,13 @@ const firestore = firebase.firestore
 // Collection helpers.
 const productsCollection = db.collection('products')
 const waypointsCollection = db.collection('waypoints')
+const assistanceOptionsCollection = db.collection('assistance_options')
 
 export {
     db,
     auth,
     firestore,
     productsCollection,
-    waypointsCollection
+    waypointsCollection,
+    assistanceOptionsCollection
 }

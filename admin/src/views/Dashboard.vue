@@ -162,11 +162,23 @@
                       <v-col
                         cols="12"
                         sm="6"
-                        md="4"
+                        md="6"
                       >
                         <v-text-field
                           v-model="adding_waypoint.phone"
                           label="Phone"
+                          :rules="add_waypoint_form_rules.basic_input_under_1000"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="adding_waypoint.hours"
+                          label="Hours"
+                          placeholder="M-F: 8a-6p, Sat-Sun: 10a-4p"
                           :rules="add_waypoint_form_rules.basic_input_under_1000"
                         ></v-text-field>
                       </v-col>
@@ -207,6 +219,19 @@
                           item-value="id"
                           item-text="name"
                           label="Products"
+                          multiple
+                          chips
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-select
+                          :items="assistance_options"
+                          v-model="adding_waypoint.assistance_options"
+                          item-value="id"
+                          item-text="name"
+                          label="Assistance Options"
                           multiple
                           chips
                         ></v-select>
@@ -357,6 +382,18 @@
                       </v-col>
                       <v-col
                         cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-text-field
+                          v-model="editing_waypoint.hours"
+                          label="Hours"
+                          placeholder="M-F: 8a-6p, Sat-Sun: 10a-4p"
+                          :rules="add_waypoint_form_rules.basic_input_under_1000"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
                       >
                         <v-text-field
                           v-model="editing_waypoint.website"
@@ -392,6 +429,19 @@
                           item-value="id"
                           item-text="name"
                           label="Products"
+                          multiple
+                          chips
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-select
+                          :items="assistance_options"
+                          v-model="editing_waypoint.assistance_options"
+                          item-value="id"
+                          item-text="name"
+                          label="Assistance Options"
                           multiple
                           chips
                         ></v-select>
@@ -519,6 +569,23 @@
                     </v-col>
                     <v-col
                       cols="12"
+                      sm="6"
+                      md="6"
+                    >
+                      <div
+                        class="text-subtitle-1 font-weight-bold"
+                      >Hours</div>
+                      <div
+                        class="text-body-2"
+                        v-if="viewed_waypoint.hours"
+                      >{{viewed_waypoint.hours}}</div>
+                      <div
+                        class="text-body-2"
+                        v-if="!viewed_waypoint.hours"
+                      >No hours listed.</div>
+                    </v-col>
+                    <v-col
+                      cols="12"
                     >
                       <div
                         class="text-subtitle-1 font-weight-bold"
@@ -556,6 +623,22 @@
                         :key="product.id"
                         class="mr-2"
                       >{{ product.name }}</v-chip>
+                      <p
+                        v-if="viewed_waypoint_products.length === 0"
+                      >No products.</p>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <div class="text-subtitle-1 font-weight-bold">Assistance Options</div>
+                      <v-chip
+                        v-for="opt in viewed_waypoint_assistance_options"
+                        :key="opt.id"
+                        class="mr-2"
+                      >{{ opt.name }}</v-chip>
+                      <p
+                        v-if="viewed_waypoint_assistance_options.length === 0"
+                      >No options.</p>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -587,6 +670,7 @@
                     left
                   >mdi-open-in-new</v-icon>
                 Visit Website</v-chip>
+                <div v-else>No website.</div>
               </template>
               <template
                 v-slot:[`item.actions`]="{ item }"
@@ -719,7 +803,8 @@ export default {
     ...mapGetters({
       // This is a getter because deep object properties can be updated and need to be handled with Vue.set for reactivity
       products: 'productObjects',
-      waypoints: 'waypointObjects'
+      waypoints: 'waypointObjects',
+      assistance_options: 'assistanceOptionsObjects'
     }),
     viewed_waypoint_google_maps_link() {
       if ( this.viewed_waypoint.coordinates && this.viewed_waypoint.coordinates._lat && this.viewed_waypoint.coordinates._long ) {
@@ -738,10 +823,22 @@ export default {
         })
       }
       return []
+    },
+    viewed_waypoint_assistance_options() {
+      if ( this.viewed_waypoint.assistance_options && this.assistance_options ) {
+        return this.assistance_options.filter( opt => {
+          if ( this.viewed_waypoint.assistance_options.includes( opt.id ) ) {
+            return true
+          } else {
+            return false
+          }
+        })
+      }
+      return []
     }
   },
   methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints', 'editWaypoint', 'addWaypoint']),
+    ...mapActions(['fetchProducts', 'fetchWaypoints', 'fetchAssistanceOptions', 'editWaypoint', 'addWaypoint']),
     viewItem(item) {
       this.closeWaypointDialogs()
       this.viewed_waypoint = item
@@ -774,7 +871,7 @@ export default {
       if ( valid ) {
         this.addWaypoint(item)
           .then(() => {
-            this.adding_waypoint = this.default_adding_waypoint_object
+            this.clearAddWaypointObject()
             this.showSuccessMessage('Waypoint Created!')
             this.closeWaypointDialogs()
           }).catch(err => {
@@ -826,12 +923,16 @@ export default {
       if ( this.$refs && this.$refs.edit_waypoint_form ) {
         this.$refs.edit_waypoint_form.resetValidation()
       }
+    },
+    clearAddWaypointObject() {
+      this.adding_waypoint = { ...this.default_adding_waypoint_object, coordinates: { ...this.default_adding_waypoint_object.coordinates } }
     }
   },
   mounted() {
     this.fetchProducts()
     this.fetchWaypoints()
-    this.adding_waypoint = this.default_adding_waypoint_object
+    this.fetchAssistanceOptions()
+    this.clearAddWaypointObject()
   }
 }
 </script>

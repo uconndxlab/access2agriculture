@@ -11,6 +11,7 @@ const initialState = () => {
   return {
     products: [],
     waypoints: [],
+    assistanceOptions: [],
     businessTypes: [
       { name: 'Community Garden' },
       { name: 'Farm' },
@@ -21,7 +22,7 @@ const initialState = () => {
     filter: {
       businessTypes: [],
       distance: 0.0,
-      snap_ebt: false,
+      assistanceOptions: [],
       products: []
     }
   }
@@ -35,6 +36,9 @@ const store = new Vuex.Store({
     },
     SET_PRODUCTS(state, val) {
       state.products = val
+    },
+    SET_ASSISTANCE_OPTIONS(state, val) {
+      state.assistanceOptions = val
     },
     SET_FILTER(state, val) {
       state.filter = val
@@ -57,6 +61,9 @@ const store = new Vuex.Store({
     productObjects(state) {
       return state.products
     },
+    assistanceOptionsObjects(state) {
+      return state.assistanceOptions
+    },
     businessTypeObjects(state) {
       return state.businessTypes
     },
@@ -70,6 +77,7 @@ const store = new Vuex.Store({
       return state.waypoints.filter(x => {
         let has_products = true
         let has_business_type = true
+        let has_assistance_options = true
 
         if ( state.filter.products && state.filter.products.length > 0 ) {
           has_products = state.filter.products.every(y => {
@@ -83,7 +91,17 @@ const store = new Vuex.Store({
           })
         }
 
-        return has_products && has_business_type
+        if ( state.filter.assistanceOptions && state.filter.assistanceOptions.length > 0 ) {
+          if ( !x.assistance_options ) {
+            has_assistance_options = false
+          } else {
+            has_assistance_options = state.filter.assistanceOptions.some(y => {
+              return x.assistance_options.includes(y)
+            })
+          }
+        }
+
+        return has_products && has_business_type && has_assistance_options
       })
     }
   },
@@ -97,6 +115,16 @@ const store = new Vuex.Store({
       })
 
       commit('SET_PRODUCTS', products_extracted)
+    },
+    async fetchAssistanceOptions({ commit }) {
+      const assistance_options = await fb.assistanceOptionsCollection.get()
+      const assistance_options_extracted = assistance_options.docs.map( opt => {
+        let option_obj = opt.data()
+        option_obj.id = opt.id
+        return option_obj
+      })
+
+      commit('SET_ASSISTANCE_OPTIONS', assistance_options_extracted)
     },
     async fetchWaypoints({ commit }) {
       const waypoints = await fb.waypointsCollection.get()

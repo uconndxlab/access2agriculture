@@ -46,8 +46,8 @@ export default {
     var map = new mapboxgl.Map({
       container: "mapContainer",
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [-72.21, 41.71],
-      zoom: 12,
+      center: [-72.253983, 41.807739],
+      zoom: 10,
     });
 
     const nav = new mapboxgl.NavigationControl();
@@ -73,6 +73,7 @@ export default {
           properties: {
             title: wp.name,
             description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
+            id: wp.id
           },
         };
       });
@@ -89,13 +90,10 @@ export default {
           .setLngLat(marker.geometry.coordinates)
           .setPopup(
             new mapboxgl.Popup({ offset: 25 }) // add popups
-              .setHTML(
-                "<h3>" +
-                  marker.properties.title +
-                  "</h3><p>" +
-                  marker.properties.description +
-                  "</p>"
-              )
+              .setHTML(`<h3>${marker.properties.title}</h3>
+              <p>${marker.properties.description}</p>
+              <p><a href="/#/map-item/${marker.properties.id}">Get Info</a></p>`
+            )
           )
           .addTo(map);
       });

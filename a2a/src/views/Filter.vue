@@ -87,13 +87,22 @@
 
                 <!-- SNAP/EBT Toggle -->
                 <v-card-text>
-                <h2 class="subtitle-1">
-                    SNAP/EBT Benefits
-                </h2>
-                <v-switch
-                    v-model="proposedFilter.snap_ebt"
-                    color="black"
-                 ></v-switch>
+                    <h2 class="subtitle-1">
+                        Assistance Options
+                    </h2>
+                    <v-chip-group
+                        column
+                        multiple
+                        v-model="proposedFilter.assistanceOptions"
+                    >
+                        <v-chip
+                            v-for="opt in assistanceOptions"
+                            :key="opt.id"
+                            filter
+                            outlined
+                            :value="opt.id"
+                        >{{ opt.name }}</v-chip>
+                    </v-chip-group>
                 </v-card-text>
 
                 <v-divider></v-divider>
@@ -157,7 +166,7 @@ export default {
         proposedFilter: {
             businessTypes: [],
             distance: 0.0,
-            snap_ebt: false,
+            assistanceOptions: [],
             products: []
         }
     }),
@@ -165,6 +174,7 @@ export default {
         ...mapGetters({
             products: 'productObjects',
             businessTypes: 'businessTypeObjects',
+            assistanceOptions: 'assistanceOptionsObjects',
             filter: 'filterObject',
             initialFilter: 'initialFilter'
         })
