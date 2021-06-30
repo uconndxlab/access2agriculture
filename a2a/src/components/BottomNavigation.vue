@@ -3,7 +3,7 @@
     <v-btn
         color="white"
         value="map"
-        to="/map">
+        to="/">
       <span>Map</span>
 
       <v-icon>mdi-map</v-icon>

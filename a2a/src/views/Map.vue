@@ -50,9 +50,6 @@ export default {
       zoom: 10,
     });
 
-    const nav = new mapboxgl.NavigationControl();
-    map.addControl(nav, "top-right");
-
     let geojson = {
       type: "FeatureCollection",
       features: [],
@@ -84,6 +81,7 @@ export default {
         // create a HTML element for each feature
         var el = document.createElement("div");
         el.className = "marker";
+
 
         // make a marker for each feature and add it to the map
         new mapboxgl.Marker(el)
@@ -122,16 +120,12 @@ export default {
   z-index: -1;
 }
 
-.marker {
-  background-image: url("/assets/mapbox-icon.png");
-  background-size: cover;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  cursor: pointer;
-  background-color: #fd4c4c;
-  border-color: black;
-  border: 1px solid;
+.marker::before{
+    font-family: "Material Icons";
+    content: "\e8b4";
+    color: #333;
+    font-size: 40px;
+    cursor: pointer;
 }
 
 .mapboxgl-popup {
