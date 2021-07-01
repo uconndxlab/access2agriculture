@@ -58,7 +58,7 @@ export default {
 </style>
 
 <style lang="css">
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap');
+
 #app{
   font-family: 'Kanit', sans-serif;
 }
@@ -101,8 +101,12 @@ a.v-btn--active.v-btn--active.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--rout
   background-color:white!important;
 }
 
-a.v-btn--active.v-btn--active.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--router.theme--light.v-size--default.white .v-btn__content{
+.v-item-group.v-bottom-navigation--fixed a.v-btn--active.v-btn--active.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--router.theme--light.v-size--default.white .v-btn__content{
   border-top: 2px solid black;
+}
+
+.theme--light.v-bottom-navigation .v-btn:not(.v-btn--active){
+  color: #9E9E9E!important;
 }
 
 .v-btn__content{
@@ -112,12 +116,14 @@ a.v-btn--active.v-btn--active.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--rout
 .v-application #mapContainer h3{
   margin-bottom: 3px;
   font-family: 'Kanit', sans-serif!important;
+  text-align: left;
 }
 
 .v-application #mapContainer p{
   margin-bottom: 0px;
   font-family: 'Kanit', sans-serif!important;
   line-height: 16px;
+  text-align: left;
 }
 
 #mapContainer .mapboxgl-popup-close-button{
@@ -126,6 +132,6 @@ a.v-btn--active.v-btn--active.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--rout
 }
 
 #mapContainer .mapboxgl-popup-content{
-    padding: 20px 30px;
+    padding: 20px 25px;
 }
 </style>
