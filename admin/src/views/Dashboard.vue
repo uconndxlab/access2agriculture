@@ -13,6 +13,10 @@
         </v-col>
       </v-row>
 
+      <waypoint-image-uploader 
+        ref="waypoint_image_uploader"
+      />
+
       <v-row
         justify="center"
       >
@@ -448,6 +452,22 @@
                       </v-col>
                     </v-row>
                   </v-card-text>
+                  <v-card-title>Image / Presentation</v-card-title>
+                  <v-card-text>
+                    <v-row>
+                      <v-col>
+                        <v-img
+                          :src="editing_waypoint.image"
+                          v-if="editing_waypoint.image"
+                          max-width="300"
+                          class="mb-3"
+                        ></v-img>
+                        <v-btn
+                          @click="openWaypointImageUploader(editing_waypoint)"
+                        >Edit Image</v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
                     <v-btn
@@ -643,6 +663,20 @@
                   </v-row>
                 </v-card-text>
                 <v-divider></v-divider>
+                <v-card-title>Photo / Presentation</v-card-title>
+                <v-card-text>
+                  <v-row>
+                    <v-col>
+                      <v-img
+                        :src="viewed_waypoint.image"
+                        max-width="300"
+                        v-if="viewed_waypoint.image"
+                      ></v-img>
+                      <p v-else>No image.</p>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-divider></v-divider>
                 <v-card-actions>
                   <v-btn
                     text
@@ -683,6 +717,10 @@
                   class="mr-2"
                   @click="editItem(item)"
                 >mdi-pencil</v-icon>
+                <v-icon
+                  class="mr-2"
+                  @click="openWaypointImageUploader(item)"
+                >mdi-image-edit</v-icon>
               </template>
             </v-data-table>
           </v-card>
@@ -717,8 +755,12 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
+import WaypointImageUploader from '@/components/WaypointImageUploader.vue'
 
 export default {
+  components: {
+    WaypointImageUploader
+  },
   data: () => ({
     view_waypoint_dialog: false,
     edit_waypoint_dialog: false,
@@ -839,6 +881,10 @@ export default {
   },
   methods: {
     ...mapActions(['fetchProducts', 'fetchWaypoints', 'fetchAssistanceOptions', 'editWaypoint', 'addWaypoint']),
+    openWaypointImageUploader(waypoint) {
+      this.closeWaypointDialogs()
+      this.$refs.waypoint_image_uploader.openWaypoint(waypoint)
+    },
     viewItem(item) {
       this.closeWaypointDialogs()
       this.viewed_waypoint = item

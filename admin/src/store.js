@@ -253,6 +253,33 @@ const store = new Vuex.Store({
 
                 return waypoint_create
             }
+        },
+        async uploadWaypointImage({ commit }, { waypoint, imageURL }) {
+            console.log('Upload Waypoint Image', waypoint, imageURL)
+
+            // const waypoint_id = waypoint.id
+            // delete waypoint.id
+            const waypoint_in_collection_ref = fb.waypointsCollection.doc(waypoint.id)
+            const waypoint_in_collection = await waypoint_in_collection_ref.get()
+
+            if ( waypoint_in_collection.exists ) {
+                await waypoint_in_collection_ref.set({
+                    image: imageURL
+                }, { merge: true })
+                const final_wp_object = {
+                    ...waypoint,
+                    image: imageURL
+                }
+                commit('setUpdatedWaypoint', final_wp_object)
+                return true
+            }
+
+            return false
+        },
+        async waypointExists({ commit }, waypoint) {
+            const waypoint_in_collection_ref = fb.waypointsCollection.doc(waypoint.id)
+            const waypoint_in_collection = await waypoint_in_collection_ref.get()
+            return waypoint_in_collection.exists
         }
     }
 })
