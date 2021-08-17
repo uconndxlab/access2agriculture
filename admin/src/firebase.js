@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/storage'
 
 // Set up your firebase configuration.
 // Project Settings > General > Your Apps
@@ -18,6 +19,7 @@ firebase.initializeApp(firebaseConfig)
 const db = firebase.firestore()
 const auth = firebase.auth()
 const firestore = firebase.firestore
+const storage = firebase.storage()
 
 // Collection helpers.
 const productsCollection = db.collection('products')
@@ -29,6 +31,7 @@ export {
     db,
     auth,
     firestore,
+    storage,
     productsCollection,
     waypointsCollection,
     usersCollection,
