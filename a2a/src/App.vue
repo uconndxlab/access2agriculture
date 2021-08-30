@@ -3,19 +3,14 @@
     <v-main>
       <router-view/>
     </v-main>
-    <bottom-navigation/>
   </v-app>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import BottomNavigation from '@/components/BottomNavigation.vue'
 
 export default {
   name: 'App',
-  components: {
-    BottomNavigation
-  },
   methods: {
     ...mapActions(['fetchProducts', 'fetchWaypoints', 'fetchAssistanceOptions'])
   },
@@ -23,10 +18,7 @@ export default {
     this.fetchProducts()
     this.fetchWaypoints()
     this.fetchAssistanceOptions()
-  },
-  // mounted() {
-    
-  // }
+  }
 }
 </script>
 
