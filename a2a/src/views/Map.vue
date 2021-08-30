@@ -30,6 +30,7 @@ export default {
     return {
       accessToken:
         "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ",
+      yourLocation: [41.765804, -72.673370]
     };
   },
   computed: {
@@ -94,7 +95,15 @@ export default {
             )
           )
           .addTo(map);
+
+        
       });
+      var yourmark = document.createElement("div");
+      yourmark.className = "marker your-marker";
+
+      new mapboxgl.Marker(yourmark)
+        .setLngLat([this.yourLocation[1], this.yourLocation[0]])
+        .addTo(map)
     })
 
     
@@ -124,6 +133,14 @@ export default {
     font-family: "Material Icons";
     content: "\e8b4";
     color: #333;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.your-marker::before{
+    font-family: "Material Icons";
+    content: "\e8b4";
+    color: red;
     font-size: 40px;
     cursor: pointer;
 }

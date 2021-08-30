@@ -24,8 +24,7 @@
                             icon
                             elevation="2"
                             color="white"
-                            value="map-list"
-                            to="/map">
+                            to="/">
                                 <v-icon color="black">mdi-close</v-icon>
                             </v-btn>
                         </v-col>
@@ -58,15 +57,15 @@
                 <!-- Distance Slider -->
                 <v-card-text>
                         <h2 class="subtitle-1">
-                            Distance
+                            Distance (Miles)
                         </h2>
                         <v-col class="pr-4">
                         <v-slider
-                            step="0.25" 
+                            step="1" 
                             color="black"
                             v-model="proposedFilter.distance"
                             class="align-center"
-                            :max="15"
+                            :max="120"
                             hide-details
                         >
                             <template v-slot:append>
