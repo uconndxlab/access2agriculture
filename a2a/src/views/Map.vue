@@ -36,6 +36,7 @@ export default {
   computed: {
     ...mapGetters({
       waypoints: "waypointObjectsByFilter",
+      userLoc: "userLocation"
     }),
   },
   methods: {
@@ -98,12 +99,16 @@ export default {
 
         
       });
-      var yourmark = document.createElement("div");
-      yourmark.className = "marker your-marker";
 
-      new mapboxgl.Marker(yourmark)
-        .setLngLat([this.yourLocation[1], this.yourLocation[0]])
-        .addTo(map)
+      if ( this.userLoc ) {
+        var yourmark = document.createElement("div");
+        yourmark.className = "marker your-marker";
+
+        new mapboxgl.Marker(yourmark)
+          .setLngLat([this.userLoc.long, this.userLoc.lat])
+          .addTo(map)
+      }
+      
     })
 
     

@@ -25,6 +25,12 @@ const initialState = () => {
       distance: 0.0,
       assistanceOptions: [],
       products: []
+    },
+    userLocation: {
+      coords: {
+        lat: 41.765804,
+        long: -72.673370
+      }
     }
   }
 }
@@ -46,6 +52,11 @@ const store = new Vuex.Store({
     },
     RESET_FILTER(state) {
       state.filter = initialState().filter
+    },
+    SET_USER_COORDINATES(state, val) {
+      if ( val.lat && val.long ) {
+        state.userLocation.coords = val
+      }
     }
   },
   getters: {
@@ -73,6 +84,9 @@ const store = new Vuex.Store({
     },
     initialFilter() {
       return initialState().filter
+    },
+    userLocation(state) {
+      return state.userLocation.coords
     },
     waypointObjectsByFilter(state) {
       return state.waypoints.filter(x => {
@@ -103,11 +117,11 @@ const store = new Vuex.Store({
           }
         }
 
-        if ( state.filter.distance ) {
+        if ( state.filter.distance && state.userLocation.coords.lat && state.userLocation.coords.long ) {
           if ( !x.coordinates ) {
             is_within_distance = false
           } else {
-            const distanceInKm = geofire.distanceBetween([x.coordinates._lat, x.coordinates._long], [41.765804, -72.673370])
+            const distanceInKm = geofire.distanceBetween([x.coordinates._lat, x.coordinates._long], [state.userLocation.coords.lat, state.userLocation.coords.long])
             const radiusInKm = state.filter.distance * 1.60934
             is_within_distance = distanceInKm <= radiusInKm
           }

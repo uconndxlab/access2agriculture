@@ -82,6 +82,26 @@
                         </v-col>
                 </v-card-text>
 
+                <v-card-text v-if="proposedFilter.distance > 0">
+                    <p>In order to accurately filter locations based on your location, we will need access to your current location.</p>
+
+                    <v-alert
+                        :type="locationStatusMessageType"
+                        dense
+                        color="blue"
+                    >
+                        {{ locationStatusMessage }}
+                        <span class="custom-loader" v-if="showLocationStatusLoading">
+                            <v-icon light>mdi-cached</v-icon>
+                        </span>
+                        
+                    </v-alert>
+
+                    <v-btn
+                        @click="requestLocation()"
+                    >Enable Location</v-btn>
+                </v-card-text>
+
                 <v-divider></v-divider>
 
                 <!-- SNAP/EBT Toggle -->
@@ -157,7 +177,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
     name: "WaypointFilter",
@@ -167,7 +187,10 @@ export default {
             distance: 0.0,
             assistanceOptions: [],
             products: []
-        }
+        },
+        locationStatusMessage: 'Location has not been detected.',
+        locationStatusMessageType: 'info',
+        showLocationStatusLoading: false
     }),
     computed: {
         ...mapGetters({
@@ -179,12 +202,49 @@ export default {
         })
     },
     methods: {
+        ...mapMutations({
+            'setCoordinates': 'SET_USER_COORDINATES'
+        }),
         setFilter() {
             this.$store.commit('SET_FILTER', this.proposedFilter)
         },
         clearFilter() {
             this.$store.commit('RESET_FILTER')
             this.proposedFilter = this.initialFilter
+        },
+        requestLocation() {
+            this.showLocationStatusLoading = true
+            if ( !navigator.geolocation ) {
+                console.log('Not able to retrieve location.')
+                this.showLocationStatusLoading = false
+            } else {
+                console.log('Has access to location.')
+                this.locationStatusMessage = 'Finding location.'
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    console.log(pos)
+                    this.showLocationStatusLoading = false
+                    if ( pos.coords && pos.coords.latitude && pos.coords.longitude ) {
+                        this.locationStatusMessage = 'Location Found!'
+                        this.locationStatusMessageType = 'success'
+                        this.setCoordinates({
+                            lat: pos.coords.latitude,
+                            long: pos.coords.longitude
+                        })
+                    }
+                }, (error) => {
+                    console.log(error)
+                    const default_error_message = 'Something went wrong with the location service.'
+                    const error_messages = {
+                        '1': 'Permission to location was denied.  In order to enable this functionality, you must enable location permissions manually on your browser.'  // User denied geolocation
+                    }
+                    if ( error.code && error.code.toString() in error_messages ) {
+                        this.locationStatusMessage = error_messages[error.code.toString()]
+                    } else {
+                        this.locationStatusMessage = default_error_message
+                    }
+                    this.showLocationStatusLoading = false
+                })
+            }
         }
     },
     mounted() {
@@ -192,3 +252,42 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.custom-loader {
+    animation: loader 1s infinite;
+    display: inline-block;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
