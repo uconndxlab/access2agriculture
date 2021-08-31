@@ -36,7 +36,8 @@ export default {
   computed: {
     ...mapGetters({
       waypoints: "waypointObjectsByFilter",
-      userLoc: "userLocation"
+      userLoc: "userLocation",
+      userLocSet: "userLocationSet"
     }),
   },
   methods: {
@@ -100,7 +101,7 @@ export default {
         
       });
 
-      if ( this.userLoc ) {
+      if ( this.userLoc && this.userLocSet ) {
         var yourmark = document.createElement("div");
         yourmark.className = "marker your-marker";
 

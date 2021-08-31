@@ -99,6 +99,7 @@
 
                     <v-btn
                         @click="requestLocation()"
+                        v-if="!locationHasBeenSet"
                     >Enable Location</v-btn>
                 </v-card-text>
 
@@ -198,19 +199,27 @@ export default {
             businessTypes: 'businessTypeObjects',
             assistanceOptions: 'assistanceOptionsObjects',
             filter: 'filterObject',
-            initialFilter: 'initialFilter'
+            initialFilter: 'initialFilter',
+            locationHasBeenSet: 'userLocationSet'
         })
     },
     methods: {
         ...mapMutations({
-            'setCoordinates': 'SET_USER_COORDINATES'
+            'setCoordinates': 'SET_USER_COORDINATES',
         }),
         setFilter() {
-            this.$store.commit('SET_FILTER', this.proposedFilter)
+            const filter = {}
+            Object.assign(filter, this.proposedFilter)
+            this.$store.commit('SET_FILTER', filter)
         },
         clearFilter() {
             this.$store.commit('RESET_FILTER')
             this.proposedFilter = this.initialFilter
+        },
+        locationHasSet() {
+            this.showLocationStatusLoading = false
+            this.locationStatusMessage = 'Location Found!'
+            this.locationStatusMessageType = 'success'
         },
         requestLocation() {
             this.showLocationStatusLoading = true
@@ -222,10 +231,8 @@ export default {
                 this.locationStatusMessage = 'Finding location.'
                 navigator.geolocation.getCurrentPosition((pos) => {
                     console.log(pos)
-                    this.showLocationStatusLoading = false
                     if ( pos.coords && pos.coords.latitude && pos.coords.longitude ) {
-                        this.locationStatusMessage = 'Location Found!'
-                        this.locationStatusMessageType = 'success'
+                        this.locationHasSet()
                         this.setCoordinates({
                             lat: pos.coords.latitude,
                             long: pos.coords.longitude
@@ -248,7 +255,12 @@ export default {
         }
     },
     mounted() {
-        this.proposedFilter = this.filter
+        const filter = {}
+        Object.assign(filter, this.filter)
+        this.proposedFilter = filter
+        if ( this.locationHasBeenSet ) {
+            this.locationHasSet()
+        }
     }
 }
 </script>

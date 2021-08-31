@@ -30,7 +30,8 @@ const initialState = () => {
       coords: {
         lat: 41.765804,
         long: -72.673370
-      }
+      },
+      hasBeenSet: false
     }
   }
 }
@@ -48,7 +49,12 @@ const store = new Vuex.Store({
       state.assistanceOptions = val
     },
     SET_FILTER(state, val) {
-      state.filter = val
+      state.filter = {
+        businessTypes: val.businessTypes,
+        distance: val.distance,
+        assistanceOptions: val.assistanceOptions,
+        products: val.products
+      }
     },
     RESET_FILTER(state) {
       state.filter = initialState().filter
@@ -56,6 +62,7 @@ const store = new Vuex.Store({
     SET_USER_COORDINATES(state, val) {
       if ( val.lat && val.long ) {
         state.userLocation.coords = val
+        state.userLocation.hasBeenSet = true
       }
     }
   },
@@ -88,6 +95,9 @@ const store = new Vuex.Store({
     userLocation(state) {
       return state.userLocation.coords
     },
+    userLocationSet(state) {
+      return state.userLocation.hasBeenSet
+    },
     waypointObjectsByFilter(state) {
       return state.waypoints.filter(x => {
         let has_products = true
@@ -117,7 +127,7 @@ const store = new Vuex.Store({
           }
         }
 
-        if ( state.filter.distance && state.userLocation.coords.lat && state.userLocation.coords.long ) {
+        if ( state.filter.distance && state.userLocation.coords.lat && state.userLocation.coords.long && state.userLocation.hasBeenSet ) {
           if ( !x.coordinates ) {
             is_within_distance = false
           } else {
