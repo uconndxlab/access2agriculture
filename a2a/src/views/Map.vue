@@ -29,12 +29,14 @@ export default {
   data() {
     return {
       accessToken:
-        "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ",
+        "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ"
     };
   },
   computed: {
     ...mapGetters({
       waypoints: "waypointObjectsByFilter",
+      userLoc: "userLocation",
+      userLocSet: "userLocationSet"
     }),
   },
   methods: {
@@ -43,12 +45,18 @@ export default {
   mounted() {
     mapboxgl.accessToken = this.accessToken;
 
-    var map = new mapboxgl.Map({
+    let map_config = {
       container: "mapContainer",
       style: "mapbox://styles/mapbox/streets-v11",
       center: [-72.253983, 41.807739],
       zoom: 10,
-    });
+    }
+
+    if ( this.userLoc && this.userLocSet ) {
+      map_config.center = [this.userLoc.long, this.userLoc.lat]
+    }
+
+    var map = new mapboxgl.Map(map_config);
 
     let geojson = {
       type: "FeatureCollection",
@@ -95,9 +103,16 @@ export default {
           )
           .addTo(map);
       });
-    })
 
-    
+      if ( this.userLoc && this.userLocSet ) {
+        var yourmark = document.createElement("div");
+        yourmark.className = "marker your-marker";
+
+        new mapboxgl.Marker(yourmark)
+          .setLngLat([this.userLoc.long, this.userLoc.lat])
+          .addTo(map)
+      }
+    })
   },
 };
 </script>
@@ -124,6 +139,14 @@ export default {
     font-family: "Material Icons";
     content: "\e8b4";
     color: #333;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.your-marker::before{
+    font-family: "Material Icons";
+    content: "\e8b4";
+    color: red;
     font-size: 40px;
     cursor: pointer;
 }

@@ -103,6 +103,11 @@ export default {
             title: "Products",
             icon: 'mdi-format-list-bulleted',
             to: '/products'
+          },
+          {
+            title: "Geo",
+            icon: 'mdi-earth',
+            to: '/geo'
           }
         ]
       }
