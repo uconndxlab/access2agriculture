@@ -46,12 +46,18 @@ export default {
   mounted() {
     mapboxgl.accessToken = this.accessToken;
 
-    var map = new mapboxgl.Map({
+    let map_config = {
       container: "mapContainer",
       style: "mapbox://styles/mapbox/streets-v11",
       center: [-72.253983, 41.807739],
       zoom: 10,
-    });
+    }
+
+    if ( this.userLoc && this.userLocSet ) {
+      map_config.center = [this.userLoc.long, this.userLoc.lat]
+    }
+
+    var map = new mapboxgl.Map(map_config);
 
     let geojson = {
       type: "FeatureCollection",
