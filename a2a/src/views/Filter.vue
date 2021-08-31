@@ -99,10 +99,8 @@
                 <v-divider></v-divider>
 
                 <!-- SNAP/EBT Toggle -->
+                <v-card-title class="subtitle-1">Assistance Options</v-card-title>
                 <v-card-text>
-                    <h2 class="subtitle-1">
-                        Assistance Options
-                    </h2>
                     <v-chip-group
                         column
                         multiple
@@ -121,11 +119,8 @@
                 <v-divider></v-divider>
 
                 <!-- Products Selection -->
+                <v-card-title class="subtitle-1">Products</v-card-title>
                 <v-card-text>
-                    <h2 class="subtitle-1">
-                        Products
-                    </h2>
-
                     <v-chip-group
                         column
                         multiple

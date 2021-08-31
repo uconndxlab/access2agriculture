@@ -32,7 +32,8 @@ const initialState = () => {
         long: -72.673370
       },
       hasBeenSet: false
-    }
+    },
+    bookmarks: ( localStorage.getItem('a2a_bookmarks') ) ? JSON.parse(localStorage.getItem('a2a_bookmarks')) : []
   }
 }
 
@@ -63,6 +64,27 @@ const store = new Vuex.Store({
       if ( val.lat && val.long ) {
         state.userLocation.coords = val
         state.userLocation.hasBeenSet = true
+      }
+    },
+    SET_BOOKMARK(state, val) {
+      if ( state.bookmarks.indexOf(val) === -1 ) {
+        state.bookmarks.push(val)
+        const wp_index = state.waypoints.map(wp => wp.id).indexOf(val)
+        if ( wp_index > -1 ) {
+          state.waypoints[wp_index].bookmarked = true
+        }
+        localStorage.setItem('a2a_bookmarks', JSON.stringify(state.bookmarks))
+      }
+    },
+    UNSET_BOOKMARK(state, val) {
+      const index = state.bookmarks.indexOf(val)
+      if ( index !== -1 ) {
+        state.bookmarks.splice(index, 1)
+        const wp_index = state.waypoints.map(wp => wp.id).indexOf(val)
+        if ( wp_index > -1 ) {
+          state.waypoints[wp_index].bookmarked = false
+        }
+        localStorage.setItem('a2a_bookmarks', JSON.stringify(state.bookmarks))
       }
     }
   },
@@ -98,8 +120,13 @@ const store = new Vuex.Store({
     userLocationSet(state) {
       return state.userLocation.hasBeenSet
     },
-    waypointObjectsByFilter(state) {
+    bookmarkedWaypoints(state) {
       return state.waypoints.filter(x => {
+        return state.bookmarks.includes(x.id)
+      })
+    },
+    waypointObjectsByFilter(state, getters) {
+      let wps = state.waypoints.filter(x => {
         let has_products = true
         let has_business_type = true
         let has_assistance_options = true
@@ -139,6 +166,15 @@ const store = new Vuex.Store({
 
         return has_products && has_business_type && has_assistance_options && is_within_distance
       })
+
+      return wps.map((wp) => {
+        let w = wp
+        w.bookmarked = false
+        if ( state.bookmarks.includes(w.id) ) {
+          w.bookmarked = true
+        }
+        return w
+      })
     }
   },
   actions: {
@@ -162,11 +198,15 @@ const store = new Vuex.Store({
 
       commit('SET_ASSISTANCE_OPTIONS', assistance_options_extracted)
     },
-    async fetchWaypoints({ commit }) {
+    async fetchWaypoints({ commit, state }) {
       const waypoints = await fb.waypointsCollection.get()
       const waypoints_extracted = waypoints.docs.map(waypoint => {
         let waypoint_obj = waypoint.data()
         waypoint_obj.id = waypoint.id
+        waypoint_obj.bookmarked = false
+        if ( state.bookmarks.includes(waypoint_obj.id) ) {
+          waypoint_obj.bookmarked = true
+        }
         return waypoint_obj
       })
 

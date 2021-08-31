@@ -20,18 +20,22 @@
         </v-list-item-content>
 
         <v-card-actions>
-            <v-btn icon>
-                <v-icon color="black">mdi-bookmark-outline</v-icon>
+            <v-btn icon @click.prevent="toggleBookmark()">
+                <v-icon color="black">{{ bookmarkIcon }}</v-icon>
             </v-btn>
         </v-card-actions>
     </v-list-item>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
     name: "MapListItem",
     props: ['waypoint', 'link'],
-    data: () => ({}),
+    data: () => ({
+        bookmarked: false
+    }),
     computed: {
         address() {
             let addr = `${this.waypoint.address}, ${this.waypoint.town} ${this.waypoint.state}, ${this.waypoint.zip}`
@@ -43,6 +47,32 @@ export default {
                 return undefined
             }
             return '/map-item/' + this.waypoint.id
+        },
+        bookmarkIcon() {
+            if ( this.bookmarked ) {
+                return 'mdi-bookmark'
+            }
+            return 'mdi-bookmark-outline'
+        }
+    },
+    methods: {
+        ...mapMutations({
+            'addBookmark': 'SET_BOOKMARK',
+            'removeBookmark': 'UNSET_BOOKMARK'
+        }),
+        toggleBookmark() {
+            if ( this.bookmarked ) {
+                this.removeBookmark(this.waypoint.id)
+                this.bookmarked = false
+            } else {
+                this.addBookmark(this.waypoint.id)
+                this.bookmarked = true
+            }
+        }
+    },
+    created() {
+        if ( this.waypoint.bookmarked ) {
+            this.bookmarked = this.waypoint.bookmarked
         }
     }
 }

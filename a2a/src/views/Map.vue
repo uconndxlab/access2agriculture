@@ -29,8 +29,7 @@ export default {
   data() {
     return {
       accessToken:
-        "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ",
-      yourLocation: [41.765804, -72.673370]
+        "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ"
     };
   },
   computed: {
@@ -103,8 +102,6 @@ export default {
             )
           )
           .addTo(map);
-
-        
       });
 
       if ( this.userLoc && this.userLocSet ) {
@@ -115,10 +112,7 @@ export default {
           .setLngLat([this.userLoc.long, this.userLoc.lat])
           .addTo(map)
       }
-      
     })
-
-    
   },
 };
 </script>

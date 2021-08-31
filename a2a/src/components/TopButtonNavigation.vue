@@ -16,7 +16,7 @@
       </v-col>
       <v-col>
         <v-btn-toggle rounded>
-          <v-btn elevation="3" color="white">
+          <v-btn elevation="3" color="white" to="/liked">
             <v-icon color="black">mdi-bookmark</v-icon>
           </v-btn>
           <v-btn elevation="3" color="white">
