@@ -10,32 +10,21 @@
                 flat
                 color="white"
                 >
-                    <v-row
-                    align="center"
-                    justify="space-around">
-                        <v-col>
-                            <h1 class="display-1">Filter</h1>
-                        </v-col>
-                        
-                        <v-col
-                        class="text-right"
-                        >
-                            <v-btn 
-                            icon
-                            elevation="2"
-                            color="white"
-                            to="/">
-                                <v-icon color="black">mdi-close</v-icon>
-                            </v-btn>
-                        </v-col>
-                    </v-row>
+                    <v-toolbar-title class="display-1">Filter</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn 
+                        icon
+                        elevation="2"
+                        color="white"
+                        class="mr-3"
+                        to="/">
+                        <v-icon color="black">mdi-close</v-icon>
+                    </v-btn>
                 </v-toolbar>
                 
                 <!-- Business Type Selection -->
+                <v-card-title class="subtitle-1">Business Type</v-card-title>
                 <v-card-text>
-                    <h2 class="subtitle-1">
-                        Business Type
-                    </h2>
                     <v-chip-group
                         column
                         multiple
@@ -55,10 +44,8 @@
 
 
                 <!-- Distance Slider -->
+                <v-card-title class="subtitle-1">Distance (Miles)</v-card-title>
                 <v-card-text>
-                        <h2 class="subtitle-1">
-                            Distance (Miles)
-                        </h2>
                         <v-col class="pr-4">
                         <v-slider
                             step="1" 
@@ -79,28 +66,34 @@
                             ></v-text-field>
                             </template>
                         </v-slider>
-                        </v-col>
-                </v-card-text>
 
-                <v-card-text v-if="proposedFilter.distance > 0">
-                    <p>In order to accurately filter locations based on your location, we will need access to your current location.</p>
+                        <p v-if="proposedFilter.distance > 0">In order to accurately filter locations based on your location, we will need access to your current location.</p>
 
-                    <v-alert
-                        :type="locationStatusMessageType"
-                        dense
-                        color="blue"
-                    >
-                        {{ locationStatusMessage }}
-                        <span class="custom-loader" v-if="showLocationStatusLoading">
-                            <v-icon light>mdi-cached</v-icon>
-                        </span>
+                        <div style="display:flex">
+                            <v-alert
+                            :type="locationStatusMessageType"
+                            dense
+                            color="blue"
+                            class="distance-filter-notice"
+                            v-if="proposedFilter.distance > 0"
+                        >
+                            {{ locationStatusMessage }}
+                            <span class="custom-loader" v-if="showLocationStatusLoading">
+                                <v-icon light>mdi-cached</v-icon>
+                            </span>
+                        </v-alert>
+                        </div>
+
+                        <div style="display:flex">
+                            <v-btn
+                                @click="requestLocation()"
+                                v-if="proposedFilter.distance > 0"
+                                class="distance-filter-notice"
+                            >{{ locationButtonText }}</v-btn>
+                        </div>
                         
-                    </v-alert>
-
-                    <v-btn
-                        @click="requestLocation()"
-                        v-if="!locationHasBeenSet"
-                    >Enable Location</v-btn>
+                        
+                        </v-col>
                 </v-card-text>
 
                 <v-divider></v-divider>
@@ -200,8 +193,11 @@ export default {
             assistanceOptions: 'assistanceOptionsObjects',
             filter: 'filterObject',
             initialFilter: 'initialFilter',
-            locationHasBeenSet: 'userLocationSet'
-        })
+            locationHasBeenSet: 'userLocationSet',
+        }),
+        locationButtonText() {
+            return (this.locationHasBeenSet) ? 'Re-check Location' : 'Enable Location'
+        }
     },
     methods: {
         ...mapMutations({
@@ -242,7 +238,9 @@ export default {
                     console.log(error)
                     const default_error_message = 'Something went wrong with the location service.'
                     const error_messages = {
-                        '1': 'Permission to location was denied.  In order to enable this functionality, you must enable location permissions manually on your browser.'  // User denied geolocation
+                        '1': 'Permission to location was denied.  In order to enable this functionality, you must enable location permissions manually on your browser.',  // User denied geolocation,
+                        '2': 'Unable to determine location from this device.',
+                        '3': 'Location detection timed out.'
                     }
                     if ( error.code && error.code.toString() in error_messages ) {
                         this.locationStatusMessage = error_messages[error.code.toString()]
@@ -301,5 +299,14 @@ export default {
     to {
       transform: rotate(360deg);
     }
+  }
+
+  p {
+      text-align: left;
+  }
+  .distance-filter-notice {
+      display: inline-block;
+      text-align: left;
+      width: auto;
   }
 </style>
