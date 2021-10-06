@@ -37,8 +37,8 @@ export default {
       defaultMapConfig: {
         container: "mapContainer",
         style: "mapbox://styles/mapbox/streets-v11",
-        center: [-72.253983, 41.807739],
-        zoom: 10,
+        center: [-72.253983, 41.607739],
+        zoom: 9.5,
       },
       geojson: null,
       markers: []
@@ -99,7 +99,7 @@ export default {
     if ( this.isSM || this.isXS ) {
       this.defaultMapConfig.zoom = 8
       // [ long, lat ]
-      this.defaultMapConfig.center = [this.defaultMapConfig.center[0], this.defaultMapConfig.center[1] - 0.1]
+      this.defaultMapConfig.center = [this.defaultMapConfig.center[0], this.defaultMapConfig.center[1] - 0.04]
     }
 
     this.map = new mapboxgl.Map(this.defaultMapConfig);
