@@ -6,10 +6,13 @@
           <v-btn v-if="isRootMapRoute" elevation="3" color="white" to="/map-list">
             <v-icon color="black">mdi-format-list-bulleted</v-icon>
           </v-btn>
-          <v-btn v-if="!isRootMapRoute" elevation="3" color="white" value="map" to="/">
+          <v-btn v-if="!isRootMapRoute" elevation="3" color="white" to="/">
             <v-icon color="black">mdi-map</v-icon>
           </v-btn>
-          <v-btn elevation="3" color="white" value="filter" to="/filter">
+          <v-btn elevation="3" color="white" @click="openFilter()" v-if="!toPage">
+            <v-icon color="black">mdi-filter-variant</v-icon>
+          </v-btn>
+          <v-btn elevation="3" color="white" to="/filter" v-else>
             <v-icon color="black">mdi-filter-variant</v-icon>
           </v-btn>
         </v-btn-toggle>
@@ -33,10 +36,21 @@ import router from '@/router'
 
 export default {
   name: "TopButtonNavigation",
+  props: {
+    toPage: {
+      type: Boolean,
+      default: true
+    }
+  },
   computed: {
       isRootMapRoute() {
           return router.currentRoute.path === '/'
       }
+  },
+  methods: {
+    openFilter() {
+      this.$emit('topNavOpenFilter')
+    }
   }
 };
 </script>

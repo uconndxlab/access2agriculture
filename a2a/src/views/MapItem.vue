@@ -1,6 +1,6 @@
 <template>
     <div id="map-item-view">
-        <top-button-navigation></top-button-navigation>
+        <top-button-navigation class="mt-8"></top-button-navigation>
 
         <full-map-background
             :lat="lat"

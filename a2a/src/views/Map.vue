@@ -1,64 +1,110 @@
 <template>
   <div id="map-page">
-    <top-button-navigation></top-button-navigation>
+    <top-button-navigation :to-page="false" @topNavOpenFilter="openFilter()"></top-button-navigation>
 
     <div id="map">
       <div id="mapContainer" class="basemap"></div>
     </div>
 
-    <!-- <full-map-background
-            lat="41.6629199"
-            long="-72.6889928"
-            zoom="9.28"
-        ></full-map-background> -->
+    <v-dialog
+      v-model="filter_dialog"
+      max-width="90%"
+    >
+      <map-points-filter @filterCloseSelf="closeFilter()"></map-points-filter>
+    </v-dialog>
+
   </div>
 </template>
 
 <script>
 import mapboxgl from "mapbox-gl";
 import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
+import Filter from "@/components/Filter.vue"
 import { mapGetters, mapActions } from "vuex";
-// import FullMapBackground from '@/components/FullMapBackground.vue'
 
 export default {
   name: "BaseMap",
   components: {
     TopButtonNavigation,
-    // FullMapBackground
+    MapPointsFilter: Filter
   },
   data() {
     return {
       accessToken:
-        "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ"
+        "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ",
+      filter_dialog: false,
+      map: null,
+      defaultMapConfig: {
+        container: "mapContainer",
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: [-72.253983, 41.807739],
+        zoom: 10,
+      },
+      geojson: null,
+      markers: []
     };
   },
   computed: {
     ...mapGetters({
+      fullWaypoints: "waypointObjects",
       waypoints: "waypointObjectsByFilter",
       userLoc: "userLocation",
       userLocSet: "userLocationSet"
     }),
+    isSM() {
+      return this.$vuetify.breakpoint.name === 'sm'
+    },
+    isXS()  {
+      return this.$vuetify.breakpoint.name === 'xs'
+    },
+    filteredMarkerIDs() {
+      return this.waypoints.map(x => {
+        return x.id
+      })
+    }
   },
   methods: {
-    ...mapActions(['fetchWaypointsConditionally'])
+    ...mapActions(['fetchWaypointsConditionally']),
+    openFilter() {
+      this.filter_dialog = true
+    },
+    closeFilter() {
+      this.filter_dialog = false
+      this.filterMapLayer()
+    },
+    filterMapLayer() {
+      this.markers.forEach( (mark) => {
+        if ( this.filteredMarkerIDs.includes(mark.properties.id) ) {
+          if (!mark._pos) {
+            console.log('adding marker')
+            mark.addTo(this.map)
+          } else {
+            console.log('not adding marker, has pos')
+          }
+        } else {
+          mark.remove()
+          mark._pos = null
+        }
+      })
+    }
   },
   mounted() {
     mapboxgl.accessToken = this.accessToken;
 
-    let map_config = {
-      container: "mapContainer",
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [-72.253983, 41.807739],
-      zoom: 10,
-    }
-
     if ( this.userLoc && this.userLocSet ) {
-      map_config.center = [this.userLoc.long, this.userLoc.lat]
+      this.defaultMapConfig.center = [this.userLoc.long, this.userLoc.lat]
     }
 
-    var map = new mapboxgl.Map(map_config);
+    // Make any adjustments for mobile on initialization.  The browser may be resized at any time but we will leave that zoom up to the user, in case they have already interacted with it.
+    if ( this.isSM || this.isXS ) {
+      this.defaultMapConfig.zoom = 8
+      // [ long, lat ]
+      this.defaultMapConfig.center = [this.defaultMapConfig.center[0], this.defaultMapConfig.center[1] - 0.1]
+    }
 
-    let geojson = {
+    this.map = new mapboxgl.Map(this.defaultMapConfig);
+
+    this.geojson = {
       type: "FeatureCollection",
       features: [],
     };
@@ -68,7 +114,7 @@ export default {
     * So, we have a custom action here that will only fetch data if it hasn't been loaded already.
     */
     this.fetchWaypointsConditionally().then(() => {
-      geojson.features = this.waypoints.map((wp) => {
+      this.geojson.features = this.fullWaypoints.map((wp) => {
         return {
           type: "Feature",
           geometry: {
@@ -83,34 +129,48 @@ export default {
         };
       });
 
-      // add markers to map
-      geojson.features.forEach(function (marker) {
-        console.log('adding marker', marker)
+      // Now we need to create markers for each geojson property.
+      this.geojson.features.forEach( (marker) => {
+
         // create a HTML element for each feature
         var el = document.createElement("div");
         el.className = "marker";
 
+        // Since we want something to pop up on marker click, we need to create a popup for this marker.
+        const pop = new mapboxgl.Popup({ offset: 25 }) // add popups
+            .setHTML(`<h3>${marker.properties.title}</h3>
+            <p>${marker.properties.description}</p>
+            <p><a href="/#/map-item/${marker.properties.id}">Get Info</a></p>`)
 
-        // make a marker for each feature and add it to the map
-        new mapboxgl.Marker(el)
+        // Create the marker object.  Not adding to map yet since we might be loading this view with a filter already active.
+        const m = new mapboxgl.Marker(el)
           .setLngLat(marker.geometry.coordinates)
-          .setPopup(
-            new mapboxgl.Popup({ offset: 25 }) // add popups
-              .setHTML(`<h3>${marker.properties.title}</h3>
-              <p>${marker.properties.description}</p>
-              <p><a href="/#/map-item/${marker.properties.id}">Get Info</a></p>`
-            )
-          )
-          .addTo(map);
+          .setPopup(pop)
+
+        m.properties = marker.properties
+
+        // Lets see if the filtered waypoints on initialization include this, find the index.
+        const marker_initial_filter_index = this.waypoints.findIndex(el => {
+          return el.id === marker.properties.id
+        })
+
+        // Marker was in the filter, so lets add it to the map
+        if ( marker_initial_filter_index > -1 ) {
+          m.addTo(this.map)
+        }
+
+        // Keep a record of the marker and current state, so we can filter later.
+        this.markers.push(m);
       });
 
+      // Set a custom marker for your current location, if provided.
       if ( this.userLoc && this.userLocSet ) {
         var yourmark = document.createElement("div");
         yourmark.className = "marker your-marker";
 
         new mapboxgl.Marker(yourmark)
           .setLngLat([this.userLoc.long, this.userLoc.lat])
-          .addTo(map)
+          .addTo(this.map)
       }
     })
   },
