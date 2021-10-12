@@ -296,10 +296,15 @@ html {
 body {
   height: 100%;
 }
-.basemap {
-  width: 100%;
-  height: 100vh;
-  min-height: -webkit-fill-available;
+
+
+
+@supports (-webkit-appearance: none) {
+  /** SUPER TEMPORARY FIX FOR MOBILE */
+  #map-page {
+    height: calc(100% - 56px);
+    position: relative;
+  }
 }
 
 .v-main__wrap {
@@ -311,7 +316,7 @@ body {
   top: 0;
   bottom: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   z-index: -1;
 }
 
