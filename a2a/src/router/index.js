@@ -50,8 +50,8 @@ const routes = [
   },
   {
     path: '/map-item/:id',
-    name: 'Map Item By Id',
-    component: () => import(/* webpackChunkName: "map-item-id" */ '../views/MapItem.vue')
+    name: 'map-item-by-id',
+    component: () => import(/* webpackChunkName: "map-item-id" */ '../views/Map.vue')
   }
 ]
 

@@ -96,6 +96,10 @@ export default {
     },
     filterMapLayer() {
       this.markers.forEach( (mark) => {
+        // Close open popups
+        if ( mark.getPopup().isOpen() ) {
+          mark.getPopup().remove()
+        }
         if ( this.filteredMarkerIDs.includes(mark.properties.id) ) {
           if (!mark._pos) {
             console.log('adding marker')
@@ -109,6 +113,15 @@ export default {
         }
       })
     },
+    navigateToDefaultMapView() {
+      this.filterMapLayer()
+      this.map.flyTo({
+        center: this.defaultMapConfig.center,
+        zoom: this.defaultMapConfig.zoom
+      })
+      this.$refs.map_list_item_component.setWaypoint(null)
+      this.showIntro = true
+    },
     navigateToSingleWaypoint(waypointID) {
       console.log(`Navigating to waypoint: ${waypointID}`)
       this.showIntro = false
@@ -119,11 +132,17 @@ export default {
           if ( !mark._pos ) {
             mark.addTo(this.map)
           }
+          if ( !mark.getPopup().isOpen() ) {
+            console.log(mark)
+            mark.getPopup().addTo(this.map)
+          }
         } else {
           mark.remove()
           mark._pos = null
         }
       })
+
+      console.log(`Matched Marker: `, matched_marker)
 
       if ( matched_marker ) {
         console.log(matched_marker)
@@ -132,6 +151,9 @@ export default {
           zoom: 14
         })
         this.$refs.map_list_item_component.setWaypoint(this.waypointById(waypointID))
+        if ( this.$route.path !== '/map-item/' + waypointID) {
+          this.$router.push({ name: 'map-item-by-id', params: { id: waypointID }})
+        }
       }
       
     },
@@ -208,18 +230,37 @@ export default {
 
         m.properties = marker.properties
 
-        // Lets see if the filtered waypoints on initialization include this, find the index.
-        const marker_initial_filter_index = this.waypoints.findIndex(el => {
-          return el.id === marker.properties.id
-        })
-
-        // Marker was in the filter, so lets add it to the map
-        if ( marker_initial_filter_index > -1 ) {
-          m.addTo(this.map)
-        }
+        // We might be initializing on a map item already.  Lets check.
+        const routed_from_map_item = this.$route.name === 'map-item-by-id' && this.$route.params && this.$route.params.id
 
         // Keep a record of the marker and current state, so we can filter later.
         this.markers.push(m);
+
+        if ( routed_from_map_item ) {
+          const is_correct_routed_marker = this.$route.params.id === marker.properties.id
+          if ( is_correct_routed_marker ) {
+            m.addTo(this.map)
+          }
+          // Keep a record of the marker and current state, so we can filter later.
+          // This looks insane because these need to be done in this exact order, otherwise we cant scroll properly.
+          this.markers.push(m);
+          if ( is_correct_routed_marker ) {
+            this.navigateToSingleWaypoint(marker.properties.id)
+          }
+        } else {
+          // Lets see if the filtered waypoints on initialization include this, find the index.
+          const marker_initial_filter_index = this.waypoints.findIndex(el => {
+            return el.id === marker.properties.id
+          })
+
+          // Marker was in the filter, so lets add it to the map
+          if ( marker_initial_filter_index > -1 ) {
+            console.log('adding point to map')
+            m.addTo(this.map)
+          }
+          // Keep a record of the marker and current state, so we can filter later.
+          this.markers.push(m);
+        }
       });
 
       // Set a custom marker for your current location, if provided.
@@ -235,14 +276,30 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener("click", this.mountWaypointGetInfoListener)
+  },
+  watch: {
+    '$route.path': function(val, oldVal) {
+      console.log('Route changing, ', val, oldVal)
+      if ( val === '/' ) {
+        this.navigateToDefaultMapView()
+      }
+    }
   }
 };
 </script>
 
 <style lang="css">
+html {
+  height: 100%;
+  min-height: -webkit-fill-available;
+}
+body {
+  height: 100%;
+}
 .basemap {
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
 .v-main__wrap {
@@ -254,6 +311,7 @@ export default {
   top: 0;
   bottom: 0;
   width: 100%;
+  height: 100vh;
   z-index: -1;
 }
 

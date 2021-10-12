@@ -72,8 +72,10 @@ export default {
         },
         setWaypoint(waypoint) {
             this.waypoint = waypoint
-            if ( this.waypoint.bookmarked ) {
+            if ( this.waypoint && this.waypoint.bookmarked ) {
                 this.bookmarked = this.waypoint.bookmarked
+            } else {
+                this.bookmarked = false
             }
         }
     },

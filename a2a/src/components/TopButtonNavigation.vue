@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import router from '@/router'
 
 export default {
   name: "TopButtonNavigation",
@@ -44,7 +43,7 @@ export default {
   },
   computed: {
       isRootMapRoute() {
-          return router.currentRoute.path === '/'
+          return this.$route.path === '/'
       }
   },
   methods: {
