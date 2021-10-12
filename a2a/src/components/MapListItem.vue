@@ -6,9 +6,9 @@
         <v-list-item-avatar
             tile
             color="grey"
+            v-if="waypoint.image"
         >
             <v-img
-                v-if="waypoint.image"
                 :src="waypoint.image"
                 :alt="'Photo of ' + waypoint.name"
             ></v-img>
@@ -32,9 +32,10 @@ import { mapMutations } from 'vuex'
 
 export default {
     name: "MapListItem",
-    props: ['waypoint', 'link'],
+    props: ['link', 'starting_waypoint'],
     data: () => ({
-        bookmarked: false
+        bookmarked: false,
+        waypoint: null
     }),
     computed: {
         address() {
@@ -68,10 +69,19 @@ export default {
                 this.addBookmark(this.waypoint.id)
                 this.bookmarked = true
             }
+        },
+        setWaypoint(waypoint) {
+            this.waypoint = waypoint
+            if ( this.waypoint.bookmarked ) {
+                this.bookmarked = this.waypoint.bookmarked
+            }
         }
     },
     created() {
-        if ( this.waypoint.bookmarked ) {
+        if ( this.starting_waypoint ) {
+            this.waypoint = this.starting_waypoint
+        }
+        if ( this.waypoint && this.waypoint.bookmarked ) {
             this.bookmarked = this.waypoint.bookmarked
         }
     }

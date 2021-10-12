@@ -14,7 +14,7 @@
         >
             <map-list-item
                 v-if="$store.getters.waypointById($route.params.id)"
-                :waypoint="$store.getters.waypointById($route.params.id)"
+                :starting_waypoint="$store.getters.waypointById($route.params.id)"
                 link="false"
             ></map-list-item>
         </v-card>
