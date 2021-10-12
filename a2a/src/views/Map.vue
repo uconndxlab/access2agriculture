@@ -304,6 +304,7 @@ body {
   #map-page {
     height: calc(100% - 56px);
     position: relative;
+    z-index: 1
   }
 }
 
