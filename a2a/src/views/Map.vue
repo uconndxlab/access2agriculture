@@ -13,6 +13,12 @@
       <map-points-filter @filterCloseSelf="closeFilter()"></map-points-filter>
     </v-dialog>
 
+    <v-alert
+      class="intro-alert-description"
+      type="info"
+      dismissible
+    >{{ string('HOMEPAGE_INTRO') }}</v-alert>
+
   </div>
 </template>
 
@@ -49,7 +55,8 @@ export default {
       fullWaypoints: "waypointObjects",
       waypoints: "waypointObjectsByFilter",
       userLoc: "userLocation",
-      userLocSet: "userLocationSet"
+      userLocSet: "userLocationSet",
+      string: "string"
     }),
     isSM() {
       return this.$vuetify.breakpoint.name === 'sm'
@@ -213,5 +220,16 @@ export default {
 
 .mapboxgl-popup {
   max-width: 200px;
+}
+</style>
+
+<style lang="scss" scoped>
+.intro-alert-description {
+  position: absolute;
+  bottom: 4%;
+  left: 8%;
+  right: 8%;
+  max-width: 500px;
+  text-align: left;
 }
 </style>
