@@ -2,7 +2,6 @@
   <v-bottom-navigation grow app>
     <v-btn
         color="white"
-        value="map"
         to="/">
       <span>Map</span>
 
@@ -11,29 +10,32 @@
 
     <v-btn 
         color="white"
-        value="liked"
+        to="/map-list">
+      <span>List</span>
+
+      <v-icon>mdi-format-list-bulleted</v-icon>
+    </v-btn>
+
+    <v-btn
+        color="white"
         to="/liked">
-      <span>Liked</span>
+      <span>Saved</span>
 
-      <v-icon>mdi-heart</v-icon>
+      <v-icon>mdi-bookmark</v-icon>
     </v-btn>
 
     <v-btn
         color="white"
-        value="notifications"
-        to="/notifications">
-      <span>Notifications</span>
+        to="/settings">
+      <span>Settings</span>
 
-      <v-icon>mdi-map-marker</v-icon>
-    </v-btn>
-
-    <v-btn
-        color="white"
-        value="account"
-        to="/account">
-      <span>Account</span>
-
-      <v-icon>mdi-account-circle</v-icon>
+      <v-icon>mdi-cog</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>
+
+<script>
+export default {
+  name: "BottomNavigation"
+}
+</script>

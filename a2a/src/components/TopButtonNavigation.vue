@@ -1,34 +1,19 @@
 <template>
-  <v-container class="pt-9">
-    <v-row align="center" justify="space-around">
-      <v-col>
-        <v-btn-toggle rounded>
-          <v-btn v-if="isRootMapRoute" elevation="3" color="white" to="/map-list">
-            <v-icon color="black">mdi-format-list-bulleted</v-icon>
-          </v-btn>
-          <v-btn v-if="!isRootMapRoute" elevation="3" color="white" to="/">
-            <v-icon color="black">mdi-map</v-icon>
-          </v-btn>
-          <v-btn elevation="3" color="white" @click="openFilter()" v-if="!toPage">
-            <v-icon color="black">mdi-filter-variant</v-icon>
-          </v-btn>
-          <v-btn elevation="3" color="white" to="/filter" v-else>
-            <v-icon color="black">mdi-filter-variant</v-icon>
-          </v-btn>
-        </v-btn-toggle>
-      </v-col>
-      <v-col>
-        <v-btn-toggle rounded>
-          <v-btn elevation="3" color="white" to="/liked">
-            <v-icon color="black">mdi-bookmark</v-icon>
-          </v-btn>
-          <v-btn elevation="3" color="white">
-            <v-icon color="black">mdi-cog</v-icon>
-          </v-btn>
-        </v-btn-toggle>
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-app-bar
+    color="white"
+  >
+    <v-icon></v-icon>
+    <v-toolbar-title>Access2Ag</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-btn elevation="0" color="white" @click="openFilter()" class="vert-btn mr-2" v-if="!toPage">
+      <v-icon color="black">mdi-filter-variant</v-icon>
+      Filter
+    </v-btn>
+    <v-btn elevation="0" color="white" @click="openNearMe()" class="vert-btn">
+      <v-icon color="black">mdi-navigation-variant</v-icon>
+      Near Me
+    </v-btn>
+  </v-app-bar>
 </template>
 
 <script>
@@ -49,7 +34,20 @@ export default {
   methods: {
     openFilter() {
       this.$emit('topNavOpenFilter')
+    },
+    openNearMe() {
+      this.$emit('topNavOpenFilter')
     }
   }
 };
 </script>
+
+<style lang="scss">
+.vert-btn {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  .v-btn__content {
+    flex-direction: column;
+  }
+}
+</style>
