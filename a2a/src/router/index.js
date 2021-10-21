@@ -34,19 +34,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "liked" */ '../views/Liked.vue')
   },
   {
-    path: '/map-item',
-    name: 'Map Item',
-    component: () => import(/* webpackChunkName: "map-item" */ '../views/MapItem.vue')
-  },
-  {
-    path: '/filter',
-    name: 'Filter',
-    component: () => import(/* webpackChunkName: "map-item" */ '../views/Filter.vue')
-  },
-  {
     path: '/map-list',
     name: 'Map List',
-    component: () => import(/* webpackChunkName: "map-item" */ '../views/Maplist.vue')
+    component: () => import(/* webpackChunkName: "map-item" */ '../views/MapList.vue')
   },
   {
     path: '/map-item/:id',

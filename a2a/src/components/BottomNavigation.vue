@@ -53,6 +53,8 @@ export default {
     }
   },
   created() {
+    // This exists to correct the current 'active' nav item on initial load.
+    // There is probably a better way to do this, but I was having trouble mixing 'value' and vue-router states through vuetify here.
     if ( this.isMapRoute ) {
       this.activeNav = 'map'
     } else {
