@@ -59,6 +59,9 @@ const store = new Vuex.Store({
         products: val.products
       }
     },
+    SET_FILTER_LOCATION_DISTANCE(state, val) {
+      state.filter.distance = val
+    },
     RESET_FILTER(state) {
       state.filter = initialState().filter
     },

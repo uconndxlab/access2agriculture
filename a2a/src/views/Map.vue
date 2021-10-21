@@ -1,6 +1,11 @@
 <template>
   <div id="map-page">
-    <top-button-navigation :to-page="false" @topNavOpenFilter="openFilter()"></top-button-navigation>
+    <top-button-navigation
+      :to-page="false"
+      @topNavOpenFilter="openFilter()"
+      @locationJustSet="userJustSetNearMeLocation()"
+      @locationHasError="displayLocationError()"
+    ></top-button-navigation>
 
     <div id="map">
       <div id="mapContainer" class="basemap"></div>
@@ -61,6 +66,7 @@ export default {
       },
       geojson: null,
       markers: [],
+      userMarker: null,
       showIntro: true
     };
   },
@@ -165,6 +171,34 @@ export default {
           this.navigateToSingleWaypoint(e.target.dataset.markerId)
         }
       }
+    },
+    setUserLocationMarker() {
+      console.log('Setting user location marker')
+      // Set a custom marker for your current location, if provided.
+      if ( this.userLoc && this.userLocSet && !this.userMarker ) {
+        console.log('Have location but no marker set, setting a marker')
+        var yourmark = document.createElement("div");
+        yourmark.className = "marker your-marker";
+
+        this.userMarker = new mapboxgl.Marker(yourmark)
+          .setLngLat([this.userLoc.long, this.userLoc.lat])
+          .addTo(this.map)
+      }
+    },
+    userJustSetNearMeLocation() {
+      this.setUserLocationMarker()
+      this.flyToUserLocation()
+    },
+    displayLocationError() {
+      // TODO
+    },
+    flyToUserLocation() {
+      if ( this.userLoc && this.userLocSet && this.userMarker ) {
+        this.map.flyTo({
+          center: [this.userLoc.long, this.userLoc.lat],
+          zoom: 11
+        })
+      }
     }
   },
   mounted() {
@@ -263,15 +297,7 @@ export default {
         }
       });
 
-      // Set a custom marker for your current location, if provided.
-      if ( this.userLoc && this.userLocSet ) {
-        var yourmark = document.createElement("div");
-        yourmark.className = "marker your-marker";
-
-        new mapboxgl.Marker(yourmark)
-          .setLngLat([this.userLoc.long, this.userLoc.lat])
-          .addTo(this.map)
-      }
+      this.setUserLocationMarker()
     })
   },
   beforeDestroy() {
@@ -283,6 +309,9 @@ export default {
       if ( val === '/' ) {
         this.navigateToDefaultMapView()
       }
+    },
+    'filteredMarkerIDs': function() {
+      this.filterMapLayer()
     }
   }
 };
