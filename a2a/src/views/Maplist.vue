@@ -1,6 +1,6 @@
 <template>
     <div id="map-list-view">
-        <top-button-navigation></top-button-navigation>
+        <top-button-navigation :to-page="false"></top-button-navigation>
 
             <v-list>
                 <template

@@ -1,41 +1,66 @@
 <template>
-  <v-bottom-navigation grow app>
+  <v-bottom-navigation grow app v-model="activeNav">
     <v-btn
-        color="white"
-        to="/">
-      <span>Map</span>
+      v-for="nav in navItems"
+      :key="`bnav-${nav.value}`"
+      color="white"
+      :to="nav.to"
+      :value="nav.value">
+      <span>{{ nav.text }}</span>
 
-      <v-icon>mdi-map</v-icon>
-    </v-btn>
-
-    <v-btn 
-        color="white"
-        to="/map-list">
-      <span>List</span>
-
-      <v-icon>mdi-format-list-bulleted</v-icon>
-    </v-btn>
-
-    <v-btn
-        color="white"
-        to="/liked">
-      <span>Saved</span>
-
-      <v-icon>mdi-bookmark</v-icon>
-    </v-btn>
-
-    <v-btn
-        color="white"
-        to="/settings">
-      <span>Settings</span>
-
-      <v-icon>mdi-cog</v-icon>
+      <v-icon>{{ nav.icon }}</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>
 
 <script>
 export default {
-  name: "BottomNavigation"
+  name: "BottomNavigation",
+  data: () => {
+    return {
+      activeNav: '',
+      navItems: [
+        {
+          to: '/',
+          value: 'map',
+          icon: 'mdi-map',
+          text: 'Map'
+        },
+        {
+          to: '/map-list',
+          value: 'map-list',
+          icon: 'mdi-format-list-bulleted',
+          text: 'List'
+        },
+        {
+          to: '/liked',
+          value: 'liked',
+          icon: 'mdi-bookmark',
+          text: 'Saved'
+        },
+        {
+          to: '/settings',
+          value: 'settings',
+          icon: 'mdi-cog',
+          text: 'Settings'
+        }
+      ]
+    }
+  },
+  computed: {
+    isMapRoute() {
+      return this.$route.path.startsWith('/map-item') || this.$route.path === '/' 
+    }
+  },
+  created() {
+    if ( this.isMapRoute ) {
+      this.activeNav = 'map'
+    } else {
+      const existingNav = this.navItems.find(x => x.to === this.$route.path)
+      if ( existingNav && existingNav.value ) {
+        this.activeNav = existingNav.value
+      }
+    }
+  }
 }
 </script>
