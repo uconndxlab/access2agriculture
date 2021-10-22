@@ -1,8 +1,8 @@
 <template>
-  <v-container>
+  <v-container class="mt-3">
     <v-row justify="center">
       <v-col md="10">
-        <h1 class="display-2 font-weight-bold mb-3">Products</h1>
+        <h1 class="display-1 font-weight-black mb-3">Products</h1>
       </v-col>
     </v-row>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="about mt-3">
     <v-container>
       <v-row
         justify="center"
@@ -8,7 +8,7 @@
           md="10"
         >
           <h1
-            class="display-2 font-weight-bold mb-3"
+            class="display-1 font-weight-black mb-3"
           >Waypoints Dashboard</h1>
         </v-col>
       </v-row>

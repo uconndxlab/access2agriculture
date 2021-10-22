@@ -1,9 +1,9 @@
 <template>
-  <v-container>
+  <v-container class="mt-3">
     <v-row class="text-center">
 
       <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
+        <h1 class="display-1 font-weight-black mb-3">
           Access2Ag Admin
         </h1>
 
