@@ -114,6 +114,11 @@ export default {
             to: '/products'
           },
           {
+            title: "Routes",
+            icon: "mdi-bus",
+            to: "/routes"
+          },
+          {
             title: "Geo",
             icon: 'mdi-earth',
             to: '/geo'
