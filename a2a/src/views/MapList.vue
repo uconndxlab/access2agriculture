@@ -3,7 +3,10 @@
         <top-button-navigation
             :to-page="false"
             @topNavOpenFilter="openFilter()"
+            @locationHasError="displayLocationError"
         ></top-button-navigation>
+
+        <location-error ref="location_error_alert"></location-error>
 
         <v-list>
             <template
@@ -40,13 +43,15 @@ import { mapGetters } from 'vuex'
 import MapListItem from '@/components/MapListItem.vue'
 import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
 import Filter from "@/components/Filter.vue"
+import LocationError from "@/components/LocationError.vue"
 
 export default {
     name: "Maplist",
     components: {
         MapListItem,
         TopButtonNavigation,
-        MapPointsFilter: Filter
+        MapPointsFilter: Filter,
+        LocationError
     },
     data: () => ({
         filter_dialog: false
@@ -63,7 +68,11 @@ export default {
         },
         openFilter() {
             this.filter_dialog = true
-        }
+        },
+        displayLocationError(message) {
+            this.$refs.location_error_alert.updateMessage(message)
+            this.$refs.location_error_alert.showAlertForTime(10000)
+        },
     }
 }
 </script>

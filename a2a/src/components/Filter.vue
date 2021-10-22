@@ -211,10 +211,10 @@ export default {
         requestLocation() {
             this.showLocationStatusLoading = true
             if ( !navigator.geolocation ) {
-                console.log('Not able to retrieve location.')
+                console.log('Browser does not support location.')
                 this.showLocationStatusLoading = false
             } else {
-                console.log('Has access to location.')
+                console.log('Browser supports location.')
                 this.locationStatusMessage = 'Finding location.'
                 navigator.geolocation.getCurrentPosition((pos) => {
                     console.log(pos)

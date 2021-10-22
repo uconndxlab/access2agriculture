@@ -79,11 +79,11 @@ export default {
         requestLocation() {
             this.showNearMeLoader = true
             if (!navigator.geolocation) {
-                console.log("Not able to retrieve location.");
-                this.$emit('locationHasError')
+                console.log("Browser does not support location.");
+                this.$emit('locationHasError', "Browser does not support location services.")
                 this.showNearMeLoader = false
             } else {
-                console.log("Has access to location");
+                console.log("Browser supports location.");
                 navigator.geolocation.getCurrentPosition(
                     (pos) => {
                         console.log("Retrieved location:", pos);

@@ -4,7 +4,7 @@
       :to-page="false"
       @topNavOpenFilter="openFilter()"
       @locationJustSet="userJustSetNearMeLocation()"
-      @locationHasError="displayLocationError()"
+      @locationHasError="displayLocationError"
     ></top-button-navigation>
 
     <div id="map">
@@ -28,6 +28,8 @@
       <map-points-filter @filterCloseSelf="closeFilter()"></map-points-filter>
     </v-dialog>
 
+    <location-error ref="location_error_alert"></location-error>
+
     <v-alert
       class="intro-alert-description"
       type="info"
@@ -43,6 +45,7 @@ import mapboxgl from "mapbox-gl";
 import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
 import MapListItem from "@/components/MapListItem.vue"
 import Filter from "@/components/Filter.vue"
+import LocationError from "@/components/LocationError.vue"
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -50,7 +53,8 @@ export default {
   components: {
     TopButtonNavigation,
     MapPointsFilter: Filter,
-    MapListItem
+    MapListItem,
+    LocationError
   },
   data() {
     return {
@@ -189,8 +193,9 @@ export default {
       this.setUserLocationMarker()
       this.flyToUserLocation()
     },
-    displayLocationError() {
-      // TODO
+    displayLocationError(message) {
+      this.$refs.location_error_alert.updateMessage(message)
+      this.$refs.location_error_alert.showAlertForTime(10000)
     },
     flyToUserLocation() {
       if ( this.userLoc && this.userLocSet && this.userMarker ) {
