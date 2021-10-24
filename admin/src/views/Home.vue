@@ -3,13 +3,13 @@
 </template>
 
 <script>
-  import AccessAgHomeContent from '../components/AccessAgHomeContent'
+import AccessAgHomeContent from '../components/AccessAgHomeContent'
 
-  export default {
+export default {
     name: 'Home',
 
     components: {
-      AccessAgHomeContent,
+        AccessAgHomeContent,
     },
-  }
+}
 </script>

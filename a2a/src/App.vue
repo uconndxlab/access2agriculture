@@ -2,15 +2,20 @@
   <v-app>
     <v-main>
       <router-view/>
+      <bottom-navigation></bottom-navigation>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import BottomNavigation from '@/components/BottomNavigation.vue'
 
 export default {
   name: 'App',
+  components: {
+    BottomNavigation
+  },
   methods: {
     ...mapActions(['fetchProducts', 'fetchWaypoints', 'fetchAssistanceOptions'])
   },

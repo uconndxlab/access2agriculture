@@ -4,6 +4,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as fb from '../firebase'
 import * as geofire from 'geofire-common'
+import * as strings from '../strings'
 // import router from './router'
 
 Vue.use(Vuex)
@@ -33,7 +34,8 @@ const initialState = () => {
       },
       hasBeenSet: false
     },
-    bookmarks: ( localStorage.getItem('a2a_bookmarks') ) ? JSON.parse(localStorage.getItem('a2a_bookmarks')) : []
+    bookmarks: ( localStorage.getItem('a2a_bookmarks') ) ? JSON.parse(localStorage.getItem('a2a_bookmarks')) : [],
+    strings: strings
   }
 }
 
@@ -56,6 +58,9 @@ const store = new Vuex.Store({
         assistanceOptions: val.assistanceOptions,
         products: val.products
       }
+    },
+    SET_FILTER_LOCATION_DISTANCE(state, val) {
+      state.filter.distance = val
     },
     RESET_FILTER(state) {
       state.filter = initialState().filter
@@ -98,6 +103,12 @@ const store = new Vuex.Store({
         return waypoint_arr[0]
       }
       return {}
+    },
+    string: (state) => (key) => {
+      if ( key in state.strings ) {
+        return state.strings[key]
+      }
+      return ''
     },
     productObjects(state) {
       return state.products

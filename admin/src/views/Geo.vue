@@ -1,9 +1,9 @@
 <template>
-    <div class="page-geo">
+    <div class="page-geo mt-3">
         <v-container>
             <v-row justify="center">
                 <v-col md="10">
-                    <h1>Geo Tools</h1>
+                    <h1 class="display-1 font-weight-black mb-3">Geo Tools</h1>
                     <p>Firebase requires a <a href="https://firebase.google.com/docs/firestore/solutions/geoqueries">Geohash</a> property saved on documents in order to perform distance queries.  This tool can generate hashes for the data set.</p>
 
                     <v-btn

@@ -8,7 +8,7 @@
             >
                 <map-list-item
                     :key="waypoint.id"
-                    :waypoint="waypoint"
+                    :starting_waypoint="waypoint"
                 ></map-list-item>
 
                 <v-divider

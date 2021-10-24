@@ -12,6 +12,7 @@ const initialState = {
     products: [],
     waypoints: [],
     assistance_options: [],
+    routes: [],
     business_types: [
         'Community Garden',
         'Farm',
@@ -36,6 +37,9 @@ const store = new Vuex.Store({
         setWaypoints(state, val) {
             state.waypoints = val
         },
+        setRoutes(state, val) {
+            state.routes = val
+        },
         setAssistanceOptions(state, val) {
             state.assistance_options = val
         },
@@ -57,6 +61,14 @@ const store = new Vuex.Store({
                 Vue.set(state.products, index, val);
             }
         },
+        setUpdatedRoute(state, val) {
+            let index = state.routes.findIndex(r => {
+                return r.id == val.id
+            })
+            if ( index != -1 ) {
+                Vue.set(state.routes, index, val)
+            }
+        },
         prependWaypoint(state, val) {
             let new_state_waypoints = state.waypoints.slice()
             new_state_waypoints.unshift(val)
@@ -66,6 +78,11 @@ const store = new Vuex.Store({
             let new_state_products = state.products.slice()
             new_state_products.unshift(val)
             state.products = new_state_products
+        },
+        prependRoute(state, val) {
+            let new_state_routes = state.routes.slice()
+            new_state_routes.unshift(val)
+            state.routes = new_state_routes
         }
     },
 
@@ -78,6 +95,12 @@ const store = new Vuex.Store({
         },
         productObjects(state) {
             return state.products
+        },
+        routeObjects(state) {
+            return state.routes
+        },
+        businessTypes(state) {
+            return state.business_types
         },
         assistanceOptionsObjects(state) {
             return state.assistance_options
@@ -135,6 +158,7 @@ const store = new Vuex.Store({
 
             commit('setProducts', products_extracted)
         },
+    
         async addProduct({ commit }, product) {
             const product_with_name = await fb.productsCollection
                 .where('name', '==', product.name)
@@ -174,7 +198,7 @@ const store = new Vuex.Store({
             if ( product_exists ) {
                 throw new Error('Product Already Exists with Name')
             } else {
-                const product_commit = fb.productsCollection.doc(product_id).update(product)
+                const product_commit = await fb.productsCollection.doc(product_id).update(product)
 
                 product.id = product_id
                 commit('setUpdatedProduct', product)
@@ -209,6 +233,7 @@ const store = new Vuex.Store({
                 throw new Error('Waypoint already exists with this name')
             } else {
                 // Blindly update all properties.  Can split this out if we want.
+                waypoint.coordinates = new fb.firestore.GeoPoint(waypoint.coordinates._lat, waypoint.coordinates._long)
                 const waypoint_commit = await fb.waypointsCollection.doc(waypoint_id).update(waypoint)
 
                 // Reassign id.
@@ -280,6 +305,73 @@ const store = new Vuex.Store({
             const waypoint_in_collection_ref = fb.waypointsCollection.doc(waypoint.id)
             const waypoint_in_collection = await waypoint_in_collection_ref.get()
             return waypoint_in_collection.exists
+        },
+
+        /**
+         * Routes actions.
+         */
+        async fetchRoutes({ commit }) {
+            const routes = await fb.routesCollection.get()
+            const routes_extracted = routes.docs.map( route => {
+                let route_obj = route.data()
+                route_obj.id = route.id
+                return route_obj
+            })
+
+            commit('setRoutes', routes_extracted)
+        },
+
+        async editRoute({ commit }, route) {
+            const route_id = route.id
+            delete route.id
+
+            const routes_with_name = await fb.routesCollection
+                .where('name', '==', route.name)
+                .get()
+            
+            const route_exists = routes_with_name
+                && routes_with_name.docs
+                && routes_with_name.docs.length > 0
+                && route_id != routes_with_name.docs[0].id
+
+            if ( route_exists ) {
+                throw new Error('Route already exists with name.')
+            } else {
+                const route_commit = await fb.routesCollection.doc(route_id).update(route)
+
+                route.id = route_id
+                commit('setUpdatedRoute', route)
+                return route_commit
+            }
+        },
+
+        async addRoute({ commit }, route) {
+            const routes_with_name = await fb.routesCollection
+                .where('name', '==', route.name)
+                .get()
+
+            const route_exists = routes_with_name
+                && routes_with_name.docs
+                && routes_with_name.docs.length > 0
+
+            if ( route_exists ) {
+                throw new Error('Route already exists with given name.')
+            } else {
+                const route_create = await fb.routesCollection
+                    .add(route)
+
+                if ( route_create && route_create.id ) {
+                    const read_route = await fb.routesCollection.doc(route_create.id).get()
+
+                    if ( read_route ) {
+                        let new_route_obj = read_route.data()
+                        new_route_obj.id = read_route.id
+                        commit('prependRoute', new_route_obj)
+                    }
+                }
+            }
+
+            return true
         }
     }
 })

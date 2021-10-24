@@ -25,6 +25,7 @@ const storage = firebase.storage()
 const productsCollection = db.collection('products')
 const waypointsCollection = db.collection('waypoints')
 const usersCollection = db.collection('users')
+const routesCollection = db.collection('routes')
 const assistanceOptionsCollection = db.collection('assistance_options')
 
 export {
@@ -35,5 +36,6 @@ export {
     productsCollection,
     waypointsCollection,
     usersCollection,
+    routesCollection,
     assistanceOptionsCollection
 }
