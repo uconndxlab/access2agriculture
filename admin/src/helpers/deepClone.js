@@ -1,6 +1,6 @@
 // This function exists because there are conditions in which JSON.parse(JSON.stringify)) will strip necessary information from an object, such as _lat,_long in firebase.
 export function deepCloneWaypoint (item) {
-    return {
+    let wp = {
         name: item.name,
         address: item.address,
         coordinates: {
@@ -17,11 +17,23 @@ export function deepCloneWaypoint (item) {
         zip: item.zip,
         town: item.town,
         id: item.id,
-        assistance_options: item.assistance_options
+        assistance_options: item.assistance_options,
+        routes: []
     }
+    if ( item.routes ) {
+        wp.routes = item.routes
+    }
+    return wp
 }
 
 export function deepCloneProduct (item) {
+    return {
+        id: item.id,
+        name: item.name
+    }
+}
+
+export function deepCloneRoute (item) {
     return {
         id: item.id,
         name: item.name

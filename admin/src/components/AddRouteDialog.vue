@@ -1,13 +1,14 @@
 <template>
-    <v-dialog v-model="show" width="600">
+    <v-dialog v-model="show" max-width="600px">
         <v-card>
             <v-card-title>
-                <span class="text-h5 mb-2">Add Product</span>
+                <span class="text-h5 mb-2">Add Route</span>
             </v-card-title>
-            <v-form ref="add_product_form">
+            
+            <v-form ref="add_route_form">
                 <v-card-text>
                     <v-text-field
-                        v-model="product.name"
+                        v-model="route.name"
                         :rules="form_rules.name"
                     >
                         <template #label>
@@ -22,12 +23,14 @@
                     <v-btn text @click="close()"
                         >Close</v-btn
                     >
+                    <v-spacer></v-spacer>
                     <v-btn
                         text
-                        @click="addProductAction(product)"
-                        >Add New Product</v-btn
+                        @click="addRouteAction(route)"
+                        >Add New Route</v-btn
                     >
                 </v-card-actions>
+                
             </v-form>
         </v-card>
     </v-dialog>
@@ -36,54 +39,56 @@
 <script>
 import { mapActions } from 'vuex'
 import { waypointFormRules } from '@/rules/waypoint.js'
-function default_add_product() {
+
+function default_route_object() {
     return {
         name: ''
     }
+    
 }
 
 export default {
     data: () => {
         return {
             show: false,
-            product: default_add_product(),
+            route: default_route_object(),
             form_rules: waypointFormRules
         }
     },
     methods: {
-        ...mapActions(['addProduct']),
+        ...mapActions(['addRoute']),
         open() {
-            this.product = default_add_product()
+            this.route = default_route_object()
             this.show = true
         },
         close() {
-            this.product = default_add_product()
+            this.route = default_route_object()
             this.resetValidation()
             this.show = false
         },
-        addProductAction(product) {
-            let valid = this.validate();
-            if (valid) {
-                this.addProduct(product)
+        addRouteAction(route) {
+            let valid = this.validate()
+            if ( valid ) {
+                this.addRoute(route)
                     .then(() => {
-                        this.$emit('successMessage', 'Product Created!')
+                        this.$emit('successMessage', 'Route created!')
                         this.close()
                     })
-                    .catch((error) => {
-                        this.$emit('errorMessage', error.message)
+                    .catch((err) => {
+                        this.$emit('errorMessage', err.message)
                         this.close()
-                    });
+                    })
             }
         },
         validate() {
-            return this.$refs.add_product_form.validate();
+            return this.$refs.add_route_form.validate();
         },
         resetValidation() {
-            if (this.$refs && this.$refs.add_product_form) {
-                this.$refs.add_product_form.resetValidation();
+            if (this.$refs && this.$refs.add_route_form) {
+                this.$refs.add_route_form.resetValidation();
             }
         }
     }
+    
 }
 </script>
-

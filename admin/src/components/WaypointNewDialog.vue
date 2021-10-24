@@ -224,14 +224,16 @@ import { mapGetters, mapActions } from 'vuex'
 import { waypointFormRules } from '@/rules/waypoint.js'
 import { states } from '@/data/states.js'
 
-const default_waypoint_object = {
-    state: "CT",
-    coordinates: {},
+function default_waypoint_object() {
+    return {
+        state: "CT",
+        coordinates: {}
+    }
 }
 export default {
     data: () => {
         return {
-            waypoint: default_waypoint_object,
+            waypoint: default_waypoint_object(),
             form_rules: waypointFormRules,
             show: false,
             states: states
@@ -257,7 +259,7 @@ export default {
             this.show = false
         },
         clear() {
-            this.waypoint = default_waypoint_object
+            this.waypoint = default_waypoint_object()
         },
         resetValidation() {
             if (this.$refs && this.$refs.add_waypoint_form) {

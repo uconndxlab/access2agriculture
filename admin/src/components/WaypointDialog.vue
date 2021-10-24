@@ -359,6 +359,37 @@
                                 </div>
                             </v-col>
                         </v-row>
+
+
+                        <!-- Routes Field -->
+                        <v-row>
+                            <v-col>
+                                <div v-if="!editing">
+                                    <div class="text-subtitle-1 font-weight-bold">
+                                        Route(s)
+                                    </div>
+                                    <v-chip
+                                        v-for="r in waypoint_routes"
+                                        :key="`rs-${r.id}`"
+                                        class="mr-2"
+                                    >{{ r.name }}</v-chip>
+                                    <p v-if="waypoint_routes.length === 0">
+                                        No routes.
+                                    </p>
+                                </div>
+                                <div v-if="editing">
+                                    <v-select
+                                        :items="routes"
+                                        v-model="waypoint.routes"
+                                        item-value="id"
+                                        item-text="name"
+                                        label="Routes"
+                                        multiple
+                                        chips
+                                    ></v-select>
+                                </div>
+                            </v-col>
+                        </v-row>
                     </v-card-text>
 
 
@@ -417,7 +448,8 @@ export default {
         ...mapGetters({
             products: 'productObjects',
             assistance_options: 'assistanceOptionsObjects',
-            business_types: 'businessTypes'
+            business_types: 'businessTypes',
+            routes: 'routeObjects'
         }),
         icon() {
             if ( this.editing ) {
@@ -466,6 +498,17 @@ export default {
                 });
             }
             return [];
+        },
+        waypoint_routes() {
+            if ( this.waypoint.routes && this.routes ) {
+                return this.routes.filter((r) => {
+                    if ( this.waypoint.routes.includes(r.id)) {
+                        return true
+                    }
+                    return false
+                })
+            }
+            return []
         },
         waypoint_assistance_options() {
             if (

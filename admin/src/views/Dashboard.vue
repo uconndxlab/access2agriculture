@@ -168,7 +168,8 @@ export default {
         ...mapActions([
             "fetchProducts",
             "fetchWaypoints",
-            "fetchAssistanceOptions"
+            "fetchAssistanceOptions",
+            "fetchRoutes"
         ]),
         openWaypointImageUploader(waypoint) {
             this.closeWaypointDialogs();
@@ -221,6 +222,7 @@ export default {
         this.fetchProducts();
         this.fetchWaypoints();
         this.fetchAssistanceOptions();
+        this.fetchRoutes()
     },
 };
 </script>
