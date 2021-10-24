@@ -367,6 +367,7 @@ import WaypointImageUploader from "@/components/WaypointImageUploader.vue";
 import WaypointDialog from "@/components/WaypointDialog.vue";
 import { waypointFormRules } from "@/rules/waypoint.js"
 import { deepCloneWaypoint } from "@/helpers/deepClone.js"
+import { states } from '@/data/states.js'
 
 export default {
     components: {
@@ -414,6 +415,7 @@ export default {
                 sortable: false,
             },
         ],
+        states: states,
         add_waypoint_form_rules: waypointFormRules,
     }),
     computed: {
