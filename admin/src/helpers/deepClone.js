@@ -16,6 +16,7 @@ export function deepCloneWaypoint (item) {
         website: item.website,
         zip: item.zip,
         town: item.town,
-        id: item.id
+        id: item.id,
+        assistance_options: item.assistance_options
     }
 }

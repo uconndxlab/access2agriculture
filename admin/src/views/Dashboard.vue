@@ -34,275 +34,18 @@
                             >
                         </v-card-title>
 
-                        <v-dialog v-model="add_waypoint_dialog" width="600">
-                            <v-card>
-                                <v-card-title>
-                                    <span class="text-h5 mb-2"
-                                        >Add Waypoint</span
-                                    >
-                                </v-card-title>
-                                <v-form ref="add_waypoint_form">
-                                    <v-card-text>
-                                        <v-text-field
-                                            v-model="adding_waypoint.name"
-                                            :rules="
-                                                add_waypoint_form_rules.name
-                                            "
-                                        >
-                                            <template #label>
-                                                Name
-                                                <span class="red--text"
-                                                    ><strong> *</strong></span
-                                                >
-                                            </template>
-                                        </v-text-field>
-                                    </v-card-text>
-                                    <!-- <v-divider></v-divider> -->
-                                    <v-card-title>Location</v-card-title>
-                                    <v-card-text>
-                                        <v-row>
-                                            <v-col>
-                                                <v-text-field
-                                                    v-model="
-                                                        adding_waypoint.address
-                                                    "
-                                                    :rules="
-                                                        add_waypoint_form_rules.required_text
-                                                    "
-                                                >
-                                                    <template #label>
-                                                        Street Address
-                                                        <span class="red--text"
-                                                            ><strong>
-                                                                *</strong
-                                                            ></span
-                                                        >
-                                                    </template>
-                                                </v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-select
-                                                    :items="states"
-                                                    v-model="
-                                                        adding_waypoint.state
-                                                    "
-                                                >
-                                                    <template #label>
-                                                        State
-                                                        <span class="red--text"
-                                                            ><strong>
-                                                                *</strong
-                                                            ></span
-                                                        >
-                                                    </template>
-                                                </v-select>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field
-                                                    v-model="
-                                                        adding_waypoint.town
-                                                    "
-                                                    :rules="
-                                                        add_waypoint_form_rules.required_text
-                                                    "
-                                                >
-                                                    <template #label>
-                                                        Town
-                                                        <span class="red--text"
-                                                            ><strong>
-                                                                *</strong
-                                                            ></span
-                                                        >
-                                                    </template>
-                                                </v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field
-                                                    v-model="
-                                                        adding_waypoint.zip
-                                                    "
-                                                    label="Zip Code"
-                                                    :rules="
-                                                        add_waypoint_form_rules.basic_input_under_1000
-                                                    "
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row
-                                            v-if="adding_waypoint.coordinates"
-                                        >
-                                            <v-col md="4">
-                                                <v-text-field
-                                                    v-model="
-                                                        adding_waypoint
-                                                            .coordinates._lat
-                                                    "
-                                                    :rules="
-                                                        add_waypoint_form_rules.latitude_required
-                                                    "
-                                                    required
-                                                    placeholder="41.71403"
-                                                >
-                                                    <template #label>
-                                                        Latitude
-                                                        <span class="red--text"
-                                                            ><strong>
-                                                                *</strong
-                                                            ></span
-                                                        >
-                                                    </template>
-                                                </v-text-field>
-                                            </v-col>
-                                            <v-col md="4">
-                                                <v-text-field
-                                                    v-model="
-                                                        adding_waypoint
-                                                            .coordinates._long
-                                                    "
-                                                    :rules="
-                                                        add_waypoint_form_rules.longitude_required
-                                                    "
-                                                    required
-                                                    placeholder="-72.21541"
-                                                >
-                                                    <template #label>
-                                                        Longitude
-                                                        <span class="red--text"
-                                                            ><strong>
-                                                                *</strong
-                                                            ></span
-                                                        >
-                                                    </template>
-                                                </v-text-field>
-                                            </v-col>
-                                            <v-col md="4">
-                                                <a
-                                                    href="https://www.latlong.net/"
-                                                    target="_blank"
-                                                    >Help Finding
-                                                    Latitude/Longitude?</a
-                                                >
-                                            </v-col>
-                                        </v-row>
-                                    </v-card-text>
-                                    <!-- <v-divider></v-divider> -->
-                                    <v-card-title>Contact</v-card-title>
-                                    <v-card-text>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="6">
-                                                <v-text-field
-                                                    v-model="
-                                                        adding_waypoint.phone
-                                                    "
-                                                    label="Phone"
-                                                    :rules="
-                                                        add_waypoint_form_rules.basic_input_under_1000
-                                                    "
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="6">
-                                                <v-text-field
-                                                    v-model="
-                                                        adding_waypoint.hours
-                                                    "
-                                                    label="Hours"
-                                                    placeholder="M-F: 8a-6p, Sat-Sun: 10a-4p"
-                                                    :rules="
-                                                        add_waypoint_form_rules.basic_input_under_1000
-                                                    "
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    v-model="
-                                                        adding_waypoint.website
-                                                    "
-                                                    label="Website"
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                    </v-card-text>
-                                    <!-- <v-divider></v-divider> -->
-                                    <v-card-title>Metadata</v-card-title>
-                                    <v-card-text>
-                                        <v-row>
-                                            <v-col cols="12" md="6">
-                                                <v-select
-                                                    :items="business_types"
-                                                    v-model="
-                                                        adding_waypoint.type
-                                                    "
-                                                    :rules="
-                                                        add_waypoint_form_rules.required_text
-                                                    "
-                                                >
-                                                    <template #label>
-                                                        Business Type
-                                                        <span class="red--text"
-                                                            ><strong>
-                                                                *</strong
-                                                            ></span
-                                                        >
-                                                    </template>
-                                                </v-select>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row>
-                                            <v-col>
-                                                <v-select
-                                                    :items="products"
-                                                    v-model="
-                                                        adding_waypoint.products
-                                                    "
-                                                    item-value="id"
-                                                    item-text="name"
-                                                    label="Products"
-                                                    multiple
-                                                    chips
-                                                ></v-select>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row>
-                                            <v-col>
-                                                <v-select
-                                                    :items="assistance_options"
-                                                    v-model="
-                                                        adding_waypoint.assistance_options
-                                                    "
-                                                    item-value="id"
-                                                    item-text="name"
-                                                    label="Assistance Options"
-                                                    multiple
-                                                    chips
-                                                ></v-select>
-                                            </v-col>
-                                        </v-row>
-                                    </v-card-text>
-                                    <v-divider></v-divider>
-                                    <v-card-actions>
-                                        <v-btn
-                                            text
-                                            @click="closeWaypointDialogs()"
-                                            >Close</v-btn
-                                        >
-                                        <v-btn
-                                            text
-                                            @click="addItem(adding_waypoint)"
-                                            >Add New Waypoint</v-btn
-                                        >
-                                    </v-card-actions>
-                                </v-form>
-                            </v-card>
-                        </v-dialog>
-
                         <waypoint-dialog
                             ref="waypoint_fullcard"
                             @successMessage="showSuccessMessage"
                             @errorMessage="showErrorMessage"
                             @openImageUploader="openWaypointImageUploader"
                         ></waypoint-dialog>
+
+                        <waypoint-new-dialog
+                            ref="waypoint_new_dialog"
+                            @successMessage="showSuccessMessage"
+                            @errorMessage="showErrorMessage"
+                        ></waypoint-new-dialog>
 
                         <v-data-table
                             :search="waypoint_search"
@@ -365,22 +108,16 @@
 import { mapActions, mapState, mapGetters } from "vuex";
 import WaypointImageUploader from "@/components/WaypointImageUploader.vue";
 import WaypointDialog from "@/components/WaypointDialog.vue";
-import { waypointFormRules } from "@/rules/waypoint.js"
+import WaypointNewDialog from "@/components/WaypointNewDialog.vue";
 import { deepCloneWaypoint } from "@/helpers/deepClone.js"
-import { states } from '@/data/states.js'
 
 export default {
     components: {
         WaypointImageUploader,
         WaypointDialog,
+        WaypointNewDialog
     },
     data: () => ({
-        add_waypoint_dialog: false,
-        adding_waypoint: {},
-        default_adding_waypoint_object: {
-            state: "CT",
-            coordinates: {},
-        },
         show_not_finished_yet: false,
         show_success_message: false,
         success_message_text: "",
@@ -414,9 +151,7 @@ export default {
                 value: "actions",
                 sortable: false,
             },
-        ],
-        states: states,
-        add_waypoint_form_rules: waypointFormRules,
+        ]
     }),
     computed: {
         ...mapState({
@@ -433,8 +168,7 @@ export default {
         ...mapActions([
             "fetchProducts",
             "fetchWaypoints",
-            "fetchAssistanceOptions",
-            "addWaypoint",
+            "fetchAssistanceOptions"
         ]),
         openWaypointImageUploader(waypoint) {
             this.closeWaypointDialogs();
@@ -455,22 +189,7 @@ export default {
         },
         newItem() {
             this.closeWaypointDialogs();
-            this.add_waypoint_dialog = true;
-        },
-        addItem(item) {
-            let valid = this.validateAddWaypointForm();
-            if (valid) {
-                this.addWaypoint(item)
-                    .then(() => {
-                        this.clearAddWaypointObject();
-                        this.showSuccessMessage("Waypoint Created!");
-                        this.closeWaypointDialogs();
-                    })
-                    .catch((err) => {
-                        this.showErrorMessage(err.message);
-                    });
-                this.closeWaypointDialogs();
-            }
+            this.$refs.waypoint_new_dialog.open();
         },
         showNotFinishedMessage() {
             this.clearMessages();
@@ -489,38 +208,19 @@ export default {
             this.show_error_message = true;
         },
         closeWaypointDialogs() {
-            this.add_waypoint_dialog = false;
-            this.addWaypointFormResetValidation();
-
             this.$refs.waypoint_fullcard.close();
+            this.$refs.waypoint_new_dialog.close()
         },
         clearMessages() {
             this.show_not_finished_yet = false;
             this.show_success_message = false;
             this.show_error_message = false;
-        },
-        validateAddWaypointForm() {
-            return this.$refs.add_waypoint_form.validate();
-        },
-        addWaypointFormResetValidation() {
-            if (this.$refs && this.$refs.add_waypoint_form) {
-                this.$refs.add_waypoint_form.resetValidation();
-            }
-        },
-        clearAddWaypointObject() {
-            this.adding_waypoint = {
-                ...this.default_adding_waypoint_object,
-                coordinates: {
-                    ...this.default_adding_waypoint_object.coordinates,
-                },
-            };
-        },
+        }
     },
     mounted() {
         this.fetchProducts();
         this.fetchWaypoints();
         this.fetchAssistanceOptions();
-        this.clearAddWaypointObject();
     },
 };
 </script>
