@@ -177,7 +177,7 @@ const store = new Vuex.Store({
             if ( product_exists ) {
                 throw new Error('Product Already Exists with Name')
             } else {
-                const product_commit = fb.productsCollection.doc(product_id).update(product)
+                const product_commit = await fb.productsCollection.doc(product_id).update(product)
 
                 product.id = product_id
                 commit('setUpdatedProduct', product)

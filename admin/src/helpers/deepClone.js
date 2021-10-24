@@ -20,3 +20,10 @@ export function deepCloneWaypoint (item) {
         assistance_options: item.assistance_options
     }
 }
+
+export function deepCloneProduct (item) {
+    return {
+        id: item.id,
+        name: item.name
+    }
+}
