@@ -79,6 +79,9 @@ const store = new Vuex.Store({
         productObjects(state) {
             return state.products
         },
+        businessTypes(state) {
+            return state.business_types
+        },
         assistanceOptionsObjects(state) {
             return state.assistance_options
         }

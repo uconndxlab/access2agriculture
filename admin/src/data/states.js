@@ -1,0 +1,1 @@
+export const states = ["CT", "MA", "RI", "VT", "NH", "NY"]
