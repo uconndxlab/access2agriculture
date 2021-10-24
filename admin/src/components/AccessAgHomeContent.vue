@@ -37,28 +37,28 @@
 </template>
 
 <script>
-  export default {
+export default {
     name: 'AccessAgHomeContent',
 
     data: () => ({
-      importantLinks: [
-        {
-          text: 'University of Connecticut',
-          href: 'https://uconn.edu',
-        },
-        {
-          text: 'Digital Experience Group',
-          href: 'https://dxgroup.core.uconn.edu/',
-        },
-        {
-          text: 'Center for Open Research Resources and Equipment',
-          href: 'https://core.uconn.edu/news',
-        },
-        {
-          text: 'Connecticut Resource Conservation and Development',
-          href: 'https://ctrcd.org/',
-        }
-      ]
+        importantLinks: [
+            {
+                text: 'University of Connecticut',
+                href: 'https://uconn.edu',
+            },
+            {
+                text: 'Digital Experience Group',
+                href: 'https://dxgroup.core.uconn.edu/',
+            },
+            {
+                text: 'Center for Open Research Resources and Equipment',
+                href: 'https://core.uconn.edu/news',
+            },
+            {
+                text: 'Connecticut Resource Conservation and Development',
+                href: 'https://ctrcd.org/',
+            }
+        ]
     }),
-  }
+}
 </script>

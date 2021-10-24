@@ -83,68 +83,68 @@
 import { mapGetters, mapState, mapActions } from 'vuex'
 
 export default {
-  name: 'App',
+    name: 'App',
 
-  data: () => ({
-    drawer: true
-  }),
-  computed: {
-    ...mapState({
-      user: state => state.user
+    data: () => ({
+        drawer: true
     }),
-    ...mapGetters({
-      loggedIn: 'isLoggedIn'
-    }),
-    navItems() {
-      if ( this.loggedIn ) {
-        return [
-          {
-            title: "Home",
-            icon: 'mdi-home',
-            to: '/'
-          },
-          {
-            title: "Waypoints",
-            icon: 'mdi-view-dashboard',
-            to: '/dashboard'
-          },
-          {
-            title: "Products",
-            icon: 'mdi-format-list-bulleted',
-            to: '/products'
-          },
-          {
-            title: "Routes",
-            icon: "mdi-bus",
-            to: "/routes"
-          },
-          {
-            title: "Geo",
-            icon: 'mdi-earth',
-            to: '/geo'
-          }
-        ]
-      }
-      return [
-        {
-          title: "Home",
-          icon: 'mdi-home',
-          to: '/'
-        },
-        {
-          title: "Login",
-          icon: 'mdi-account',
-          to: '/login'
+    computed: {
+        ...mapState({
+            user: state => state.user
+        }),
+        ...mapGetters({
+            loggedIn: 'isLoggedIn'
+        }),
+        navItems() {
+            if ( this.loggedIn ) {
+                return [
+                    {
+                        title: "Home",
+                        icon: 'mdi-home',
+                        to: '/'
+                    },
+                    {
+                        title: "Waypoints",
+                        icon: 'mdi-view-dashboard',
+                        to: '/dashboard'
+                    },
+                    {
+                        title: "Products",
+                        icon: 'mdi-format-list-bulleted',
+                        to: '/products'
+                    },
+                    {
+                        title: "Routes",
+                        icon: "mdi-bus",
+                        to: "/routes"
+                    },
+                    {
+                        title: "Geo",
+                        icon: 'mdi-earth',
+                        to: '/geo'
+                    }
+                ]
+            }
+            return [
+                {
+                    title: "Home",
+                    icon: 'mdi-home',
+                    to: '/'
+                },
+                {
+                    title: "Login",
+                    icon: 'mdi-account',
+                    to: '/login'
+                }
+            ]
         }
-      ]
+    },
+    methods: {
+        ...mapActions(['authAction', 'logout'])
+    },
+    mounted() {
+        this.authAction()
     }
-  },
-  methods: {
-    ...mapActions(['authAction', 'logout'])
-  },
-  mounted() {
-    this.authAction()
-  }
 };
 </script>
 

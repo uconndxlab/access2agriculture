@@ -125,15 +125,15 @@ export default {
                             // Unsuccessful upload
                             this.message.type = 'error'
                             switch ( error.code ) {
-                                case 'storage/unauthorized':
-                                    this.message.body = 'Authenticated user is not authorized to upload.'
-                                    break
-                                case 'storage/canceled':
-                                    this.message.body = 'Upload was cancelled.'
-                                    break
-                                case 'storage/unknown':
-                                    this.message.body = 'Unknown error occurred.  Check logs.'
-                                    break
+                            case 'storage/unauthorized':
+                                this.message.body = 'Authenticated user is not authorized to upload.'
+                                break
+                            case 'storage/canceled':
+                                this.message.body = 'Upload was cancelled.'
+                                break
+                            case 'storage/unknown':
+                                this.message.body = 'Unknown error occurred.  Check logs.'
+                                break
                             }
                             this.message.show = true
                         },

@@ -116,159 +116,159 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  data: () => ({
-    add_product_dialog: false,
-    edit_product_dialog: false,
-    adding_product: {},
-    editing_product: {},
-    show_not_finished_yet: false,
-    show_success_message: false,
-    success_message_text: "",
-    show_error_message: false,
-    error_message_text: "",
-    product_headers: [
-      {
-        text: "Name",
-        align: "start",
-        value: "name",
-      },
-      {
-        text: "Actions",
-        value: "actions",
-        sortable: false,
-        align: "end",
-      },
-    ],
-    product_search: "",
-    add_waypoint_form_rules: {
-      name: [
-        (value) => !!value || "A unique name is required.",
-        (value) =>
-          (value && value.length <= 1000) ||
+    data: () => ({
+        add_product_dialog: false,
+        edit_product_dialog: false,
+        adding_product: {},
+        editing_product: {},
+        show_not_finished_yet: false,
+        show_success_message: false,
+        success_message_text: "",
+        show_error_message: false,
+        error_message_text: "",
+        product_headers: [
+            {
+                text: "Name",
+                align: "start",
+                value: "name",
+            },
+            {
+                text: "Actions",
+                value: "actions",
+                sortable: false,
+                align: "end",
+            },
+        ],
+        product_search: "",
+        add_waypoint_form_rules: {
+            name: [
+                (value) => !!value || "A unique name is required.",
+                (value) =>
+                    (value && value.length <= 1000) ||
           "Name is unusually long, please shorten.",
-      ],
-      required_text: [(value) => !!value || "This field is required."],
-      basic_input_under_1000: [
-        (value) =>
-          (value ? value.length <= 1000 : true) ||
+            ],
+            required_text: [(value) => !!value || "This field is required."],
+            basic_input_under_1000: [
+                (value) =>
+                    (value ? value.length <= 1000 : true) ||
           "This field should be less than 1000 characters.",
-      ],
-      latitude: [
-        (value) =>
-          (value ? value >= -90 && value <= 90 : true) ||
+            ],
+            latitude: [
+                (value) =>
+                    (value ? value >= -90 && value <= 90 : true) ||
           "Latitude is between -90 and 90",
-      ],
-      latitude_required: [
-        (value) => !!value || "This field is required.",
-        (value) =>
-          (value && value >= -90 && value <= 90) ||
+            ],
+            latitude_required: [
+                (value) => !!value || "This field is required.",
+                (value) =>
+                    (value && value >= -90 && value <= 90) ||
           "Latitude is between -90 and 90",
-      ],
-      longitude: [
-        (value) =>
-          (value ? value >= -180 && value <= 180 : true) ||
+            ],
+            longitude: [
+                (value) =>
+                    (value ? value >= -180 && value <= 180 : true) ||
           "Longitude is between -180 and 180",
-      ],
-      longitude_required: [
-        (value) => !!value || "This field is required.",
-        (value) =>
-          (value && value >= -180 && value <= 180) ||
+            ],
+            longitude_required: [
+                (value) => !!value || "This field is required.",
+                (value) =>
+                    (value && value >= -180 && value <= 180) ||
           "Longitude is between -180 and 180",
-      ],
-    },
-  }),
-  computed: {
-    ...mapGetters({
-      // This is a getter because deep object properties can be updated and need to be handled with Vue.set for reactivity
-      products: "productObjects",
+            ],
+        },
     }),
-  },
-  methods: {
-    ...mapActions(["fetchProducts", "addProduct", "editProduct"]),
-    newProductOpen() {
-      this.closeWaypointDialogs();
-      this.add_product_dialog = true;
+    computed: {
+        ...mapGetters({
+            // This is a getter because deep object properties can be updated and need to be handled with Vue.set for reactivity
+            products: "productObjects",
+        }),
     },
-    addProductAction(product) {
-      let valid = this.validateAddProductForm();
-      if (valid) {
-        this.addProduct(product)
-          .then(() => {
-            this.adding_product = {};
-            this.showSuccessMessage("Product Created!");
+    methods: {
+        ...mapActions(["fetchProducts", "addProduct", "editProduct"]),
+        newProductOpen() {
             this.closeWaypointDialogs();
-          })
-          .catch((error) => {
-            this.showErrorMessage(error.message);
+            this.add_product_dialog = true;
+        },
+        addProductAction(product) {
+            let valid = this.validateAddProductForm();
+            if (valid) {
+                this.addProduct(product)
+                    .then(() => {
+                        this.adding_product = {};
+                        this.showSuccessMessage("Product Created!");
+                        this.closeWaypointDialogs();
+                    })
+                    .catch((error) => {
+                        this.showErrorMessage(error.message);
+                        this.closeWaypointDialogs();
+                    });
+            }
+        },
+        editProductOpen(product) {
             this.closeWaypointDialogs();
-          });
-      }
+            this.editing_product = { ...product };
+            this.edit_product_dialog = true;
+        },
+        editProductAction(product) {
+            let valid = this.validateEditProductForm();
+            if (valid) {
+                this.editProduct(product)
+                    .then(() => {
+                        this.showSuccessMessage("Product Edited Successfully!");
+                        this.closeWaypointDialogs();
+                    })
+                    .catch((err) => {
+                        this.showErrorMessage(err.message);
+                    });
+                this.closeWaypointDialogs();
+            }
+        },
+        showNotFinishedMessage() {
+            this.clearMessages();
+            setTimeout(() => {
+                this.show_not_finished_yet = true;
+            }, 100);
+        },
+        showSuccessMessage(message) {
+            this.clearMessages();
+            this.success_message_text = message;
+            this.show_success_message = true;
+        },
+        showErrorMessage(error_message) {
+            this.clearMessages();
+            this.error_message_text = error_message;
+            this.show_error_message = true;
+        },
+        closeWaypointDialogs() {
+            this.add_product_dialog = false;
+            this.edit_product_dialog = false;
+            this.addProductFormResetValidation();
+        },
+        clearMessages() {
+            this.show_not_finished_yet = false;
+            this.show_success_message = false;
+            this.show_error_message = false;
+        },
+        validateAddProductForm() {
+            return this.$refs.add_product_form.validate();
+        },
+        addProductFormResetValidation() {
+            if (this.$refs && this.$refs.add_product_form) {
+                this.$refs.add_product_form.resetValidation();
+            }
+        },
+        validateEditProductForm() {
+            return this.$refs.edit_product_form.validate();
+        },
+        editProductFormResetValidation() {
+            if (this.$refs && this.$refs.edit_product_form) {
+                this.$refs.edit_product_form.resetValidation();
+            }
+        },
     },
-    editProductOpen(product) {
-      this.closeWaypointDialogs();
-      this.editing_product = { ...product };
-      this.edit_product_dialog = true;
+    mounted() {
+        this.fetchProducts();
     },
-    editProductAction(product) {
-      let valid = this.validateEditProductForm();
-      if (valid) {
-        this.editProduct(product)
-          .then(() => {
-            this.showSuccessMessage("Product Edited Successfully!");
-            this.closeWaypointDialogs();
-          })
-          .catch((err) => {
-            this.showErrorMessage(err.message);
-          });
-        this.closeWaypointDialogs();
-      }
-    },
-    showNotFinishedMessage() {
-      this.clearMessages();
-      setTimeout(() => {
-        this.show_not_finished_yet = true;
-      }, 100);
-    },
-    showSuccessMessage(message) {
-      this.clearMessages();
-      this.success_message_text = message;
-      this.show_success_message = true;
-    },
-    showErrorMessage(error_message) {
-      this.clearMessages();
-      this.error_message_text = error_message;
-      this.show_error_message = true;
-    },
-    closeWaypointDialogs() {
-      this.add_product_dialog = false;
-      this.edit_product_dialog = false;
-      this.addProductFormResetValidation();
-    },
-    clearMessages() {
-      this.show_not_finished_yet = false;
-      this.show_success_message = false;
-      this.show_error_message = false;
-    },
-    validateAddProductForm() {
-      return this.$refs.add_product_form.validate();
-    },
-    addProductFormResetValidation() {
-      if (this.$refs && this.$refs.add_product_form) {
-        this.$refs.add_product_form.resetValidation();
-      }
-    },
-    validateEditProductForm() {
-      return this.$refs.edit_product_form.validate();
-    },
-    editProductFormResetValidation() {
-      if (this.$refs && this.$refs.edit_product_form) {
-        this.$refs.edit_product_form.resetValidation();
-      }
-    },
-  },
-  mounted() {
-    this.fetchProducts();
-  },
 };
 </script>
 
