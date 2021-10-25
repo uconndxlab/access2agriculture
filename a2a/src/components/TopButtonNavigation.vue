@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex"
 import SpinLoader from '@/components/SpinLoader.vue'
 
 export default {
@@ -55,14 +55,14 @@ export default {
         return {
             locationStatusMessage: "",
             showNearMeLoader: false
-        };
+        }
     },
     computed: {
         ...mapGetters({
             locationHasBeenSet: "userLocationSet",
         }),
         isRootMapRoute() {
-            return this.$route.path === "/";
+            return this.$route.path === "/"
         },
     },
     methods: {
@@ -71,22 +71,22 @@ export default {
             setFilterLocationDistance: "SET_FILTER_LOCATION_DISTANCE"
         }),
         openFilter() {
-            this.$emit("topNavOpenFilter");
+            this.$emit("topNavOpenFilter")
         },
         openNearMe() {
-            this.requestLocation();
+            this.requestLocation()
         },
         requestLocation() {
             this.showNearMeLoader = true
             if (!navigator.geolocation) {
-                console.log("Browser does not support location.");
+                console.log("Browser does not support location.")
                 this.$emit('locationHasError', "Browser does not support location services.")
                 this.showNearMeLoader = false
             } else {
-                console.log("Browser supports location.");
+                console.log("Browser supports location.")
                 navigator.geolocation.getCurrentPosition(
                     (pos) => {
-                        console.log("Retrieved location:", pos);
+                        console.log("Retrieved location:", pos)
                         if (
                             pos.coords &&
                             pos.coords.latitude &&
@@ -95,40 +95,40 @@ export default {
                             this.setCoordinates({
                                 lat: pos.coords.latitude,
                                 long: pos.coords.longitude,
-                            });
-                            this.$emit("locationJustSet");
+                            })
+                            this.$emit("locationJustSet")
                             this.setFilterLocationDistance(10)
                         }
                         this.showNearMeLoader = false
                     },
                     (error) => {
                         const default_error_message =
-                            "Something went wrong with the location service.";
+                            "Something went wrong with the location service."
                         const error_messages = {
                             1: "Permission to location was denied.  In order to enable this functionality, you must enable location permissions manually on your browser.", // User denied geolocation,
                             2: "Unable to determine location from this device.",
                             3: "Location detection timed out.",
-                        };
+                        }
                         if (
                             error.code &&
                             error.code.toString() in error_messages
                         ) {
                             this.locationStatusMessage =
-                                error_messages[error.code.toString()];
+                                error_messages[error.code.toString()]
                         } else {
-                            this.locationStatusMessage = default_error_message;
+                            this.locationStatusMessage = default_error_message
                         }
                         this.$emit(
                             "locationHasError",
                             this.locationStatusMessage
-                        );
+                        )
                         this.showNearMeLoader = false
                     }
-                );
+                )
             }
         },
     },
-};
+}
 </script>
 
 <style lang="scss">

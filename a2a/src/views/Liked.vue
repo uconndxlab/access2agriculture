@@ -28,7 +28,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import MapListItem from '@/components/MapListItem.vue'
-import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
+import TopButtonNavigation from "@/components/TopButtonNavigation.vue"
 
 export default {
     name: "Bookmarks",

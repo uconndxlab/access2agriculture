@@ -41,285 +41,285 @@
 </template>
 
 <script>
-import mapboxgl from "mapbox-gl";
-import TopButtonNavigation from "@/components/TopButtonNavigation.vue";
+import mapboxgl from "mapbox-gl"
+import TopButtonNavigation from "@/components/TopButtonNavigation.vue"
 import MapListItem from "@/components/MapListItem.vue"
 import Filter from "@/components/Filter.vue"
 import LocationError from "@/components/LocationError.vue"
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex"
 
 export default {
-  name: "BaseMap",
-  components: {
-    TopButtonNavigation,
-    MapPointsFilter: Filter,
-    MapListItem,
-    LocationError
-  },
-  data() {
-    return {
-      accessToken:
+    name: "BaseMap",
+    components: {
+        TopButtonNavigation,
+        MapPointsFilter: Filter,
+        MapListItem,
+        LocationError
+    },
+    data() {
+        return {
+            accessToken:
         "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ",
-      filter_dialog: false,
-      map: null,
-      defaultMapConfig: {
-        container: "mapContainer",
-        style: "mapbox://styles/mapbox/streets-v11",
-        center: [-72.253983, 41.607739],
-        zoom: 9.5,
-      },
-      geojson: null,
-      markers: [],
-      userMarker: null,
-      showIntro: true
-    };
-  },
-  computed: {
-    ...mapGetters({
-      fullWaypoints: "waypointObjects",
-      waypoints: "waypointObjectsByFilter",
-      userLoc: "userLocation",
-      userLocSet: "userLocationSet",
-      string: "string",
-      waypointById: "waypointById"
-    }),
-    isSM() {
-      return this.$vuetify.breakpoint.name === 'sm'
-    },
-    isXS()  {
-      return this.$vuetify.breakpoint.name === 'xs'
-    },
-    filteredMarkerIDs() {
-      return this.waypoints.map(x => {
-        return x.id
-      })
-    }
-  },
-  methods: {
-    ...mapActions(['fetchWaypointsConditionally']),
-    openFilter() {
-      this.filter_dialog = true
-    },
-    closeFilter() {
-      this.filter_dialog = false
-      this.filterMapLayer()
-    },
-    filterMapLayer() {
-      this.markers.forEach( (mark) => {
-        // Close open popups
-        if ( mark.getPopup().isOpen() ) {
-          mark.getPopup().remove()
+            filter_dialog: false,
+            map: null,
+            defaultMapConfig: {
+                container: "mapContainer",
+                style: "mapbox://styles/mapbox/streets-v11",
+                center: [-72.253983, 41.607739],
+                zoom: 9.5,
+            },
+            geojson: null,
+            markers: [],
+            userMarker: null,
+            showIntro: true
         }
-        if ( this.filteredMarkerIDs.includes(mark.properties.id) ) {
-          if (!mark._pos) {
-            console.log('adding marker')
-            mark.addTo(this.map)
-          } else {
-            console.log('not adding marker, has pos')
-          }
-        } else {
-          mark.remove()
-          mark._pos = null
-        }
-      })
     },
-    navigateToDefaultMapView() {
-      this.filterMapLayer()
-      this.map.flyTo({
-        center: this.defaultMapConfig.center,
-        zoom: this.defaultMapConfig.zoom
-      })
-      this.$refs.map_list_item_component.setWaypoint(null)
-      this.showIntro = true
-    },
-    navigateToSingleWaypoint(waypointID) {
-      console.log(`Navigating to waypoint: ${waypointID}`)
-      this.showIntro = false
-      let matched_marker = null
-      this.markers.forEach( (mark) => {
-        if ( mark.properties.id === waypointID ) {
-          matched_marker = mark
-          if ( !mark._pos ) {
-            mark.addTo(this.map)
-          }
-          if ( !mark.getPopup().isOpen() ) {
-            console.log(mark)
-            mark.getPopup().addTo(this.map)
-          }
-        } else {
-          mark.remove()
-          mark._pos = null
+    computed: {
+        ...mapGetters({
+            fullWaypoints: "waypointObjects",
+            waypoints: "waypointObjectsByFilter",
+            userLoc: "userLocation",
+            userLocSet: "userLocationSet",
+            string: "string",
+            waypointById: "waypointById"
+        }),
+        isSM() {
+            return this.$vuetify.breakpoint.name === 'sm'
+        },
+        isXS()  {
+            return this.$vuetify.breakpoint.name === 'xs'
+        },
+        filteredMarkerIDs() {
+            return this.waypoints.map(x => {
+                return x.id
+            })
         }
-      })
+    },
+    methods: {
+        ...mapActions(['fetchWaypointsConditionally']),
+        openFilter() {
+            this.filter_dialog = true
+        },
+        closeFilter() {
+            this.filter_dialog = false
+            this.filterMapLayer()
+        },
+        filterMapLayer() {
+            this.markers.forEach( (mark) => {
+                // Close open popups
+                if ( mark.getPopup().isOpen() ) {
+                    mark.getPopup().remove()
+                }
+                if ( this.filteredMarkerIDs.includes(mark.properties.id) ) {
+                    if (!mark._pos) {
+                        console.log('adding marker')
+                        mark.addTo(this.map)
+                    } else {
+                        console.log('not adding marker, has pos')
+                    }
+                } else {
+                    mark.remove()
+                    mark._pos = null
+                }
+            })
+        },
+        navigateToDefaultMapView() {
+            this.filterMapLayer()
+            this.map.flyTo({
+                center: this.defaultMapConfig.center,
+                zoom: this.defaultMapConfig.zoom
+            })
+            this.$refs.map_list_item_component.setWaypoint(null)
+            this.showIntro = true
+        },
+        navigateToSingleWaypoint(waypointID) {
+            console.log(`Navigating to waypoint: ${waypointID}`)
+            this.showIntro = false
+            let matched_marker = null
+            this.markers.forEach( (mark) => {
+                if ( mark.properties.id === waypointID ) {
+                    matched_marker = mark
+                    if ( !mark._pos ) {
+                        mark.addTo(this.map)
+                    }
+                    if ( !mark.getPopup().isOpen() ) {
+                        console.log(mark)
+                        mark.getPopup().addTo(this.map)
+                    }
+                } else {
+                    mark.remove()
+                    mark._pos = null
+                }
+            })
 
-      console.log(`Matched Marker: `, matched_marker)
+            console.log(`Matched Marker: `, matched_marker)
 
-      if ( matched_marker ) {
-        console.log(matched_marker)
-        this.map.flyTo({
-          center: [matched_marker._lngLat.lng, matched_marker._lngLat.lat],
-          zoom: 14
-        })
-        this.$refs.map_list_item_component.setWaypoint(this.waypointById(waypointID))
-        if ( this.$route.path !== '/map-item/' + waypointID) {
-          this.$router.push({ name: 'map-item-by-id', params: { id: waypointID }})
-        }
-      }
+            if ( matched_marker ) {
+                console.log(matched_marker)
+                this.map.flyTo({
+                    center: [matched_marker._lngLat.lng, matched_marker._lngLat.lat],
+                    zoom: 14
+                })
+                this.$refs.map_list_item_component.setWaypoint(this.waypointById(waypointID))
+                if ( this.$route.path !== '/map-item/' + waypointID) {
+                    this.$router.push({ name: 'map-item-by-id', params: { id: waypointID }})
+                }
+            }
       
-    },
-    // This has to be added separately since its generated by mapbox.
-    mountWaypointGetInfoListener(e) {
-      if ( e.target.classList.contains('marker-get-info-text') ) {
-        console.log(e.target.dataset)
-        if ( 'markerId' in e.target.dataset ) {
-          this.navigateToSingleWaypoint(e.target.dataset.markerId)
+        },
+        // This has to be added separately since its generated by mapbox.
+        mountWaypointGetInfoListener(e) {
+            if ( e.target.classList.contains('marker-get-info-text') ) {
+                console.log(e.target.dataset)
+                if ( 'markerId' in e.target.dataset ) {
+                    this.navigateToSingleWaypoint(e.target.dataset.markerId)
+                }
+            }
+        },
+        setUserLocationMarker() {
+            console.log('Setting user location marker')
+            // Set a custom marker for your current location, if provided.
+            if ( this.userLoc && this.userLocSet && !this.userMarker ) {
+                console.log('Have location but no marker set, setting a marker')
+                var yourmark = document.createElement("div")
+                yourmark.className = "marker your-marker"
+
+                this.userMarker = new mapboxgl.Marker(yourmark)
+                    .setLngLat([this.userLoc.long, this.userLoc.lat])
+                    .addTo(this.map)
+            }
+        },
+        userJustSetNearMeLocation() {
+            this.setUserLocationMarker()
+            this.flyToUserLocation()
+        },
+        displayLocationError(message) {
+            this.$refs.location_error_alert.updateMessage(message)
+            this.$refs.location_error_alert.showAlertForTime(10000)
+        },
+        flyToUserLocation() {
+            if ( this.userLoc && this.userLocSet && this.userMarker ) {
+                this.map.flyTo({
+                    center: [this.userLoc.long, this.userLoc.lat],
+                    zoom: 11
+                })
+            }
         }
-      }
     },
-    setUserLocationMarker() {
-      console.log('Setting user location marker')
-      // Set a custom marker for your current location, if provided.
-      if ( this.userLoc && this.userLocSet && !this.userMarker ) {
-        console.log('Have location but no marker set, setting a marker')
-        var yourmark = document.createElement("div");
-        yourmark.className = "marker your-marker";
+    mounted() {
+        document.addEventListener("click", this.mountWaypointGetInfoListener)
 
-        this.userMarker = new mapboxgl.Marker(yourmark)
-          .setLngLat([this.userLoc.long, this.userLoc.lat])
-          .addTo(this.map)
-      }
-    },
-    userJustSetNearMeLocation() {
-      this.setUserLocationMarker()
-      this.flyToUserLocation()
-    },
-    displayLocationError(message) {
-      this.$refs.location_error_alert.updateMessage(message)
-      this.$refs.location_error_alert.showAlertForTime(10000)
-    },
-    flyToUserLocation() {
-      if ( this.userLoc && this.userLocSet && this.userMarker ) {
-        this.map.flyTo({
-          center: [this.userLoc.long, this.userLoc.lat],
-          zoom: 11
-        })
-      }
-    }
-  },
-  mounted() {
-    document.addEventListener("click", this.mountWaypointGetInfoListener)
+        mapboxgl.accessToken = this.accessToken
 
-    mapboxgl.accessToken = this.accessToken;
+        if ( this.userLoc && this.userLocSet ) {
+            this.defaultMapConfig.center = [this.userLoc.long, this.userLoc.lat]
+        }
 
-    if ( this.userLoc && this.userLocSet ) {
-      this.defaultMapConfig.center = [this.userLoc.long, this.userLoc.lat]
-    }
+        // Make any adjustments for mobile on initialization.  The browser may be resized at any time but we will leave that zoom up to the user, in case they have already interacted with it.
+        if ( this.isSM || this.isXS ) {
+            this.defaultMapConfig.zoom = 8
+            // [ long, lat ]
+            this.defaultMapConfig.center = [this.defaultMapConfig.center[0], this.defaultMapConfig.center[1] - 0.04]
+        }
 
-    // Make any adjustments for mobile on initialization.  The browser may be resized at any time but we will leave that zoom up to the user, in case they have already interacted with it.
-    if ( this.isSM || this.isXS ) {
-      this.defaultMapConfig.zoom = 8
-      // [ long, lat ]
-      this.defaultMapConfig.center = [this.defaultMapConfig.center[0], this.defaultMapConfig.center[1] - 0.04]
-    }
+        this.map = new mapboxgl.Map(this.defaultMapConfig)
 
-    this.map = new mapboxgl.Map(this.defaultMapConfig);
+        this.geojson = {
+            type: "FeatureCollection",
+            features: [],
+        }
 
-    this.geojson = {
-      type: "FeatureCollection",
-      features: [],
-    };
-
-    /*
+        /*
     * Since we depend on the location's data, we need to wait until we have that data, especially on first page load.
     * So, we have a custom action here that will only fetch data if it hasn't been loaded already.
     */
-    this.fetchWaypointsConditionally().then(() => {
-      this.geojson.features = this.fullWaypoints.map((wp) => {
-        return {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [wp.coordinates._long, wp.coordinates._lat],
-          },
-          properties: {
-            title: wp.name,
-            description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
-            id: wp.id
-          },
-        };
-      });
+        this.fetchWaypointsConditionally().then(() => {
+            this.geojson.features = this.fullWaypoints.map((wp) => {
+                return {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [wp.coordinates._long, wp.coordinates._lat],
+                    },
+                    properties: {
+                        title: wp.name,
+                        description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
+                        id: wp.id
+                    },
+                }
+            })
 
-      // Now we need to create markers for each geojson property.
-      this.geojson.features.forEach( (marker) => {
+            // Now we need to create markers for each geojson property.
+            this.geojson.features.forEach( (marker) => {
 
-        // create a HTML element for each feature
-        var el = document.createElement("div");
-        el.className = "marker";
+                // create a HTML element for each feature
+                var el = document.createElement("div")
+                el.className = "marker"
 
-        // Since we want something to pop up on marker click, we need to create a popup for this marker.
-        const pop = new mapboxgl.Popup({ offset: 25 }) // add popups
-            .setHTML(`<h3>${marker.properties.title}</h3>
+                // Since we want something to pop up on marker click, we need to create a popup for this marker.
+                const pop = new mapboxgl.Popup({ offset: 25 }) // add popups
+                    .setHTML(`<h3>${marker.properties.title}</h3>
             <p>${marker.properties.description}</p>
             <p><a class="marker-get-info-text" data-marker-id="${marker.properties.id}">Get Info</a></p>`)
 
-        // Create the marker object.  Not adding to map yet since we might be loading this view with a filter already active.
-        const m = new mapboxgl.Marker(el)
-          .setLngLat(marker.geometry.coordinates)
-          .setPopup(pop)
+                // Create the marker object.  Not adding to map yet since we might be loading this view with a filter already active.
+                const m = new mapboxgl.Marker(el)
+                    .setLngLat(marker.geometry.coordinates)
+                    .setPopup(pop)
 
-        m.properties = marker.properties
+                m.properties = marker.properties
 
-        // We might be initializing on a map item already.  Lets check.
-        const routed_from_map_item = this.$route.name === 'map-item-by-id' && this.$route.params && this.$route.params.id
+                // We might be initializing on a map item already.  Lets check.
+                const routed_from_map_item = this.$route.name === 'map-item-by-id' && this.$route.params && this.$route.params.id
 
-        // Keep a record of the marker and current state, so we can filter later.
-        this.markers.push(m);
+                // Keep a record of the marker and current state, so we can filter later.
+                this.markers.push(m)
 
-        if ( routed_from_map_item ) {
-          const is_correct_routed_marker = this.$route.params.id === marker.properties.id
-          if ( is_correct_routed_marker ) {
-            m.addTo(this.map)
-          }
-          // Keep a record of the marker and current state, so we can filter later.
-          // This looks insane because these need to be done in this exact order, otherwise we cant scroll properly.
-          this.markers.push(m);
-          if ( is_correct_routed_marker ) {
-            this.navigateToSingleWaypoint(marker.properties.id)
-          }
-        } else {
-          // Lets see if the filtered waypoints on initialization include this, find the index.
-          const marker_initial_filter_index = this.waypoints.findIndex(el => {
-            return el.id === marker.properties.id
-          })
+                if ( routed_from_map_item ) {
+                    const is_correct_routed_marker = this.$route.params.id === marker.properties.id
+                    if ( is_correct_routed_marker ) {
+                        m.addTo(this.map)
+                    }
+                    // Keep a record of the marker and current state, so we can filter later.
+                    // This looks insane because these need to be done in this exact order, otherwise we cant scroll properly.
+                    this.markers.push(m)
+                    if ( is_correct_routed_marker ) {
+                        this.navigateToSingleWaypoint(marker.properties.id)
+                    }
+                } else {
+                    // Lets see if the filtered waypoints on initialization include this, find the index.
+                    const marker_initial_filter_index = this.waypoints.findIndex(el => {
+                        return el.id === marker.properties.id
+                    })
 
-          // Marker was in the filter, so lets add it to the map
-          if ( marker_initial_filter_index > -1 ) {
-            console.log('adding point to map')
-            m.addTo(this.map)
-          }
-          // Keep a record of the marker and current state, so we can filter later.
-          this.markers.push(m);
-        }
-      });
+                    // Marker was in the filter, so lets add it to the map
+                    if ( marker_initial_filter_index > -1 ) {
+                        console.log('adding point to map')
+                        m.addTo(this.map)
+                    }
+                    // Keep a record of the marker and current state, so we can filter later.
+                    this.markers.push(m)
+                }
+            })
 
-      this.setUserLocationMarker()
-    })
-  },
-  beforeDestroy() {
-    document.removeEventListener("click", this.mountWaypointGetInfoListener)
-  },
-  watch: {
-    '$route.path': function(val, oldVal) {
-      console.log('Route changing, ', val, oldVal)
-      if ( val === '/' ) {
-        this.navigateToDefaultMapView()
-      }
+            this.setUserLocationMarker()
+        })
     },
-    'filteredMarkerIDs': function() {
-      this.filterMapLayer()
+    beforeDestroy() {
+        document.removeEventListener("click", this.mountWaypointGetInfoListener)
+    },
+    watch: {
+        '$route.path': function(val, oldVal) {
+            console.log('Route changing, ', val, oldVal)
+            if ( val === '/' ) {
+                this.navigateToDefaultMapView()
+            }
+        },
+        'filteredMarkerIDs': function() {
+            this.filterMapLayer()
+        }
     }
-  }
-};
+}
 </script>
 
 <style lang="css">
