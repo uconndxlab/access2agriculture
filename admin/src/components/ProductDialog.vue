@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { waypointFormRules } from "@/rules/waypoint.js";
+import { waypointFormRules } from "@/rules/waypoint.js"
 import { mapActions } from "vuex"
 
 export default {
@@ -40,43 +40,43 @@ export default {
             show: false,
             form_rules: waypointFormRules,
             product: null,
-        };
+        }
     },
     methods: {
         ...mapActions([
             "editProduct"
         ]),
         openWithProduct(product) {
-            this.product = product;
-            this.show = true;
+            this.product = product
+            this.show = true
         },
         close() {
-            this.product = null;
-            this.show = false;
+            this.product = null
+            this.show = false
         },
         editProductAction(product) {
             console.log('calling edit product')
-            let valid = this.validate();
+            let valid = this.validate()
             if (valid) {
                 this.editProduct(product)
                     .then(() => {
                         this.$emit('successMessage', 'Product Edited Successfully!')
-                        this.close();
+                        this.close()
                     })
                     .catch((err) => {
                         this.$emit('errorMessage', err.message)
-                    });
-                this.close();
+                    })
+                this.close()
             }
         },
         validate() {
-            return this.$refs.edit_product_form.validate();
+            return this.$refs.edit_product_form.validate()
         },
         resetValidation() {
             if (this.$refs && this.$refs.edit_product_form) {
-                this.$refs.edit_product_form.resetValidation();
+                this.$refs.edit_product_form.resetValidation()
             }
         },
     },
-};
+}
 </script>

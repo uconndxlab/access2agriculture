@@ -12,18 +12,18 @@ import { mapActions } from 'vuex'
 import BottomNavigation from '@/components/BottomNavigation.vue'
 
 export default {
-  name: 'App',
-  components: {
-    BottomNavigation
-  },
-  methods: {
-    ...mapActions(['fetchProducts', 'fetchWaypoints', 'fetchAssistanceOptions'])
-  },
-  created() {
-    this.fetchProducts()
-    this.fetchWaypoints()
-    this.fetchAssistanceOptions()
-  }
+    name: 'App',
+    components: {
+        BottomNavigation
+    },
+    methods: {
+        ...mapActions(['fetchProducts', 'fetchWaypoints', 'fetchAssistanceOptions'])
+    },
+    created() {
+        this.fetchProducts()
+        this.fetchWaypoints()
+        this.fetchAssistanceOptions()
+    }
 }
 </script>
 

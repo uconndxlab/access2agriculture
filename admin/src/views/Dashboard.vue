@@ -105,10 +105,10 @@
 
 
 <script>
-import { mapActions, mapState, mapGetters } from "vuex";
-import WaypointImageUploader from "@/components/WaypointImageUploader.vue";
-import WaypointDialog from "@/components/WaypointDialog.vue";
-import WaypointNewDialog from "@/components/WaypointNewDialog.vue";
+import { mapActions, mapState, mapGetters } from "vuex"
+import WaypointImageUploader from "@/components/WaypointImageUploader.vue"
+import WaypointDialog from "@/components/WaypointDialog.vue"
+import WaypointNewDialog from "@/components/WaypointNewDialog.vue"
 import { deepCloneWaypoint } from "@/helpers/deepClone.js"
 
 export default {
@@ -172,59 +172,59 @@ export default {
             "fetchRoutes"
         ]),
         openWaypointImageUploader(waypoint) {
-            this.closeWaypointDialogs();
-            this.$refs.waypoint_image_uploader.openWaypoint(waypoint);
+            this.closeWaypointDialogs()
+            this.$refs.waypoint_image_uploader.openWaypoint(waypoint)
         },
         viewItem(item) {
-            this.closeWaypointDialogs();
+            this.closeWaypointDialogs()
             this.$refs.waypoint_fullcard.assignWaypoint(
                 deepCloneWaypoint(item)
-            );
+            )
         },
         editItem(item) {
-            this.closeWaypointDialogs();
+            this.closeWaypointDialogs()
             this.$refs.waypoint_fullcard.assignWaypoint(
                 deepCloneWaypoint(item),
                 true
-            );
+            )
         },
         newItem() {
-            this.closeWaypointDialogs();
-            this.$refs.waypoint_new_dialog.open();
+            this.closeWaypointDialogs()
+            this.$refs.waypoint_new_dialog.open()
         },
         showNotFinishedMessage() {
-            this.clearMessages();
+            this.clearMessages()
             setTimeout(() => {
-                this.show_not_finished_yet = true;
-            }, 100);
+                this.show_not_finished_yet = true
+            }, 100)
         },
         showSuccessMessage(message) {
-            this.clearMessages();
-            this.success_message_text = message;
-            this.show_success_message = true;
+            this.clearMessages()
+            this.success_message_text = message
+            this.show_success_message = true
         },
         showErrorMessage(error_message) {
-            this.clearMessages();
-            this.error_message_text = error_message;
-            this.show_error_message = true;
+            this.clearMessages()
+            this.error_message_text = error_message
+            this.show_error_message = true
         },
         closeWaypointDialogs() {
-            this.$refs.waypoint_fullcard.close();
+            this.$refs.waypoint_fullcard.close()
             this.$refs.waypoint_new_dialog.close()
         },
         clearMessages() {
-            this.show_not_finished_yet = false;
-            this.show_success_message = false;
-            this.show_error_message = false;
+            this.show_not_finished_yet = false
+            this.show_success_message = false
+            this.show_error_message = false
         }
     },
     mounted() {
-        this.fetchProducts();
-        this.fetchWaypoints();
-        this.fetchAssistanceOptions();
+        this.fetchProducts()
+        this.fetchWaypoints()
+        this.fetchAssistanceOptions()
         this.fetchRoutes()
     },
-};
+}
 </script>
 
 <style scoped>

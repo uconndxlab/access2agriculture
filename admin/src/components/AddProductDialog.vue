@@ -62,7 +62,7 @@ export default {
             this.show = false
         },
         addProductAction(product) {
-            let valid = this.validate();
+            let valid = this.validate()
             if (valid) {
                 this.addProduct(product)
                     .then(() => {
@@ -72,15 +72,15 @@ export default {
                     .catch((error) => {
                         this.$emit('errorMessage', error.message)
                         this.close()
-                    });
+                    })
             }
         },
         validate() {
-            return this.$refs.add_product_form.validate();
+            return this.$refs.add_product_form.validate()
         },
         resetValidation() {
             if (this.$refs && this.$refs.add_product_form) {
-                this.$refs.add_product_form.resetValidation();
+                this.$refs.add_product_form.resetValidation()
             }
         }
     }

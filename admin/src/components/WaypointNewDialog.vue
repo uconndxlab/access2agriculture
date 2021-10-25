@@ -263,25 +263,25 @@ export default {
         },
         resetValidation() {
             if (this.$refs && this.$refs.add_waypoint_form) {
-                this.$refs.add_waypoint_form.resetValidation();
+                this.$refs.add_waypoint_form.resetValidation()
             }
         },
         validate() {
-            return this.$refs.add_waypoint_form.validate();
+            return this.$refs.add_waypoint_form.validate()
         },
         addItem(item) {
-            let valid = this.validate();
+            let valid = this.validate()
             if (valid) {
                 this.addWaypoint(item)
                     .then(() => {
-                        this.clear();
-                        this.$emit("successMessage", "Waypoint Created!");
-                        this.close();
+                        this.clear()
+                        this.$emit("successMessage", "Waypoint Created!")
+                        this.close()
                     })
                     .catch((err) => {
-                        this.$emit("errorMessage", err.message);
-                    });
-                this.close();
+                        this.$emit("errorMessage", err.message)
+                    })
+                this.close()
             }
         }
     }

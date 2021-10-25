@@ -49,7 +49,7 @@ const store = new Vuex.Store({
             })
             if ( index != -1 ) {
                 // Need to use this to trigger reactivity
-                Vue.set(state.waypoints, index, val);
+                Vue.set(state.waypoints, index, val)
             }
         },
         setUpdatedProduct(state, val) {
@@ -58,7 +58,7 @@ const store = new Vuex.Store({
             })
             if ( index != -1 ) {
                 // Need to use this to trigger reactivity
-                Vue.set(state.products, index, val);
+                Vue.set(state.products, index, val)
             }
         },
         setUpdatedRoute(state, val) {
@@ -88,7 +88,7 @@ const store = new Vuex.Store({
 
     getters: {
         isLoggedIn(state) {
-            return state.user !== null && Object.prototype.hasOwnProperty.call(state.user, 'name');
+            return state.user !== null && Object.prototype.hasOwnProperty.call(state.user, 'name')
         },
         waypointObjects(state) {
             return state.waypoints
@@ -119,7 +119,7 @@ const store = new Vuex.Store({
         },
         async fetchUser({ commit }, user) {
             const userProfile = await fb.usersCollection.doc(user.uid).get()
-            const userProfileData = userProfile.data();
+            const userProfileData = userProfile.data()
             userProfileData.email = user.toJSON().email
 
             commit('setUser', userProfileData)
