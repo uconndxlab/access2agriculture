@@ -81,11 +81,11 @@ export default {
             }
         },
         validate() {
-            return this.$refs.add_route_form.validate();
+            return this.$refs.add_route_form.validate()
         },
         resetValidation() {
             if (this.$refs && this.$refs.add_route_form) {
-                this.$refs.add_route_form.resetValidation();
+                this.$refs.add_route_form.resetValidation()
             }
         }
     }

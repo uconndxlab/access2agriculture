@@ -442,7 +442,7 @@ export default {
             show: false,
             form_rules: waypointFormRules,
             states: states
-        };
+        }
     },
     computed: {
         ...mapGetters({
@@ -466,11 +466,11 @@ export default {
         cardTitle() {
             if (this.waypoint && this.waypoint.name) {
                 if (this.editing) {
-                    return "Edit Waypoint";
+                    return "Edit Waypoint"
                 }
-                return this.waypoint.name;
+                return this.waypoint.name
             }
-            return "Error: No Waypoint Data";
+            return "Error: No Waypoint Data"
         },
         waypoint_google_maps_link() {
             if (
@@ -483,21 +483,21 @@ export default {
                     this.waypoint.coordinates._lat +
                     "," +
                     this.waypoint.coordinates._long
-                );
+                )
             }
-            return "";
+            return ""
         },
         waypoint_products() {
             if (this.waypoint.products && this.products) {
                 return this.products.filter((prod) => {
                     if (this.waypoint.products.includes(prod.id)) {
-                        return true;
+                        return true
                     } else {
-                        return false;
+                        return false
                     }
-                });
+                })
             }
-            return [];
+            return []
         },
         waypoint_routes() {
             if ( this.waypoint.routes && this.routes ) {
@@ -519,13 +519,13 @@ export default {
                     if (
                         this.waypoint.assistance_options.includes(opt.id)
                     ) {
-                        return true;
+                        return true
                     } else {
-                        return false;
+                        return false
                     }
-                });
+                })
             }
-            return [];
+            return []
         },
     },
     methods: {
@@ -534,15 +534,15 @@ export default {
         ]),
         assignWaypoint(waypoint, edit = false) {
             console.log(waypoint)
-            this.editing = edit;
-            this.waypoint = waypoint;
-            this.show = true;
+            this.editing = edit
+            this.waypoint = waypoint
+            this.show = true
         },
         close() {
-            this.show = false;
-            this.editing = false;
-            this.waypoint = null;
-            this.editWaypointFormResetValidation();
+            this.show = false
+            this.editing = false
+            this.waypoint = null
+            this.editWaypointFormResetValidation()
         },
         toggleEdit() {
             this.editing = !this.editing
@@ -552,29 +552,29 @@ export default {
             this.close()
         },
         saveItem(item) {
-            let valid = this.validateEditWaypointForm();
+            let valid = this.validateEditWaypointForm()
             if (valid) {
                 this.editWaypoint(item)
                     .then(() => {
                         this.$emit('successMessage', 'Waypoint Edited Successfully!')
-                        this.close();
+                        this.close()
                     })
                     .catch((err) => {
                         this.$emit('errorMessage', err.message)
-                    });
-                this.close();
+                    })
+                this.close()
             }
         },
         validateEditWaypointForm() {
-            return this.$refs.edit_waypoint_form.validate();
+            return this.$refs.edit_waypoint_form.validate()
         },
         editWaypointFormResetValidation() {
             if (this.$refs && this.$refs.edit_waypoint_form) {
-                this.$refs.edit_waypoint_form.resetValidation();
+                this.$refs.edit_waypoint_form.resetValidation()
             }
         },
     },
-};
+}
 </script>
 
 <style lang="scss" scoped>

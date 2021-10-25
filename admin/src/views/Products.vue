@@ -73,10 +73,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import ProductDialog from "@/components/ProductDialog.vue";
+import { mapActions, mapGetters } from "vuex"
+import ProductDialog from "@/components/ProductDialog.vue"
 import AddProductDialog from "@/components/AddProductDialog.vue"
-import { deepCloneProduct } from "@/helpers/deepClone.js";
+import { deepCloneProduct } from "@/helpers/deepClone.js"
 
 export default {
     components: {
@@ -113,45 +113,45 @@ export default {
     methods: {
         ...mapActions(["fetchProducts"]),
         newProductOpen() {
-            this.closeWaypointDialogs();
+            this.closeWaypointDialogs()
             this.$refs.add_product_dialog.open()
         },
         editProductOpen(product) {
-            this.closeWaypointDialogs();
+            this.closeWaypointDialogs()
             this.$refs.edit_product_dialog.openWithProduct(
                 deepCloneProduct(product)
-            );
+            )
         },
         showNotFinishedMessage() {
-            this.clearMessages();
+            this.clearMessages()
             setTimeout(() => {
-                this.show_not_finished_yet = true;
-            }, 100);
+                this.show_not_finished_yet = true
+            }, 100)
         },
         showSuccessMessage(message) {
-            this.clearMessages();
-            this.success_message_text = message;
-            this.show_success_message = true;
+            this.clearMessages()
+            this.success_message_text = message
+            this.show_success_message = true
         },
         showErrorMessage(error_message) {
-            this.clearMessages();
-            this.error_message_text = error_message;
-            this.show_error_message = true;
+            this.clearMessages()
+            this.error_message_text = error_message
+            this.show_error_message = true
         },
         closeWaypointDialogs() {
             this.$refs.add_product_dialog.close()
             this.$refs.edit_product_dialog.close()
         },
         clearMessages() {
-            this.show_not_finished_yet = false;
-            this.show_success_message = false;
-            this.show_error_message = false;
+            this.show_not_finished_yet = false
+            this.show_success_message = false
+            this.show_error_message = false
         }
     },
     mounted() {
-        this.fetchProducts();
+        this.fetchProducts()
     },
-};
+}
 </script>
 
 <style scoped>
