@@ -8,20 +8,21 @@
         <v-btn class="dismiss" @click="close()" fab small>
             <v-icon>mdi-close</v-icon>
         </v-btn>
-        <div class="image-filler-block" v-if="waypoint && !waypoint.image"></div>
-        <v-img
-            v-if="waypoint && waypoint.image"
-            :src="waypoint.image"
-            :alt="'Photo of ' + waypoint.name"
-            max-height="275"
-            height="275"
-            class="waypoint-full-card-image"
-        >
-            <template v-slot:placeholder>
-                <div class="image-filler"></div>
-            </template>
-        </v-img>
-        
+        <div class="d-flex flex-column fill-height">
+            <div class="image-filler-block" v-if="waypoint && !waypoint.image"></div>
+            <v-img
+                v-if="waypoint && waypoint.image"
+                :src="waypoint.image"
+                :alt="'Photo of ' + waypoint.name"
+                max-height="275"
+                height="275"
+                class="waypoint-full-card-image"
+            >
+                <template v-slot:placeholder>
+                    <div class="image-filler"></div>
+                </template>
+            </v-img>
+            
             <v-card
                 class="waypoint-full-card pa-5 pt-0 text-left grow"
             >
@@ -73,11 +74,10 @@
                                 >{{ opt.name }}</v-chip
                             >
                         </div>
-                        
                     </v-card-text>
                 </div>
-                
             </v-card>
+        </div>
     </v-dialog>
 </template>
 
@@ -195,7 +195,8 @@ export default {
 .waypoint-full-card-dialog {
     margin: 0 0 56px 0!important;
     align-self: flex-start;
-    max-height: calc(100% - 56px)!important;
+    max-height: none!important;
+    height: calc(100% - 56px)!important;
     border-radius: 0px!important;
     box-shadow: none!important;
 }
