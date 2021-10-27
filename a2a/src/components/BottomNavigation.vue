@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation grow app v-model="activeNav">
+  <v-bottom-navigation grow app :value="activeRoute">
     <v-btn
       v-for="nav in navItems"
       :key="`bnav-${nav.value}`"
@@ -18,7 +18,6 @@ export default {
     name: "BottomNavigation",
     data: () => {
         return {
-            activeNav: '',
             navItems: [
                 {
                     to: '/',
@@ -48,20 +47,17 @@ export default {
         }
     },
     computed: {
-        isMapRoute() {
-            return this.$route.path.startsWith('/map-item') || this.$route.path === '/' 
-        }
-    },
-    created() {
-    // This exists to correct the current 'active' nav item on initial load.
-    // There is probably a better way to do this, but I was having trouble mixing 'value' and vue-router states through vuetify here.
-        if ( this.isMapRoute ) {
-            this.activeNav = 'map'
-        } else {
-            const existingNav = this.navItems.find(x => x.to === this.$route.path)
-            if ( existingNav && existingNav.value ) {
-                this.activeNav = existingNav.value
+        activeRoute() {
+            if ( this.$route.path.startsWith('/liked') ) {
+                return 'liked'
             }
+            if ( this.$route.path.startsWith('/settings') ) {
+                return 'settings'
+            }
+            if ( this.$route.path.startsWith('/map-list') ) {
+                return 'map-list'
+            }
+            return 'map'
         }
     }
 }
