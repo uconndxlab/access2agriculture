@@ -145,6 +145,9 @@ const store = new Vuex.Store({
 
                 if ( state.filter.products && state.filter.products.length > 0 ) {
                     has_products = state.filter.products.every(y => {
+                        if ( !x.products ) {
+                            return false
+                        }
                         return x.products.includes(y)
                     })
                 }

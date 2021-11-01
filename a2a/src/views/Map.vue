@@ -37,6 +37,8 @@
       v-model="showIntro"
     >{{ string('HOMEPAGE_INTRO') }}</v-alert>
 
+    <waypoint-full-card ref="waypoint_full_card"></waypoint-full-card>
+
   </div>
 </template>
 
@@ -46,6 +48,8 @@ import TopButtonNavigation from "@/components/TopButtonNavigation.vue"
 import MapListItem from "@/components/MapListItem.vue"
 import Filter from "@/components/Filter.vue"
 import LocationError from "@/components/LocationError.vue"
+import WaypointFullCard from "@/components/WaypointFullCard.vue"
+import { deepCloneWaypoint } from "@/helpers/deepClone.js"
 import { mapGetters, mapActions } from "vuex"
 
 export default {
@@ -54,7 +58,8 @@ export default {
         TopButtonNavigation,
         MapPointsFilter: Filter,
         MapListItem,
-        LocationError
+        LocationError,
+        WaypointFullCard
     },
     data() {
         return {
@@ -172,7 +177,8 @@ export default {
             if ( e.target.classList.contains('marker-get-info-text') ) {
                 console.log(e.target.dataset)
                 if ( 'markerId' in e.target.dataset ) {
-                    this.navigateToSingleWaypoint(e.target.dataset.markerId)
+                    // this.navigateToSingleWaypoint(e.target.dataset.markerId)
+                    this.openFullWaypointCard(e.target.dataset.markerId)
                 }
             }
         },
@@ -203,6 +209,15 @@ export default {
                     center: [this.userLoc.long, this.userLoc.lat],
                     zoom: 11
                 })
+            }
+        },
+        openFullWaypointCard(waypointID) {
+            const wp = deepCloneWaypoint(
+                this.waypoints.find(x => x.id == waypointID)
+            )
+
+            if ( wp ) {
+                this.$refs.waypoint_full_card.openWithWaypoint(wp)
             }
         }
     },
@@ -375,8 +390,17 @@ body {
   max-width: 200px;
 }
 
+.mapboxgl-popup-content {
+    font-size: 14px;
+}
+.mapboxgl-popup-content > p {
+    margin-bottom: 8px!important;
+}
+
 .marker-get-info-text {
   cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .v-card.map-item{
