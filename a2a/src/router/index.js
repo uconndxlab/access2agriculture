@@ -42,6 +42,11 @@ const routes = [
         path: '/map-item/:id',
         name: 'map-item-by-id',
         component: () => import(/* webpackChunkName: "map-item-id" */ '../views/Map.vue')
+    },
+    {
+        path: '/settings',
+        name: 'settings',
+        component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
     }
 ]
 

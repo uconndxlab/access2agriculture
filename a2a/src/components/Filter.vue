@@ -6,7 +6,7 @@
         >
 
             <v-app-bar
-                color="#2196F3"
+                color="#000000"
                 class="filter-app-bar"
             >
                 <v-btn 
