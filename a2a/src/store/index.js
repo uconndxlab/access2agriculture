@@ -37,7 +37,8 @@ const initialState = () => {
         },
         bookmarks: ( localStorage.getItem('a2a_bookmarks') ) ? JSON.parse(localStorage.getItem('a2a_bookmarks')) : [],
         strings: strings,
-        showIntro: true
+        showIntro: true,
+        showNoWaypointsInView: false
     }
 }
 
@@ -119,6 +120,14 @@ const store = new Vuex.Store({
         CLOSE_INTRO(state) {
             state.showIntro = false
         },
+        CLOSE_NO_WAYPOINTS_IN_VIEW(state) {
+            state.showNoWaypointsInView = false
+        },
+        SHOW_NO_WAYPOINTS_IN_VIEW(state) {
+            if ( !state.showIntro ) {
+                state.showNoWaypointsInView = true
+            }
+        },
         NUKE(state) {
             localStorage.removeItem('a2a_bookmarks')
             Object.assign(state, initialState())
@@ -130,6 +139,9 @@ const store = new Vuex.Store({
         },
         showIntro(state) {
             return state.showIntro
+        },
+        showNoWaypointsInView(state) {
+            return state.showNoWaypointsInView
         },
         waypointObjects(state) {
             return state.waypoints

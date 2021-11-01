@@ -9,6 +9,9 @@
 
     <div id="map">
         <filter-summary></filter-summary>
+        <no-locations>
+            <p class="d-flex align-start ml-3">No locations with current filter.</p>
+        </no-locations>
       <div id="mapContainer" class="basemap"></div>
     </div>
 
@@ -25,8 +28,22 @@
       class="intro-alert-description"
       type="info"
       dismissible
-      v-model="showIntro"
+      @input="closeIntro()"
+      :value="showIntro"
     >{{ string('HOMEPAGE_INTRO') }}</v-alert>
+
+    <no-locations :filtered="true">
+        <v-alert
+            :value="showNoWaypointsInView" 
+            class="intro-alert-description"
+            dismissible
+            @input="closeNoWaypointsInView()"    
+        >
+            <p>{{ string('NO_WAYPOINTS_IN_VIEW') }}</p>
+            <v-btn @click="navigateToDefaultMapView();closeNoWaypointsInView()" class="mr-3">Go</v-btn>
+            <v-btn @click="closeNoWaypointsInView()">Close</v-btn>
+        </v-alert>
+    </no-locations>
 
     <waypoint-full-card ref="waypoint_full_card"></waypoint-full-card>
 
@@ -40,6 +57,7 @@ import Filter from "@/components/Filter.vue"
 import LocationError from "@/components/LocationError.vue"
 import WaypointFullCard from "@/components/WaypointFullCard.vue"
 import FilterSummary from "@/components/FilterSummary.vue"
+import NoLocations from "@/components/NoLocations.vue"
 import { deepCloneWaypoint } from "@/helpers/deepClone.js"
 import { mapGetters, mapActions, mapMutations } from "vuex"
 
@@ -50,12 +68,12 @@ export default {
         MapPointsFilter: Filter,
         LocationError,
         WaypointFullCard,
-        FilterSummary
+        FilterSummary,
+        NoLocations
     },
     data() {
         return {
-            accessToken:
-        "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ",
+            accessToken: "pk.eyJ1IjoidWNvbm5keGdyb3VwIiwiYSI6ImNrcTg4dWc5NzBkcWYyd283amtpNjFiZXkifQ.iGpZ5PfDWFWWPkuDeGQ3NQ",
             filter_dialog: false,
             map: null,
             defaultMapConfig: {
@@ -66,7 +84,7 @@ export default {
             },
             geojson: null,
             markers: [],
-            userMarker: null
+            userMarker: null,
         }
     },
     computed: {
@@ -77,7 +95,8 @@ export default {
             userLocSet: "userLocationSet",
             string: "string",
             waypointById: "waypointById",
-            showIntro: "showIntro"
+            showIntro: "showIntro",
+            showNoWaypointsInView: "showNoWaypointsInView"
         }),
         isSM() {
             return this.$vuetify.breakpoint.name === 'sm'
@@ -94,7 +113,9 @@ export default {
     methods: {
         ...mapActions(['fetchWaypointsConditionally']),
         ...mapMutations({
-            'closeIntro': 'CLOSE_INTRO'
+            'closeIntro': 'CLOSE_INTRO',
+            'openNoWaypointsInView': 'SHOW_NO_WAYPOINTS_IN_VIEW',
+            'closeNoWaypointsInView': 'CLOSE_NO_WAYPOINTS_IN_VIEW'
         }),
         openFilter() {
             this.filter_dialog = true
@@ -185,6 +206,8 @@ export default {
                 this.userMarker = new mapboxgl.Marker(yourmark)
                     .setLngLat([this.userLoc.long, this.userLoc.lat])
                     .addTo(this.map)
+
+                this.checkAndAlertForVisibleMarkers()
             }
         },
         userJustSetNearMeLocation() {
@@ -202,6 +225,7 @@ export default {
                     center: [this.userLoc.long, this.userLoc.lat],
                     zoom: 11
                 })
+                this.checkAndAlertForVisibleMarkers()
             }
         },
         openFullWaypointCard(waypointID) {
@@ -212,6 +236,40 @@ export default {
             if ( wp ) {
                 this.$refs.waypoint_full_card.openWithWaypoint(wp)
             }
+        },
+        elementOutsideOfBounding(bounding, element) {
+            return element.left > bounding.right
+            || element.right < bounding.left
+            || element.top > bounding.bottom
+            || element.bottom < bounding.top
+        },
+        areMarkersInView() {
+            const mapContainer = this.map.getContainer()
+            const markers = mapContainer.getElementsByClassName('waypoint-marker')
+            const mapContainerRect = mapContainer.getBoundingClientRect()
+
+            let visibles = []
+
+            for ( let i = 0; i < markers.length; i++ ) {
+                const el = markers.item(i)
+                const elRect = el.getBoundingClientRect()
+                const outside = this.elementOutsideOfBounding(mapContainerRect, elRect)
+
+                if ( !outside ) {
+                    visibles.push(el)
+                }
+            }
+
+            return visibles.length > 0
+
+        },
+        checkAndAlertForVisibleMarkers() {
+            setTimeout(() => {
+                if ( !this.areMarkersInView() ) {
+                    console.log('We should ask if you want to go back to default view.')
+                    this.openNoWaypointsInView()
+                }
+            }, 3000)
         }
     },
     mounted() {
@@ -262,7 +320,7 @@ export default {
 
                 // create a HTML element for each feature
                 var el = document.createElement("div")
-                el.className = "marker"
+                el.className = "marker waypoint-marker"
 
                 // Since we want something to pop up on marker click, we need to create a popup for this marker.
                 const pop = new mapboxgl.Popup({ offset: 25 }) // add popups
@@ -311,6 +369,8 @@ export default {
             })
 
             this.setUserLocationMarker()
+
+            this.checkAndAlertForVisibleMarkers()
         })
     },
     beforeDestroy() {
