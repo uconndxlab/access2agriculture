@@ -26,6 +26,7 @@
             color="white"
             @click="openNearMe()"
             class="vert-btn"
+            v-if="!toPage"
         >
             <template v-if="!showNearMeLoader">
             <v-icon color="black">mdi-navigation-variant</v-icon>

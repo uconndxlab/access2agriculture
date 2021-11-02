@@ -11,6 +11,7 @@ Vue.use(Vuex)
 
 const initialState = () => {
     return {
+        version: '0.1.0-beta',
         products: [],
         waypoints: [],
         assistanceOptions: [],
@@ -35,7 +36,9 @@ const initialState = () => {
             hasBeenSet: false
         },
         bookmarks: ( localStorage.getItem('a2a_bookmarks') ) ? JSON.parse(localStorage.getItem('a2a_bookmarks')) : [],
-        strings: strings
+        strings: strings,
+        showIntro: true,
+        showNoWaypointsInView: false
     }
 }
 
@@ -61,6 +64,28 @@ const store = new Vuex.Store({
         },
         SET_FILTER_LOCATION_DISTANCE(state, val) {
             state.filter.distance = val
+        },
+        REMOVE_SINGLE_ASSISTANCE_OPTION_FILTER(state, val) {
+            if ( val && val.id ) {
+                const i = state.filter.assistanceOptions.findIndex(a => a == val.id)
+                if ( i > -1 ) {
+                    state.filter.assistanceOptions.splice(i, 1)
+                }
+            }
+        },
+        REMOVE_SINGLE_BUSINESS_TYPE_FILTER(state, val) {
+            const i = state.filter.businessTypes.findIndex(a => a == val)
+            if ( i > -1 ) {
+                state.filter.businessTypes.splice(i, 1)
+            }
+        },
+        REMOVE_SINGLE_PRODUCT_FILTER(state, val) {
+            if ( val && val.id ) {
+                const i = state.filter.products.findIndex(a => a == val.id)
+                if ( i > -1 ) {
+                    state.filter.products.splice(i, 1)
+                }
+            }
         },
         RESET_FILTER(state) {
             state.filter = initialState().filter
@@ -91,9 +116,33 @@ const store = new Vuex.Store({
                 }
                 localStorage.setItem('a2a_bookmarks', JSON.stringify(state.bookmarks))
             }
+        },
+        CLOSE_INTRO(state) {
+            state.showIntro = false
+        },
+        CLOSE_NO_WAYPOINTS_IN_VIEW(state) {
+            state.showNoWaypointsInView = false
+        },
+        SHOW_NO_WAYPOINTS_IN_VIEW(state) {
+            if ( !state.showIntro ) {
+                state.showNoWaypointsInView = true
+            }
+        },
+        NUKE(state) {
+            localStorage.removeItem('a2a_bookmarks')
+            Object.assign(state, initialState())
         }
     },
     getters: {
+        version(state) {
+            return state.version
+        },
+        showIntro(state) {
+            return state.showIntro
+        },
+        showNoWaypointsInView(state) {
+            return state.showNoWaypointsInView
+        },
         waypointObjects(state) {
             return state.waypoints
         },
@@ -113,8 +162,24 @@ const store = new Vuex.Store({
         productObjects(state) {
             return state.products
         },
+        productsFromFilter(state) {
+            if ( state.filter.products.length > 0 && state.products.length > 0 ) {
+                return state.products.filter( (p) => {
+                    return state.filter.products.includes(p.id)
+                })
+            }
+            return []
+        },
         assistanceOptionsObjects(state) {
             return state.assistanceOptions
+        },
+        assistanceOptionsFromFilter(state) {
+            if ( state.filter.assistanceOptions.length > 0 && state.assistanceOptions.length > 0 ) {
+                return state.assistanceOptions.filter( (op) => {
+                    return state.filter.assistanceOptions.includes(op.id)
+                })
+            }
+            return []
         },
         businessTypeObjects(state) {
             return state.businessTypes
