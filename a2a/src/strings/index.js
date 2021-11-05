@@ -1,5 +1,5 @@
 const strings = {
-    HOMEPAGE_INTRO: 'Welcome to Access to Agriculture!  Here, you can browse local food vendors.',
+    HOMEPAGE_INTRO: 'Welcome to Access2Ag! Your connection to locally grown fresh food at farm stands, markets, grocers & direct support food access points.',
     NO_WAYPOINTS_IN_VIEW: 'No waypoints in view. Go home?'
 }
 
