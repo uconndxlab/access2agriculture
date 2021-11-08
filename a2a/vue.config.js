@@ -10,8 +10,8 @@ module.exports = {
     },
     pwa: {
         name: 'Access2Ag',
-        themeColor: '#000000',
-        msTileColor: '#000000',
+        themeColor: '#FFFFFF',
+        msTileColor: '#FFFFFF',
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: 'black',
         workboxPluginMode: 'GenerateSW'
