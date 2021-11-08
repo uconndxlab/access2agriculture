@@ -13,6 +13,9 @@
             <p class="d-flex align-start ml-3">No locations with current filter.</p>
         </no-locations>
       <div id="mapContainer" class="basemap"></div>
+      <v-btn class="snap-to-location-btn" v-if="userLoc && userLocSet" @click="flyToUserLocation()">
+          <v-icon>mdi-crosshairs-gps</v-icon>
+      </v-btn>
     </div>
 
     <v-dialog
@@ -466,6 +469,12 @@ body {
 </style>
 
 <style lang="scss" scoped>
+.snap-to-location-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 20px;
+}
+
 .intro-alert-description {
   position: absolute;
   bottom: 4%;
