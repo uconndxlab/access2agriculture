@@ -136,11 +136,12 @@ export default {
                 }
                 if ( this.filteredMarkerIDs.includes(mark.properties.id) ) {
                     if (!mark._pos) {
-                        console.log('adding marker')
+                        // console.log('adding marker')
                         mark.addTo(this.map)
-                    } else {
-                        console.log('not adding marker, has pos')
                     }
+                    // else {
+                    //     console.log('not adding marker, has pos')
+                    // }
                 } else {
                     mark.remove()
                     mark._pos = null
@@ -155,7 +156,6 @@ export default {
             })
         },
         navigateToSingleWaypoint(waypointID) {
-            console.log(`Navigating to waypoint: ${waypointID}`)
             this.closeIntro()
             let matched_marker = null
             this.markers.forEach( (mark) => {
@@ -165,7 +165,6 @@ export default {
                         mark.addTo(this.map)
                     }
                     if ( !mark.getPopup().isOpen() ) {
-                        console.log(mark)
                         mark.getPopup().addTo(this.map)
                     }
                 } else {
@@ -174,10 +173,7 @@ export default {
                 }
             })
 
-            console.log(`Matched Marker: `, matched_marker)
-
             if ( matched_marker ) {
-                console.log(matched_marker)
                 this.map.flyTo({
                     center: [matched_marker._lngLat.lng, matched_marker._lngLat.lat],
                     zoom: 14
@@ -199,10 +195,8 @@ export default {
             }
         },
         setUserLocationMarker() {
-            console.log('Setting user location marker')
             // Set a custom marker for your current location, if provided.
             if ( this.userLoc && this.userLocSet && !this.userMarker ) {
-                console.log('Have location but no marker set, setting a marker')
                 var yourmark = document.createElement("div")
                 yourmark.className = "marker your-marker"
 
@@ -363,7 +357,6 @@ export default {
 
                     // Marker was in the filter, so lets add it to the map
                     if ( marker_initial_filter_index > -1 ) {
-                        console.log('adding point to map')
                         m.addTo(this.map)
                     }
                     // Keep a record of the marker and current state, so we can filter later.
@@ -380,8 +373,7 @@ export default {
         document.removeEventListener("click", this.mountWaypointGetInfoListener)
     },
     watch: {
-        '$route.path': function(val, oldVal) {
-            console.log('Route changing, ', val, oldVal)
+        '$route.path': function(val) {
             if ( val === '/' ) {
                 this.navigateToDefaultMapView()
             }
