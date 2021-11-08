@@ -5,8 +5,8 @@
                 Distance: {{ filter.distance }} mi
             </v-chip>
             <v-chip v-for="a in assistanceOptions" :key="`fs-ao-${a.id}`" close @click:close="clearAssistanceOptionFilter(a)" color="primary">{{ a.name }}</v-chip>
-            <v-chip v-for="bt in filter.businessTypes" :key="`fs-bt-${bt}`" close @click:close="clearBusinessTypeFilter(bt)" color="primary">
-                {{ bt }}
+            <v-chip v-for="bt in businessTypes" :key="`fs-bt-${bt}`" close @click:close="clearBusinessTypeFilter(bt)" class="white--text" :color="getColorCode(bt.color)">
+                {{ bt.name }}
             </v-chip>
             <v-chip v-for="p in products" :key="`fs-p-${p.id}`" close @click:close="clearProductFilter(p)" color="primary">
                 {{ p.name }}
@@ -24,7 +24,9 @@ export default {
         ...mapGetters({
             filter: 'filterObject',
             assistanceOptions: 'assistanceOptionsFromFilter',
-            products: 'productsFromFilter'
+            products: 'productsFromFilter',
+            getColorCode: 'colorLookup',
+            businessTypes: 'businessTypeObjectsFromFilter'
         })
     },
     methods: {
@@ -41,7 +43,7 @@ export default {
             this.removeAssistanceOption(assistanceOption)
         },
         clearBusinessTypeFilter(businessType) {
-            this.removeBusinessType(businessType)
+            this.removeBusinessType(businessType.name)
         },
         clearProductFilter(product) {
             this.removeProduct(product)

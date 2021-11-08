@@ -99,7 +99,8 @@ export default {
             string: "string",
             waypointById: "waypointById",
             showIntro: "showIntro",
-            showNoWaypointsInView: "showNoWaypointsInView"
+            showNoWaypointsInView: "showNoWaypointsInView",
+            businessTypes: "businessTypeObjects"
         }),
         isSM() {
             return this.$vuetify.breakpoint.name === 'sm'
@@ -198,7 +199,7 @@ export default {
             // Set a custom marker for your current location, if provided.
             if ( this.userLoc && this.userLocSet && !this.userMarker ) {
                 var yourmark = document.createElement("div")
-                yourmark.className = "marker your-marker"
+                yourmark.className = "marker mdi-map-marker-outline your-marker"
 
                 this.userMarker = new mapboxgl.Marker(yourmark)
                     .setLngLat([this.userLoc.long, this.userLoc.lat])
@@ -298,17 +299,24 @@ export default {
     */
         this.fetchWaypointsConditionally().then(() => {
             this.geojson.features = this.fullWaypoints.map((wp) => {
+                let properties = {
+                    title: wp.name,
+                    description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
+                    id: wp.id,
+                    color: null
+                }
+
+                const bt = this.businessTypes.find(x => x.name === wp.type)
+                if ( bt && bt.color ) {
+                    properties.color = bt.color
+                }
                 return {
                     type: "Feature",
                     geometry: {
                         type: "Point",
                         coordinates: [wp.coordinates._long, wp.coordinates._lat],
                     },
-                    properties: {
-                        title: wp.name,
-                        description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
-                        id: wp.id
-                    },
+                    properties: properties,
                 }
             })
 
@@ -317,7 +325,11 @@ export default {
 
                 // create a HTML element for each feature
                 var el = document.createElement("div")
-                el.className = "marker waypoint-marker"
+                let classnames = "marker mdi-map-marker-outline waypoint-marker"
+                if ( marker.properties.color ) {
+                    classnames += " marker-color-" + marker.properties.color
+                }
+                el.className = classnames
 
                 // Since we want something to pop up on marker click, we need to create a popup for this marker.
                 const pop = new mapboxgl.Popup({ offset: 25 }) // add popups
@@ -419,19 +431,14 @@ body {
 }
 
 .marker::before{
-    font-family: "Material Icons";
-    content: "\e8b4";
+    font-family: 'Material Design Icons';
     color: #333;
     font-size: 40px;
     cursor: pointer;
 }
 
 .your-marker::before{
-    font-family: "Material Icons";
-    content: "\e8b4";
     color: red;
-    font-size: 40px;
-    cursor: pointer;
 }
 
 .mapboxgl-popup {
@@ -457,6 +464,16 @@ body {
 .v-card.map-item{
   position: absolute;
   bottom: 0;
+}
+</style>
+
+<style lang="scss">
+$marker-colors: (black: #000000, green: #56a744, orange: #FF5733, blue: #428EF4, pink: #F142F4);
+
+@each $name, $marker-color in $marker-colors {
+    .marker.marker-color-#{$name}::before {
+        color: #{$marker-color};
+    }
 }
 </style>
 

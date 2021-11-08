@@ -16,12 +16,19 @@ const initialState = () => {
         waypoints: [],
         assistanceOptions: [],
         businessTypes: [
-            { name: 'Community Garden' },
-            { name: 'Farm' },
-            { name: 'Farm Training Program' },
-            { name: 'General Food Access' },
-            { name: 'Market' }
+            { name: 'Community Garden', color: 'black' },
+            { name: 'Farm', color: 'green' },
+            { name: 'Farm Training Program', color: 'orange' },
+            { name: 'General Food Access', color: 'blue' },
+            { name: 'Market', color: 'pink' }
         ],
+        colors: {
+            black: '#000000',
+            green: '#56a744',
+            orange: '#FF5733',
+            blue: '#428EF4',
+            pink: '#F142F4'
+        },
         filter: {
             businessTypes: [],
             distance: 0.0,
@@ -159,6 +166,12 @@ const store = new Vuex.Store({
             }
             return ''
         },
+        colorLookup: (state) => (color) => {
+            if ( color in state.colors ) {
+                return state.colors[color]
+            }
+            return '#000000'
+        },
         productObjects(state) {
             return state.products
         },
@@ -183,6 +196,14 @@ const store = new Vuex.Store({
         },
         businessTypeObjects(state) {
             return state.businessTypes
+        },
+        businessTypeObjectsFromFilter(state) {
+            if ( state.filter.businessTypes.length > 0 && state.businessTypes.length > 0 ) {
+                return state.businessTypes.filter( (bt) => {
+                    return state.filter.businessTypes.includes(bt.name)
+                })
+            }
+            return []
         },
         filterObject(state) {
             return state.filter

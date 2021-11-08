@@ -41,7 +41,9 @@
                         filter
                         outlined
                         :value="businessType.name"
-                    >{{ businessType.name }}</v-chip>
+                    >
+                        <div class="bt-chip-color" :style="`background-color: ${getColorCode(businessType.color)} `"></div>
+                    {{ businessType.name }}</v-chip>
                 </v-chip-group>
             </v-card-text>
 
@@ -183,6 +185,7 @@ export default {
             filter: 'filterObject',
             initialFilter: 'initialFilter',
             locationHasBeenSet: 'userLocationSet',
+            getColorCode: 'colorLookup'
         }),
         locationButtonText() {
             return (this.locationHasBeenSet) ? 'Re-check Location' : 'Enable Location'
@@ -217,7 +220,6 @@ export default {
                 console.log('Browser supports location.')
                 this.locationStatusMessage = 'Finding location.'
                 navigator.geolocation.getCurrentPosition((pos) => {
-                    console.log(pos)
                     if ( pos.coords && pos.coords.latitude && pos.coords.longitude ) {
                         this.locationHasSet()
                         this.setCoordinates({
@@ -226,7 +228,6 @@ export default {
                         })
                     }
                 }, (error) => {
-                    console.log(error)
                     const default_error_message = 'Something went wrong with the location service.'
                     const error_messages = {
                         '1': 'Permission to location was denied.  In order to enable this functionality, you must enable location permissions manually on your browser.',  // User denied geolocation,
@@ -308,5 +309,12 @@ export default {
     position: sticky;
     top: 0;
     z-index: 99;
+}
+
+.bt-chip-color {
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 8px;
 }
 </style>
