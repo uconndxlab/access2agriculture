@@ -332,7 +332,7 @@ export default {
                 el.className = classnames
 
                 // Since we want something to pop up on marker click, we need to create a popup for this marker.
-                const pop = new mapboxgl.Popup({ offset: 25 }) // add popups
+                const pop = new mapboxgl.Popup({ offset: 10 }) // add popups
                     .setHTML(`<h3>${marker.properties.title}</h3>
             <p>${marker.properties.description}</p>
             <p><button type="button" class="v-btn v-btn--block v-btn--has-bg theme--light v-size--default marker-get-info-text primary" data-marker-id="${marker.properties.id}"><span class="v-btn__content">Get Info</span></button></p>`)
@@ -430,6 +430,13 @@ body {
   z-index: -1;
 }
 
+#mapContainer .mapboxgl-popup-close-button {
+    right: 7px;
+    font-size: 28px;
+    top: 7px;
+    padding: 5px;
+}
+
 /* .marker::before{
     font-family: 'Material Design Icons';
     color: #333;
@@ -443,9 +450,11 @@ body {
 
 .marker {
     background-color: black;
-    width: 12px;
-    height: 12px;
-    border-radius: 12px;
+    width: 14px;
+    height: 14px;
+    border-radius: 16px;
+    border: 2px solid white;
+    cursor: pointer;
 }
 
 .your-marker {
