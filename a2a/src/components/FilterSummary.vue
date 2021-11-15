@@ -11,6 +11,9 @@
             <v-chip v-for="p in products" :key="`fs-p-${p.id}`" close @click:close="clearProductFilter(p)" color="primary">
                 {{ p.name }}
             </v-chip>
+            <v-chip v-for="r in routes" :key="`fs-r-${r.id}`" close @click:close="clearRouteFilter(r)" color="primary">
+                {{ r.name }}
+            </v-chip>
         </v-chip-group>
     </div>
 </template>
@@ -26,7 +29,8 @@ export default {
             assistanceOptions: 'assistanceOptionsFromFilter',
             products: 'productsFromFilter',
             getColorCode: 'colorLookup',
-            businessTypes: 'businessTypeObjectsFromFilter'
+            businessTypes: 'businessTypeObjectsFromFilter',
+            routes: 'routesFromFilter'
         })
     },
     methods: {
@@ -34,7 +38,8 @@ export default {
             'setFilterDistance': 'SET_FILTER_LOCATION_DISTANCE',
             'removeAssistanceOption': 'REMOVE_SINGLE_ASSISTANCE_OPTION_FILTER',
             'removeBusinessType': 'REMOVE_SINGLE_BUSINESS_TYPE_FILTER',
-            'removeProduct': 'REMOVE_SINGLE_PRODUCT_FILTER'
+            'removeProduct': 'REMOVE_SINGLE_PRODUCT_FILTER',
+            'removeRoute': 'REMOVE_SINGLE_ROUTE_FILTER'
         }),
         clearDistanceFilter() {
             this.setFilterDistance(0.0)
@@ -47,6 +52,9 @@ export default {
         },
         clearProductFilter(product) {
             this.removeProduct(product)
+        },
+        clearRouteFilter(route) {
+            this.removeRoute(route)
         }
     }
 }

@@ -15,6 +15,7 @@ const initialState = () => {
         products: [],
         waypoints: [],
         assistanceOptions: [],
+        routes: [],
         businessTypes: [
             { name: 'Community Garden', color: 'black' },
             { name: 'Farm', color: 'green' },
@@ -33,7 +34,8 @@ const initialState = () => {
             businessTypes: [],
             distance: 0.0,
             assistanceOptions: [],
-            products: []
+            products: [],
+            routes: []
         },
         userLocation: {
             coords: {
@@ -61,12 +63,16 @@ const store = new Vuex.Store({
         SET_ASSISTANCE_OPTIONS(state, val) {
             state.assistanceOptions = val
         },
+        SET_ROUTES(state, val) {
+            state.routes = val
+        },
         SET_FILTER(state, val) {
             state.filter = {
                 businessTypes: val.businessTypes,
                 distance: val.distance,
                 assistanceOptions: val.assistanceOptions,
-                products: val.products
+                products: val.products,
+                routes: val.routes
             }
         },
         SET_FILTER_LOCATION_DISTANCE(state, val) {
@@ -91,6 +97,14 @@ const store = new Vuex.Store({
                 const i = state.filter.products.findIndex(a => a == val.id)
                 if ( i > -1 ) {
                     state.filter.products.splice(i, 1)
+                }
+            }
+        },
+        REMOVE_SINGLE_ROUTE_FILTER(state, val) {
+            if ( val && val.id ) {
+                const i = state.filter.routes.findIndex(a => a == val.id)
+                if ( i > -1 ) {
+                    state.filter.routes.splice(i, 1)
                 }
             }
         },
@@ -222,6 +236,17 @@ const store = new Vuex.Store({
                 return state.bookmarks.includes(x.id)
             })
         },
+        routeObjects(state) {
+            return state.routes
+        },
+        routesFromFilter(state) {
+            if ( state.filter.routes.length > 0 && state.routes.length > 0 ) {
+                return state.routes.filter( (route) => {
+                    return state.filter.routes.includes(route.id)
+                })
+            }
+            return []
+        },
         waypointObjectsByFilter(state, getters) {
             let wps = state.waypoints.filter(x => {
                 let has_products = true
@@ -297,6 +322,16 @@ const store = new Vuex.Store({
             })
 
             commit('SET_ASSISTANCE_OPTIONS', assistance_options_extracted)
+        },
+        async fetchRoutes({ commit }) {
+            const routes = await fb.routesCollection.get()
+            const routes_extracted = routes.docs.map( route => {
+                let route_obj = route.data()
+                route_obj.id = route.id
+                return route_obj
+            })
+
+            commit('SET_ROUTES', routes_extracted)
         },
         async fetchWaypoints({ commit, state }) {
             const waypoints = await fb.waypointsCollection.get()

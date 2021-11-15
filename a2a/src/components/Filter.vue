@@ -125,6 +125,26 @@
 
             <v-divider></v-divider>
 
+            <!-- Route selection, not currently hooked up. -->
+            <v-card-text>
+                <v-chip-group
+                    column
+                    multiple
+                    v-model="proposedFilter.routes"
+                    class="routes"
+                >
+                    <v-chip
+                        v-for="route in routes"
+                        :key="`route-chip-${route.id}`"
+                        filter
+                        outlined
+                        :value="route.id"
+                    >{{ route.name }}</v-chip>
+                </v-chip-group>
+            </v-card-text>
+
+            <v-divider></v-divider>
+
             <!-- Products Selection -->
             <v-card-title class="subtitle-1">Products</v-card-title>
             <v-card-text>
@@ -171,7 +191,8 @@ export default {
             businessTypes: [],
             distance: 0.0,
             assistanceOptions: [],
-            products: []
+            products: [],
+            routes: []
         },
         locationStatusMessage: 'Location has not been detected.',
         locationStatusMessageType: 'info',
@@ -185,7 +206,8 @@ export default {
             filter: 'filterObject',
             initialFilter: 'initialFilter',
             locationHasBeenSet: 'userLocationSet',
-            getColorCode: 'colorLookup'
+            getColorCode: 'colorLookup',
+            routes: 'routeObjects'
         }),
         locationButtonText() {
             return (this.locationHasBeenSet) ? 'Re-check Location' : 'Enable Location'
