@@ -199,7 +199,7 @@ export default {
             // Set a custom marker for your current location, if provided.
             if ( this.userLoc && this.userLocSet && !this.userMarker ) {
                 var yourmark = document.createElement("div")
-                yourmark.className = "marker mdi-map-marker-outline your-marker"
+                yourmark.className = "marker your-marker"
 
                 this.userMarker = new mapboxgl.Marker(yourmark)
                     .setLngLat([this.userLoc.long, this.userLoc.lat])
@@ -325,7 +325,7 @@ export default {
 
                 // create a HTML element for each feature
                 var el = document.createElement("div")
-                let classnames = "marker mdi-map-marker-outline waypoint-marker"
+                let classnames = "marker waypoint-marker"
                 if ( marker.properties.color ) {
                     classnames += " marker-color-" + marker.properties.color
                 }
@@ -430,7 +430,7 @@ body {
   z-index: -1;
 }
 
-.marker::before{
+/* .marker::before{
     font-family: 'Material Design Icons';
     color: #333;
     font-size: 40px;
@@ -439,6 +439,17 @@ body {
 
 .your-marker::before{
     color: red;
+} */
+
+.marker {
+    background-color: black;
+    width: 12px;
+    height: 12px;
+    border-radius: 12px;
+}
+
+.your-marker {
+    background-color: red;
 }
 
 .mapboxgl-popup {
@@ -468,11 +479,11 @@ body {
 </style>
 
 <style lang="scss">
-$marker-colors: (black: #000000, green: #56a744, orange: #FF5733, blue: #428EF4, pink: #F142F4);
+$marker-colors: ("black": #000000, "green": #56a744, "orange": #FF5733, "blue": #428EF4, "pink": #F142F4);
 
 @each $name, $marker-color in $marker-colors {
-    .marker.marker-color-#{$name}::before {
-        color: #{$marker-color};
+    .marker.marker-color-#{"" + $name} {
+        background-color: #{$marker-color};
     }
 }
 </style>
