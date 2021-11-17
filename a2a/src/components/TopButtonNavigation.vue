@@ -87,7 +87,6 @@ export default {
                 console.log("Browser supports location.")
                 navigator.geolocation.getCurrentPosition(
                     (pos) => {
-                        console.log("Retrieved location:", pos)
                         if (
                             pos.coords &&
                             pos.coords.latitude &&
