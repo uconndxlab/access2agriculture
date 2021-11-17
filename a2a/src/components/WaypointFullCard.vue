@@ -199,6 +199,7 @@ export default {
     height: calc(100% - 56px)!important;
     border-radius: 0px!important;
     box-shadow: none!important;
+    width: 100%;
 }
 </style>
 

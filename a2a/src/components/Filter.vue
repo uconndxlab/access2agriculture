@@ -41,7 +41,9 @@
                         filter
                         outlined
                         :value="businessType.name"
-                    >{{ businessType.name }}</v-chip>
+                    >
+                        <div class="bt-chip-color" :style="`background-color: ${getColorCode(businessType.color)} `"></div>
+                    {{ businessType.name }}</v-chip>
                 </v-chip-group>
             </v-card-text>
 
@@ -123,6 +125,26 @@
 
             <v-divider></v-divider>
 
+            <!-- Route selection, not currently hooked up. -->
+            <v-card-text>
+                <v-chip-group
+                    column
+                    multiple
+                    v-model="proposedFilter.routes"
+                    class="routes"
+                >
+                    <v-chip
+                        v-for="route in routes"
+                        :key="`route-chip-${route.id}`"
+                        filter
+                        outlined
+                        :value="route.id"
+                    >{{ route.name }}</v-chip>
+                </v-chip-group>
+            </v-card-text>
+
+            <v-divider></v-divider>
+
             <!-- Products Selection -->
             <v-card-title class="subtitle-1">Products</v-card-title>
             <v-card-text>
@@ -169,7 +191,8 @@ export default {
             businessTypes: [],
             distance: 0.0,
             assistanceOptions: [],
-            products: []
+            products: [],
+            routes: []
         },
         locationStatusMessage: 'Location has not been detected.',
         locationStatusMessageType: 'info',
@@ -183,6 +206,8 @@ export default {
             filter: 'filterObject',
             initialFilter: 'initialFilter',
             locationHasBeenSet: 'userLocationSet',
+            getColorCode: 'colorLookup',
+            routes: 'routeObjects'
         }),
         locationButtonText() {
             return (this.locationHasBeenSet) ? 'Re-check Location' : 'Enable Location'
@@ -217,7 +242,6 @@ export default {
                 console.log('Browser supports location.')
                 this.locationStatusMessage = 'Finding location.'
                 navigator.geolocation.getCurrentPosition((pos) => {
-                    console.log(pos)
                     if ( pos.coords && pos.coords.latitude && pos.coords.longitude ) {
                         this.locationHasSet()
                         this.setCoordinates({
@@ -226,7 +250,6 @@ export default {
                         })
                     }
                 }, (error) => {
-                    console.log(error)
                     const default_error_message = 'Something went wrong with the location service.'
                     const error_messages = {
                         '1': 'Permission to location was denied.  In order to enable this functionality, you must enable location permissions manually on your browser.',  // User denied geolocation,
@@ -308,5 +331,12 @@ export default {
     position: sticky;
     top: 0;
     z-index: 99;
+}
+
+.bt-chip-color {
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 8px;
 }
 </style>

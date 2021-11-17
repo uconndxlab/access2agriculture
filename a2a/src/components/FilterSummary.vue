@@ -5,11 +5,14 @@
                 Distance: {{ filter.distance }} mi
             </v-chip>
             <v-chip v-for="a in assistanceOptions" :key="`fs-ao-${a.id}`" close @click:close="clearAssistanceOptionFilter(a)" color="primary">{{ a.name }}</v-chip>
-            <v-chip v-for="bt in filter.businessTypes" :key="`fs-bt-${bt}`" close @click:close="clearBusinessTypeFilter(bt)" color="primary">
-                {{ bt }}
+            <v-chip v-for="bt in businessTypes" :key="`fs-bt-${bt}`" close @click:close="clearBusinessTypeFilter(bt)" class="white--text" :color="getColorCode(bt.color)">
+                {{ bt.name }}
             </v-chip>
             <v-chip v-for="p in products" :key="`fs-p-${p.id}`" close @click:close="clearProductFilter(p)" color="primary">
                 {{ p.name }}
+            </v-chip>
+            <v-chip v-for="r in routes" :key="`fs-r-${r.id}`" close @click:close="clearRouteFilter(r)" color="primary">
+                {{ r.name }}
             </v-chip>
         </v-chip-group>
     </div>
@@ -24,7 +27,10 @@ export default {
         ...mapGetters({
             filter: 'filterObject',
             assistanceOptions: 'assistanceOptionsFromFilter',
-            products: 'productsFromFilter'
+            products: 'productsFromFilter',
+            getColorCode: 'colorLookup',
+            businessTypes: 'businessTypeObjectsFromFilter',
+            routes: 'routesFromFilter'
         })
     },
     methods: {
@@ -32,7 +38,8 @@ export default {
             'setFilterDistance': 'SET_FILTER_LOCATION_DISTANCE',
             'removeAssistanceOption': 'REMOVE_SINGLE_ASSISTANCE_OPTION_FILTER',
             'removeBusinessType': 'REMOVE_SINGLE_BUSINESS_TYPE_FILTER',
-            'removeProduct': 'REMOVE_SINGLE_PRODUCT_FILTER'
+            'removeProduct': 'REMOVE_SINGLE_PRODUCT_FILTER',
+            'removeRoute': 'REMOVE_SINGLE_ROUTE_FILTER'
         }),
         clearDistanceFilter() {
             this.setFilterDistance(0.0)
@@ -41,10 +48,13 @@ export default {
             this.removeAssistanceOption(assistanceOption)
         },
         clearBusinessTypeFilter(businessType) {
-            this.removeBusinessType(businessType)
+            this.removeBusinessType(businessType.name)
         },
         clearProductFilter(product) {
             this.removeProduct(product)
+        },
+        clearRouteFilter(route) {
+            this.removeRoute(route)
         }
     }
 }

@@ -99,7 +99,8 @@ export default {
             string: "string",
             waypointById: "waypointById",
             showIntro: "showIntro",
-            showNoWaypointsInView: "showNoWaypointsInView"
+            showNoWaypointsInView: "showNoWaypointsInView",
+            businessTypes: "businessTypeObjects"
         }),
         isSM() {
             return this.$vuetify.breakpoint.name === 'sm'
@@ -298,17 +299,24 @@ export default {
     */
         this.fetchWaypointsConditionally().then(() => {
             this.geojson.features = this.fullWaypoints.map((wp) => {
+                let properties = {
+                    title: wp.name,
+                    description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
+                    id: wp.id,
+                    color: null
+                }
+
+                const bt = this.businessTypes.find(x => x.name === wp.type)
+                if ( bt && bt.color ) {
+                    properties.color = bt.color
+                }
                 return {
                     type: "Feature",
                     geometry: {
                         type: "Point",
                         coordinates: [wp.coordinates._long, wp.coordinates._lat],
                     },
-                    properties: {
-                        title: wp.name,
-                        description: `${wp.address}, ${wp.town} ${wp.state}, ${wp.zip}`,
-                        id: wp.id
-                    },
+                    properties: properties,
                 }
             })
 
@@ -317,10 +325,14 @@ export default {
 
                 // create a HTML element for each feature
                 var el = document.createElement("div")
-                el.className = "marker waypoint-marker"
+                let classnames = "marker waypoint-marker"
+                if ( marker.properties.color ) {
+                    classnames += " marker-color-" + marker.properties.color
+                }
+                el.className = classnames
 
                 // Since we want something to pop up on marker click, we need to create a popup for this marker.
-                const pop = new mapboxgl.Popup({ offset: 25 }) // add popups
+                const pop = new mapboxgl.Popup({ offset: 10 }) // add popups
                     .setHTML(`<h3>${marker.properties.title}</h3>
             <p>${marker.properties.description}</p>
             <p><button type="button" class="v-btn v-btn--block v-btn--has-bg theme--light v-size--default marker-get-info-text primary" data-marker-id="${marker.properties.id}"><span class="v-btn__content">Get Info</span></button></p>`)
@@ -418,20 +430,35 @@ body {
   z-index: -1;
 }
 
-.marker::before{
-    font-family: "Material Icons";
-    content: "\e8b4";
+#mapContainer .mapboxgl-popup-close-button {
+    right: 7px;
+    font-size: 28px;
+    top: 7px;
+    padding: 5px;
+}
+
+/* .marker::before{
+    font-family: 'Material Design Icons';
     color: #333;
     font-size: 40px;
     cursor: pointer;
 }
 
 .your-marker::before{
-    font-family: "Material Icons";
-    content: "\e8b4";
     color: red;
-    font-size: 40px;
+} */
+
+.marker {
+    background-color: black;
+    width: 14px;
+    height: 14px;
+    border-radius: 16px;
+    border: 2px solid white;
     cursor: pointer;
+}
+
+.your-marker {
+    background-color: red;
 }
 
 .mapboxgl-popup {
@@ -457,6 +484,16 @@ body {
 .v-card.map-item{
   position: absolute;
   bottom: 0;
+}
+</style>
+
+<style lang="scss">
+$marker-colors: ("black": #000000, "green": #56a744, "orange": #FF5733, "blue": #428EF4, "pink": #F142F4);
+
+@each $name, $marker-color in $marker-colors {
+    .marker.marker-color-#{"" + $name} {
+        background-color: #{$marker-color};
+    }
 }
 </style>
 
