@@ -7,17 +7,33 @@
             subheader
             two-line
         >
+            <v-subheader>Project Info / About</v-subheader>
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title>About</v-list-item-title>
+                    <v-list-item-subtitle>Read about the project.</v-list-item-subtitle>
+                </v-list-item-content>
+
+                <v-list-item-action>
+                    <v-btn to="/">Go</v-btn>
+                </v-list-item-action>
+            </v-list-item>
+
+            <v-divider></v-divider>
+
             <v-subheader>Data</v-subheader>
             <v-list-item>
                 <v-list-item-content>
                     <v-list-item-title>Clear Data</v-list-item-title>
-                    <v-list-item-subtitle>Delete all cached data &amp; bookmarks.</v-list-item-subtitle>
+                    <v-list-item-subtitle>Delete cached data &amp; bookmarks.</v-list-item-subtitle>
                 </v-list-item-content>
 
                 <v-list-item-action>
                     <v-btn @click="clearData()">Clear</v-btn>
                 </v-list-item-action>
             </v-list-item>
+
+            <v-divider></v-divider>
 
             <v-subheader>Version</v-subheader>
             <v-list-item>

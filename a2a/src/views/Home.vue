@@ -1,6 +1,9 @@
 <template>
   <div class="home">
     <div class="main-content">
+      <v-btn class="dismiss" to="/map" color="black" dark fab small>
+          <v-icon>mdi-close</v-icon>
+      </v-btn>
       <svg class="appicon" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
           viewBox="0 0 432 432" style="enable-background:new 0 0 432 432;" xml:space="preserve">
           <path d="M301.6,37.9c-21.8-23.9-53-37.5-85.9-37.5c-61.1,0-116.3,46.9-116.3,119.3c0,40,26.6,86,79.6,138.2
@@ -32,9 +35,12 @@ export default {
   justify-content: center;
   padding-right: 20px;
   padding-left: 20px;
-  .main-content {
-
+  .dismiss {
+    position: absolute;
+    top: 10px;
+    right: 10px;
   }
+
   .appicon {
     width: 40px;
     height:40px;

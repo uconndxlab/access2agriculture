@@ -2,7 +2,7 @@
   <v-app>
     <v-main>
       <router-view/>
-      <bottom-navigation></bottom-navigation>
+      <bottom-navigation v-if="!isRoot"></bottom-navigation>
     </v-main>
   </v-app>
 </template>
@@ -15,6 +15,11 @@ export default {
     name: 'App',
     components: {
         BottomNavigation
+    },
+    computed: {
+        isRoot() {
+            return this.$route.path == '/'
+        }
     },
     methods: {
         ...mapActions(['fetchProducts', 'fetchWaypoints', 'fetchAssistanceOptions', 'fetchRoutes'])
