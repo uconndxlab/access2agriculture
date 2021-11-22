@@ -14,7 +14,7 @@
           <path d="M431.8,227.7c-51.9-6-105.9,10.8-145.7,50.7c-41.9,41.9-58.3,99.6-49.5,154C342.7,422.3,426.5,335.3,431.8,227.7z"/>
       </svg>
       <h1 class="mb-4">Access2Ag</h1>
-      <p class="mb-8">Welcome to Access to Agriculture!  Here, you can browse local food vendors.</p>
+      <p class="mb-8">{{ string('HOMEPAGE_INTRO') }}</p>
       <v-btn class="blackbtn mb-4" to="/map" rounded dark color="black">Filter By Route</v-btn><br>
       <v-btn class="blackbtn" to="/map" rounded dark color="black">View Full Map</v-btn>
     </div>
@@ -22,8 +22,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-    name: 'Home'
+    name: 'Home',
+    computed: {
+        ...mapGetters({
+            string: "string"
+        })
+    }
 }
 </script>
 
