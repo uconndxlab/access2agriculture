@@ -1,6 +1,6 @@
 <template>
     <div id="liked-view">
-        <top-button-navigation @clickHome="$router.push('/')"></top-button-navigation>
+        <top-button-navigation @clickHome="$router.push('map')"></top-button-navigation>
 
         <v-list>
             <template

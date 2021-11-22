@@ -126,6 +126,7 @@
             <v-divider></v-divider>
 
             <!-- Route selection, not currently hooked up. -->
+            <v-card-title class="subtitle-1">Bus Routes</v-card-title>
             <v-card-text>
                 <v-chip-group
                     column

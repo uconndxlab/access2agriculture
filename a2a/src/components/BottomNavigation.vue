@@ -20,7 +20,7 @@ export default {
         return {
             navItems: [
                 {
-                    to: '/',
+                    to: '/map',
                     value: 'map',
                     icon: 'mdi-map',
                     text: 'Map'

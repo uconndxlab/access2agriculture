@@ -1,18 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Map from '../views/Map.vue'
+import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: Map
+        name: 'home',
+        component: Home
     },
     {
         path: '/map',
-        name: 'Map',
+        name: 'map',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -20,22 +20,17 @@ const routes = [
     },
     {
         path: '/account',
-        name: 'Account',
+        name: 'account',
         component: () => import(/* webpackChunkName: "account" */ '../views/Account.vue')
     },
     {
-        path: '/notifications',
-        name: 'Notifications',
-        component: () => import(/* webpackChunkName: "notifications" */ '../views/Notifications.vue')
-    },
-    {
         path: '/liked',
-        name: 'Liked',
+        name: 'liked',
         component: () => import(/* webpackChunkName: "liked" */ '../views/Liked.vue')
     },
     {
         path: '/map-list',
-        name: 'Map List',
+        name: 'maplist',
         component: () => import(/* webpackChunkName: "map-item" */ '../views/MapList.vue')
     },
     {

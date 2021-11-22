@@ -1,7 +1,7 @@
 <template>
     <div id="settings-view">
         <top-button-navigation
-            @clickHome="$router.push('/')"
+            @clickHome="$router.push('map')"
         ></top-button-navigation>
         <v-list
             subheader

@@ -336,7 +336,7 @@ export default {
                 const pop = new mapboxgl.Popup({ offset: 10 }) // add popups
                     .setHTML(`<h3>${marker.properties.title}</h3>
             <p>${marker.properties.description}</p>
-            <p><button type="button" class="v-btn v-btn--block v-btn--has-bg theme--light v-size--default marker-get-info-text primary" data-marker-id="${marker.properties.id}"><span class="v-btn__content">Get Info</span></button></p>`)
+            <p><button type="button" class="v-btn v-btn--block v-btn--has-bg theme--dark v-size--default marker-get-info-text black" data-marker-id="${marker.properties.id}"><span class="v-btn__content">Get Info</span></button></p>`)
 
                 // Create the marker object.  Not adding to map yet since we might be loading this view with a filter already active.
                 const m = new mapboxgl.Marker(el)
@@ -387,7 +387,7 @@ export default {
     },
     watch: {
         '$route.path': function(val) {
-            if ( val === '/' ) {
+            if ( val === '/map' ) {
                 this.navigateToDefaultMapView()
             }
         },

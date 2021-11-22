@@ -4,7 +4,7 @@
             :to-page="false"
             @topNavOpenFilter="openFilter()"
             @locationHasError="displayLocationError"
-            @clickHome="$router.push('/')"
+            @clickHome="$router.push('map')"
         ></top-button-navigation>
 
         <location-error ref="location_error_alert"></location-error>
