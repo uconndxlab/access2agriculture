@@ -5,6 +5,7 @@
       @topNavOpenFilter="openFilter()"
       @locationJustSet="userJustSetNearMeLocation()"
       @locationHasError="displayLocationError"
+      @clickHome="navigateToDefaultMapView()"
     ></top-button-navigation>
 
     <div id="map">

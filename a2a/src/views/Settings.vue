@@ -1,6 +1,8 @@
 <template>
     <div id="settings-view">
-        <top-button-navigation></top-button-navigation>
+        <top-button-navigation
+            @clickHome="$router.push('/')"
+        ></top-button-navigation>
         <v-list
             subheader
             two-line
