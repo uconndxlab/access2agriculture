@@ -270,7 +270,7 @@ const store = new Vuex.Store({
                     }
                 }
 
-                if ( state.filter.distance && state.userLocation.coords.lat && state.userLocation.coords.long && state.userLocation.hasBeenSet ) {
+                if ( state.filter.distance && state.userLocation.coords.lat && state.userLocation.coords.long && state.userLocation.hasBeenSet && state.filter.distance > 0 ) {
                     if ( !x.coordinates ) {
                         is_within_distance = false
                     } else {
