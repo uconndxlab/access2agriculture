@@ -11,7 +11,8 @@
             <v-chip v-for="p in products" :key="`fs-p-${p.id}`" close @click:close="clearProductFilter(p)" color="primary">
                 {{ p.name }}
             </v-chip>
-            <v-chip v-for="r in routes" :key="`fs-r-${r.id}`" close @click:close="clearRouteFilter(r)" color="primary">
+            <v-chip v-for="r in routes" :key="`fs-r-${r.id}`" close @click:close="clearRouteFilter(r)">
+                <div class="chip-color-line" :style="`background-color: #${r.route_color}`"></div>
                 {{ r.name }}
             </v-chip>
         </v-chip-group>
@@ -68,5 +69,13 @@ export default {
             text-transform: none;
         }
     }
+}
+
+.chip-color-line {
+    width: 15px;
+    height: 6px;
+    display: inline-block;
+    margin-right: 5px;
+    border: 1px solid black;
 }
 </style>

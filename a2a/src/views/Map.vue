@@ -92,7 +92,9 @@ export default {
             string: "string",
             waypointById: "waypointById",
             showNoWaypointsInView: "showNoWaypointsInView",
-            businessTypes: "businessTypeObjects"
+            businessTypes: "businessTypeObjects",
+            routes: "routeObjects",
+            filter: "filterObject"
         }),
         isSM() {
             return this.$vuetify.breakpoint.name === 'sm'
@@ -136,6 +138,24 @@ export default {
                 } else {
                     mark.remove()
                     mark._pos = null
+                }
+            })
+
+            this.map.getStyle().layers.forEach((l) => {
+                
+                if ( l.id.startsWith('bus-route-') ) {
+                    // If there are no filtered routes, show all routes on map.
+                    if ( this.filter.routes.length === 0 ) {
+                        this.map.setLayoutProperty(l.id, 'visibility', 'visible')
+                        return
+                    }
+
+                    const id_in_filter = this.filter.routes.find(el => l.id.endsWith(`${el}-layer`))
+                    if ( id_in_filter ) {
+                        this.map.setLayoutProperty(l.id, 'visibility', 'visible')
+                    } else {
+                        this.map.setLayoutProperty(l.id, 'visibility', 'none')
+                    }
                 }
             })
         },
@@ -255,6 +275,30 @@ export default {
                     this.openNoWaypointsInView()
                 }
             }, 3000)
+        },
+        addRouteLayers() {
+            this.map.addSource('bus-route-estuary', {
+                type: 'geojson',
+                data: '/geojson/estuarygeojson.geojson'
+            })
+
+            this.map.addSource('bus-route-windham-region', {
+                type: 'geojson',
+                data: '/geojson/windhamregiongeojson.geojson'
+            })
+
+            this.routes.forEach((r) => {
+                this.map.addLayer({
+                    'id': `${r.source}-${r.id}-layer`,
+                    'type': 'line',
+                    'source': r.source,
+                    'paint': {
+                        'line-color': `#${r.route_color}`,
+                        'line-width': 3
+                    },
+                    filter: ['==', 'route_short_name', r.route_short_name]
+                })
+            })
         }
     },
     mounted() {
@@ -274,6 +318,21 @@ export default {
         }
 
         this.map = new mapboxgl.Map(this.defaultMapConfig)
+
+        this.map.on('load', () => {
+            if ( this.routes.length > 0 ) {
+                this.addRouteLayers()
+            } else {
+                this.storeUnsubscribe = this.$store.subscribe((mutation, state) => {
+                    if ( mutation.type === 'SET_ROUTES' ) {
+                        if ( state.routes.length > 0 ) {
+                            this.addRouteLayers()
+                            this.storeUnsubscribe()
+                        }
+                    }
+                })
+            }
+        })
 
         this.geojson = {
             type: "FeatureCollection",
@@ -370,6 +429,9 @@ export default {
     },
     beforeDestroy() {
         document.removeEventListener("click", this.mountWaypointGetInfoListener)
+        if ( this.storeUnsubscribe ) {
+            this.storeUnsubscribe()
+        }
     },
     watch: {
         '$route.path': function(val) {
@@ -378,6 +440,9 @@ export default {
             }
         },
         'filteredMarkerIDs': function() {
+            this.filterMapLayer()
+        },
+        'filter.routes': function() {
             this.filterMapLayer()
         }
     }

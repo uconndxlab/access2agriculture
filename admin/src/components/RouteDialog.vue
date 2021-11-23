@@ -18,6 +18,14 @@
                                 <span class="red--text"><strong> *</strong></span>
                             </template>
                         </v-text-field>
+
+                        <span class="text-h6 mb-2">Route Color</span>
+                        <v-color-picker
+                            dot-size="25"
+                            mode="hexa"
+                            :value="route.route_color"
+                            @update:color="colorUpdate"
+                        ></v-color-picker>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn text @click="close()">Close</v-btn>
@@ -75,6 +83,10 @@ export default {
             if ( this.$refs && this.$refs.edit_route_form ) {
                 this.$refs.edit_route_form.resetValidation()
             }
+        },
+        colorUpdate(e) {
+            // Currently removing the '#' ... sorry
+            this.route.route_color = e.hex.substring(1)
         }
     }
 }

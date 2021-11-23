@@ -4,6 +4,7 @@
         <v-row justify="center">
             <v-col md="10">
                 <h1 class="display-1 font-weight-black mb-3">Routes</h1>
+                <p>Right now, routes can only be added by a developer, since they might require new route files to be generated.  Certain properties can be modified here, though.</p>
             </v-col>
         </v-row>
 
@@ -12,12 +13,6 @@
             @successMessage="showSuccessMessage"
             @errorMessage="showErrorMessage"
         ></route-dialog>
-
-        <add-route-dialog
-            ref="add_route_dialog"
-            @successMessage="showSuccessMessage"
-            @errorMessage="showErrorMessage"
-        ></add-route-dialog>
 
         <v-row justify="center">
             <v-col md="10">
@@ -32,20 +27,16 @@
                             single-line
                             hide-details
                         ></v-text-field>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            color="primary"
-                            dark
-                            class="mb-2"
-                            @click="addRoute()"
-                            >New Route</v-btn
-                        >
                     </v-card-title>
                     <v-data-table
                         :headers="route_headers"
                         :items="routes"
                         :search="route_search"
                     >
+                        <template v-slot:[`item.route_color`]="{ item }">
+                            <div class="color-circle" :style="`background-color: #${item.route_color}`"></div>
+                            #{{ item.route_color }}
+                        </template>
                         <template v-slot:[`item.actions`]="{ item }">
                             <v-icon class="mr-2" @click="editRoute(item)">mdi-pencil</v-icon>
                         </template>
@@ -72,12 +63,10 @@
 import { mapGetters, mapActions } from 'vuex'
 import { deepCloneRoute } from '@/helpers/deepClone.js'
 import RouteDialog from '@/components/RouteDialog.vue'
-import AddRouteDialog from '@/components/AddRouteDialog.vue'
 
 export default {
     components: {
-        RouteDialog,
-        AddRouteDialog
+        RouteDialog
     },
     data: () => {
         return {
@@ -87,6 +76,20 @@ export default {
                     text: "Name",
                     align: "start",
                     value: "name"
+                },
+                {
+                    text: "Map Route Color",
+                    value: "route_color",
+                    sortable: false
+                },
+                {
+                    text: "Mapbox Data Source",
+                    value: "source"
+                },
+                {
+                    text: "Route Short Name",
+                    value: "route_short_name",
+                    sortable: false
                 },
                 {
                     text: "Actions",
@@ -114,12 +117,8 @@ export default {
                 deepCloneRoute(route)
             )
         },
-        addRoute() {
-            this.$refs.add_route_dialog.open()
-        },
         closeDialogs() {
             this.$refs.edit_route_dialog.close()
-            this.$refs.add_route_dialog.close()
         },
         clearMessages() {
             this.show_success_message = false
@@ -141,3 +140,14 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.color-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+</style>

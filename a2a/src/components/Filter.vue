@@ -140,7 +140,9 @@
                         filter
                         outlined
                         :value="route.id"
-                    >{{ route.name }}</v-chip>
+                    >
+                        <div class="chip-color-line" :style="`background-color: #${route.route_color}`"></div>
+                    {{ route.name }}</v-chip>
                 </v-chip-group>
             </v-card-text>
 
@@ -339,5 +341,13 @@ export default {
     height: 8px;
     margin-right: 8px;
     border-radius: 8px;
+}
+
+.chip-color-line {
+    width: 15px;
+    height: 6px;
+    display: inline-block;
+    margin-right: 5px;
+    border: 1px solid black;
 }
 </style>
