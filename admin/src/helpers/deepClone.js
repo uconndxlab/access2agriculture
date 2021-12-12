@@ -2,20 +2,20 @@
 export function deepCloneWaypoint (item) {
     let wp = {
         name: item.name,
-        address: item.address,
+        address: item.address || "",
         coordinates: {
-            _lat: item.coordinates._lat,
-            _long: item.coordinates._long
+            _lat: item.coordinates._lat || 0,
+            _long: item.coordinates._long || 0
         },
-        state: item.state,
+        state: item.state || "CT",
         type: item.type,
         products: item.products || [],
         geohash: item.geohash,
         image: item.image || "",
-        phone: item.phone,
-        website: item.website,
-        zip: item.zip,
-        town: item.town,
+        phone: item.phone || "",
+        website: item.website || "",
+        zip: item.zip || "",
+        town: item.town || "",
         id: item.id,
         assistance_options: item.assistance_options || [],
         routes: item.routes || []
