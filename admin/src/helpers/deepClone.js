@@ -9,19 +9,16 @@ export function deepCloneWaypoint (item) {
         },
         state: item.state,
         type: item.type,
-        products: item.products,
+        products: item.products || [],
         geohash: item.geohash,
-        image: item.image,
+        image: item.image || "",
         phone: item.phone,
         website: item.website,
         zip: item.zip,
         town: item.town,
         id: item.id,
-        assistance_options: item.assistance_options,
-        routes: []
-    }
-    if ( item.routes ) {
-        wp.routes = item.routes
+        assistance_options: item.assistance_options || [],
+        routes: item.routes || []
     }
     return wp
 }
