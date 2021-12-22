@@ -15,7 +15,7 @@
       </svg>
       <h1 class="mb-4">Access2Ag</h1>
       <p class="mb-8">{{ string('HOMEPAGE_INTRO') }}</p>
-      <v-btn class="blackbtn mb-4" to="/map" rounded dark color="black">Filter By Route</v-btn><br>
+      <v-btn class="blackbtn mb-4" to="/routes" rounded dark color="black">Filter By Route</v-btn><br>
       <v-btn class="blackbtn" to="/map" rounded dark color="black">View Full Map</v-btn>
     </div>
   </div>

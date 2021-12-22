@@ -244,6 +244,7 @@ const store = new Vuex.Store({
                 let has_business_type = true
                 let has_assistance_options = true
                 let is_within_distance = true
+                let has_route_filter = true
 
                 if ( state.filter.products && state.filter.products.length > 0 ) {
                     has_products = state.filter.products.every(y => {
@@ -280,7 +281,13 @@ const store = new Vuex.Store({
                     }
                 }
 
-                return has_products && has_business_type && has_assistance_options && is_within_distance
+                if ( state.filter.routes && state.filter.routes.length > 0 ) {
+                    has_route_filter = state.filter.routes.some(y => {
+                        return x.routes.includes(y)
+                    })
+                }
+
+                return has_products && has_business_type && has_assistance_options && is_within_distance && has_route_filter
             })
 
             return wps.map((wp) => {
