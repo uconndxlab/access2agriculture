@@ -299,6 +299,8 @@ export default {
                     filter: ['==', 'route_short_name', r.route_short_name]
                 })
             })
+
+            this.filterMapLayer()
         }
     },
     mounted() {

@@ -7,21 +7,19 @@
                 <v-list-item
                     v-for="r in routes"
                     :key="`rlist-${r.id}`"
-                    @click="$router.push('map')"
+                    @click="searchByRoute(r.id)"
                 >
                     <v-list-item-content>
                         {{ r.name }}
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
-
-            {{ routes }}
         </div>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
     data: () => {
@@ -31,6 +29,22 @@ export default {
         ...mapGetters({
             routes: 'routeObjects'
         })
+    },
+    methods: {
+        ...mapMutations({
+            setFilter: 'SET_FILTER'
+        }),
+        searchByRoute(id) {
+            const filter = {
+                businessTypes: [],
+                distance: 0.0,
+                assistanceOptions: [],
+                products: [],
+                routes: [id]
+            }
+            this.setFilter(filter)
+            this.$router.push('map')
+        }
     }
 }
 </script>
