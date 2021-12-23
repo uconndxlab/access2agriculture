@@ -45,6 +45,11 @@ export function deepCloneProduct (item) {
 export function deepCloneRoute (item) {
     return {
         id: item.id,
-        name: item.name
+        name: item.name,
+        center: item.center,
+        route_color: item.route_color,
+        route_long_name: item.route_long_name,
+        route_short_name: item.route_short_name,
+        source: item.source
     }
 }

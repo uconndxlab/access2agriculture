@@ -158,6 +158,18 @@ export default {
                     }
                 }
             })
+
+            // If we only have a single route filter, lets zoom to it.
+            if ( this.filter.routes.length === 1 ) {
+                const filter_no_distance = this.filter.distance === 0
+
+                if ( filter_no_distance ) {
+                    const route = this.routes.find(x => x.id === this.filter.routes[0])
+                    this.map.flyTo({
+                        center: [route.center._long, route.center._lat]
+                    })
+                }
+            }
         },
         navigateToDefaultMapView() {
             this.filterMapLayer()
