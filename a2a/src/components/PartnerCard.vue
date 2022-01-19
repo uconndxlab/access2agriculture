@@ -8,7 +8,7 @@
         <v-card-actions v-if="link">
             <v-btn
                 text
-                :to="link"
+                :href="link"
             >
                 Learn More
             </v-btn>
