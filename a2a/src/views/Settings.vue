@@ -15,6 +15,28 @@
                 </v-list-item-content>
 
                 <v-list-item-action>
+                    <v-btn to="about">Go</v-btn>
+                </v-list-item-action>
+            </v-list-item>
+
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title>Routes</v-list-item-title>
+                    <v-list-item-subtitle>View the list of bus routes.</v-list-item-subtitle>
+                </v-list-item-content>
+
+                <v-list-item-action>
+                    <v-btn to="routes">Go</v-btn>
+                </v-list-item-action>
+            </v-list-item>
+
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title>Homepage</v-list-item-title>
+                    <v-list-item-subtitle>Go back to the homepage.</v-list-item-subtitle>
+                </v-list-item-content>
+
+                <v-list-item-action>
                     <v-btn to="/">Go</v-btn>
                 </v-list-item-action>
             </v-list-item>
