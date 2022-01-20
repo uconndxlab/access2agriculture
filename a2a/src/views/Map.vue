@@ -124,7 +124,8 @@ export default {
         filterMapLayer() {
             this.markers.forEach( (mark) => {
                 // Close open popups
-                if ( mark.getPopup().isOpen() ) {
+                const isCurrentRoute = this.$route.name === 'map-item-by-id' && this.$route.path === '/map-item/' + mark.properties.id
+                if ( mark.getPopup().isOpen() && !isCurrentRoute ) {
                     mark.getPopup().remove()
                 }
                 if ( this.filteredMarkerIDs.includes(mark.properties.id) ) {
