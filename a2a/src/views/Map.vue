@@ -160,7 +160,7 @@ export default {
             })
 
             // If we only have a single route filter, lets zoom to it.
-            if ( this.filter.routes.length === 1 ) {
+            if ( this.filter.routes.length === 1 && this.$route.name !== 'map-item-by-id' ) {
                 const filter_no_distance = this.filter.distance === 0
 
                 if ( filter_no_distance ) {
@@ -187,9 +187,11 @@ export default {
                         mark.addTo(this.map)
                     }
                     if ( !mark.getPopup().isOpen() ) {
+                        console.log('adding')
                         mark.getPopup().addTo(this.map)
                     }
                 } else {
+                    console.log('removing')
                     mark.remove()
                     mark._pos = null
                 }
@@ -202,6 +204,7 @@ export default {
                 })
                 if ( this.$route.path !== '/map-item/' + waypointID) {
                     this.$router.push({ name: 'map-item-by-id', params: { id: waypointID }})
+                    console.log('navigating')
                 }
             }
       
