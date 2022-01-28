@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="main-content text-center">
-      <v-btn class="dismiss" to="/map" color="black" dark fab small>
+      <v-btn class="dismiss" to="/map" fab small>
           <v-icon>mdi-close</v-icon>
       </v-btn>
       <app-icon />
@@ -40,8 +40,8 @@ export default {
   padding-left: 20px;
   .dismiss {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 13px;
+    right: 13px;
   }
 }
 </style>
