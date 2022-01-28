@@ -35,47 +35,32 @@ export default {
 
 
 <style lang="scss">
+@import '~vuetify/src/styles/styles.sass';
+
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #000;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 
 .v-item-group.v-bottom-navigation .v-btn.v-size--default {
   height: inherit;
 }
+
+.theme--light.v-bottom-navigation .v-btn:not(.v-btn--active){
+  color: rgba($a2a-darkgreen, 0.5) !important;
+}
+
+span.v-chip.v-slide-item--active.v-chip--active.v-chip--clickable.v-chip--no-color.v-chip--outlined.theme--light.v-size--default {
+    background-color: $a2a-green!important;
+    color: white;
+}
+
+.v-chip.v-chip--outlined.v-chip.v-chip{
+  border-color: $a2a-darkgreen;
+}
 </style>
 
 <style lang="css">
-
-#app{
-  font-family: 'Kanit', sans-serif;
-}
-
-.v-application .display-1{
-  color: #000;
-  text-align: left;
-  font-family: 'Kanit', sans-serif!important;
-}
-
-.v-list-item .v-list-item__title, .v-list-item .v-list-item__subtitle{
-  text-align: left;
-}
-
 .v-application .subtitle-1{
   text-align: left;
   font-size: 18px!important;
@@ -87,29 +72,9 @@ export default {
   text-transform: uppercase;
 }
 
-.v-chip.v-chip--outlined.v-chip.v-chip{
-  border-color: #000;
-}
-
-span.v-chip.v-slide-item--active.v-chip--active.v-chip--clickable.v-chip--no-color.v-chip--outlined.theme--light.v-size--default {
-    background-color: black!important;
-    color: white;
-}
 
 .v-card.map-item{
   width: 100%;
-}
-
-a.v-btn--active.v-btn--active.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--router.theme--light.v-size--default.white{
-  background-color:white!important;
-}
-
-.v-item-group.v-bottom-navigation--fixed a.v-btn--active.v-btn--active.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--router.theme--light.v-size--default.white .v-btn__content{
-  border-top: 2px solid black;
-}
-
-.theme--light.v-bottom-navigation .v-btn:not(.v-btn--active){
-  color: #9E9E9E!important;
 }
 
 .v-btn__content{

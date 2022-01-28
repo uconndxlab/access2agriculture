@@ -1,6 +1,6 @@
 <template>
     <div class="page-routes">
-        <div class="main-content">
+        <div class="main-content text-center">
             <h1>Routes</h1>
 
             <v-list>

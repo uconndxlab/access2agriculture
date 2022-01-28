@@ -1,14 +1,14 @@
 <template>
   <div class="home">
-    <div class="main-content">
+    <div class="main-content text-center">
       <v-btn class="dismiss" to="/map" color="black" dark fab small>
           <v-icon>mdi-close</v-icon>
       </v-btn>
       <app-icon />
       <h1 class="mb-4">Access2Ag</h1>
       <p class="mb-8">{{ string('HOMEPAGE_INTRO') }}</p>
-      <v-btn class="blackbtn mb-4" to="/routes" rounded dark color="black">Filter By Route</v-btn><br>
-      <v-btn class="blackbtn" to="/map" rounded dark color="black">View Full Map</v-btn>
+      <v-btn class="mb-4" to="/routes" rounded color="primary">Filter By Route</v-btn><br>
+      <v-btn to="/map" rounded color="primary">View Full Map</v-btn>
     </div>
   </div>
 </template>

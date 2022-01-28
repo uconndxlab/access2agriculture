@@ -11,9 +11,14 @@
 </template>
 
 <style lang="scss" scoped>
+@import '~vuetify/src/styles/styles.sass';
+
 .appicon {
     width: 40px;
     height: 40px;
     margin-right: 0;
+    path {
+        fill: $a2a-green;
+    }
 }
 </style>

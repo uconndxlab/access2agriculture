@@ -204,6 +204,8 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+@import '~vuetify/src/styles/styles.sass';
+
 .card-top-filler {
     position: absolute;
     top: -36px;
@@ -213,7 +215,7 @@ export default {
     left: 0;
     right: 0;
     z-index: 99;
-    background-color: white;
+    background-color: $a2a-tan;
 }
 .waypoint-full-card {
     position: relative;
@@ -225,12 +227,12 @@ export default {
         line-height: 1.5;
     }
     .waypoint-full-card-subheader {
-        color: grey;
+        color: $a2a-brown;
         font-weight: normal;
     }
 
     .waypoint-full-card-chip {
-        background-color: black;
+        background-color: $a2a-green;
         color: white;
         letter-spacing: 1px;
         padding-left: 16px;

@@ -15,7 +15,7 @@
                 </v-list-item-content>
 
                 <v-list-item-action>
-                    <v-btn to="about">Go</v-btn>
+                    <v-btn color="primary" to="about">Go</v-btn>
                 </v-list-item-action>
             </v-list-item>
 
@@ -26,7 +26,7 @@
                 </v-list-item-content>
 
                 <v-list-item-action>
-                    <v-btn to="routes">Go</v-btn>
+                    <v-btn color="primary" to="routes">Go</v-btn>
                 </v-list-item-action>
             </v-list-item>
 
@@ -37,7 +37,7 @@
                 </v-list-item-content>
 
                 <v-list-item-action>
-                    <v-btn to="/">Go</v-btn>
+                    <v-btn color="primary" to="/">Go</v-btn>
                 </v-list-item-action>
             </v-list-item>
 
@@ -51,7 +51,7 @@
                 </v-list-item-content>
 
                 <v-list-item-action>
-                    <v-btn @click="clearData()">Clear</v-btn>
+                    <v-btn color="primary" @click="clearData()">Clear</v-btn>
                 </v-list-item-action>
             </v-list-item>
 

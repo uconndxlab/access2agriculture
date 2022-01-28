@@ -1,9 +1,8 @@
 <template>
-  <v-bottom-navigation grow app :value="activeRoute">
+  <v-bottom-navigation class="bottom-nav" grow app :value="activeRoute">
     <v-btn
       v-for="nav in navItems"
       :key="`bnav-${nav.value}`"
-      color="white"
       :to="nav.to"
       :value="nav.value">
       <span>{{ nav.text }}</span>

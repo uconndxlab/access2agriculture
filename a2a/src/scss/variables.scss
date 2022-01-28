@@ -1,0 +1,21 @@
+$body-font-family: 'Kanit', 'sans-serif';
+$heading-font-family: 'Kanit', 'sans-serif';
+
+$a2a-tan: #fbf7f0;
+$a2a-lightgrey: #f1eee7;
+$a2a-green: #5a8759;
+$a2a-darkgreen: #384a37;
+$a2a-brown: #634833;
+$a2a-orange: #ee741c;
+
+$material-light: (
+    'app-bar': $a2a-tan,
+    'background': $a2a-tan,
+    'bottom-navigation': $a2a-tan,
+    'cards': $a2a-tan,
+    'dividers': $a2a-darkgreen,
+    'text': (
+        'primary': $a2a-darkgreen,
+        'link': $a2a-orange
+    )
+);
