@@ -19,11 +19,6 @@ const routes = [
         component: () => import(/* webpackChunkName: "map" */ '../views/Map.vue')
     },
     {
-        path: '/account',
-        name: 'account',
-        component: () => import(/* webpackChunkName: "account" */ '../views/Account.vue')
-    },
-    {
         path: '/liked',
         name: 'liked',
         component: () => import(/* webpackChunkName: "liked" */ '../views/Liked.vue')

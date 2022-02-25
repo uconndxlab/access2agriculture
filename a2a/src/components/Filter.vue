@@ -80,7 +80,7 @@
                     <v-alert
                     :type="locationStatusMessageType"
                     dense
-                    color="blue"
+                    color="#ee741c"
                     class="distance-filter-notice"
                     v-if="proposedFilter.distance > 0"
                 >

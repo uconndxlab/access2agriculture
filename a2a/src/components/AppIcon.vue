@@ -1,5 +1,5 @@
 <template>
-    <svg class="appicon" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    <svg class="appicon" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" :width="size" :height="size"
           viewBox="0 0 432 432" style="enable-background:new 0 0 432 432;" xml:space="preserve">
           <path d="M301.6,37.9c-21.8-23.9-53-37.5-85.9-37.5c-61.1,0-116.3,46.9-116.3,119.3c0,40,26.6,86,79.6,138.2
               c11.1,10.9,23.3,22.1,36.7,33.5C293.2,225.2,332,168,332,119.7C332,86.3,320.3,58.3,301.6,37.9z M215.8,87.7
@@ -10,10 +10,24 @@
       </svg>
 </template>
 
+<script>
+export default {
+    props: {
+        size: {
+            type: String,
+            default: '50px'
+        }
+    }
+}
+</script>
+
 <style lang="scss" scoped>
+@import '~vuetify/src/styles/styles.sass';
+
 .appicon {
-    width: 40px;
-    height: 40px;
     margin-right: 0;
+    path {
+        fill: $a2a-green;
+    }
 }
 </style>
