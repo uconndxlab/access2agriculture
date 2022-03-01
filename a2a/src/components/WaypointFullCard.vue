@@ -33,7 +33,10 @@
                             <v-icon>{{ bookmarkIcon }}</v-icon>
                         </v-btn>
                         <v-btn class="mr-1" icon color="black" :href="mapsLink" target="maps.google">
-                            <v-icon>mdi-open-in-new</v-icon>
+                            <v-icon>mdi-map</v-icon>
+                        </v-btn>
+                        <v-btn class="mr-1" icon color="black" :href="waypoint.website" target="_blank">
+                            <v-icon>mdi-link</v-icon>
                         </v-btn>
                         <v-btn class="mr-1" icon color="black" :href="phoneLink">
                             <v-icon>mdi-phone-outline</v-icon>
