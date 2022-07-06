@@ -10,7 +10,7 @@ export function deepCloneWaypoint (item) {
         state: item.state || "CT",
         type: item.type,
         products: item.products || [],
-        geohash: item.geohash,
+        geohash: item.geohash || "",
         image: item.image || "",
         phone: item.phone || "",
         website: item.website || "",

@@ -29,7 +29,9 @@
                             v-model.trim="loginForm.password"
                             placeholder="******"
                             label="Password"
-                            type="password"
+                            :type="inputType"
+                            :append-icon="appendIcon"
+                            @click:append="passwordVisible = !passwordVisible"
                         >
 
                         </v-text-field>
@@ -65,7 +67,8 @@ export default {
             },
             message: '',
             messageType: 'success',
-            loading: false
+            loading: false,
+            passwordVisible: false
         }
     },
     computed: {
@@ -74,6 +77,12 @@ export default {
                 return 'green'
             }
             return 'red'
+        },
+        appendIcon() {
+            return this.passwordVisible ? 'mdi-eye-off' : 'mdi-eye'
+        },
+        inputType() {
+            return this.passwordVisible ? 'text' : 'password'
         }
     },
     methods: {
