@@ -283,7 +283,7 @@ const store = new Vuex.Store({
 
                 if ( state.filter.routes && state.filter.routes.length > 0 ) {
                     has_route_filter = state.filter.routes.some(y => {
-                        return x.routes.includes(y)
+                        return x.routes?.includes(y)
                     })
                 }
 
