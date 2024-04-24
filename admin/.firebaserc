@@ -1,12 +1,12 @@
 {
   "projects": {
-    "default": "access2agriculture"
+    "default": "access2ag-7b67b"
   },
   "targets": {
-    "access2agriculture": {
+    "access2ag-7b67b": {
       "hosting": {
         "admin": [
-          "access2agriculture-admin"
+          "access2ag-admin"
         ]
       }
     }
