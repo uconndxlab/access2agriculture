@@ -6,12 +6,13 @@ import 'firebase/storage'
 // Set up your firebase configuration.
 // Project Settings > General > Your Apps
 const firebaseConfig = {
-    apiKey: "AIzaSyCLjpBPrRW_-7nqlENiW1UKXVjQzBTpcUA",
-    authDomain: "access2agriculture.firebaseapp.com",
-    projectId: "access2agriculture",
-    storageBucket: "access2agriculture.appspot.com",
-    messagingSenderId: "289762323874",
-    appId: "1:289762323874:web:fe4e4e0d15994ec47ed6fb"
+    apiKey: "AIzaSyDbbnINR0zk9Fb4YKZpdrsYAfIuaoz1ktM",
+    authDomain: "access2ag-7b67b.firebaseapp.com",
+    projectId: "access2ag-7b67b",
+    storageBucket: "access2ag-7b67b.appspot.com",
+    messagingSenderId: "90233234499",
+    appId: "1:90233234499:web:e5fa69c7b1a5956e4220f6",
+    measurementId: "G-662176STB3"
 }
 firebase.initializeApp(firebaseConfig)
 
