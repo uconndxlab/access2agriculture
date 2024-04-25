@@ -18,7 +18,7 @@ jobs:
           # Version Spec of the version to use in SemVer notation.
           # It also emits such aliases as lts, latest, nightly and canary builds
           # Examples: 12.x, 10.15.1, >=10.15.0, lts/Hydrogen, 16-nightly, latest, node
-          node-version: '14.x'
+          node-version: '20.x'
       - run: cd admin && yarn install --frozen-lockfile && yarn run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -38,12 +38,12 @@ jobs:
           # Version Spec of the version to use in SemVer notation.
           # It also emits such aliases as lts, latest, nightly and canary builds
           # Examples: 12.x, 10.15.1, >=10.15.0, lts/Hydrogen, 16-nightly, latest, node
-          node-version: '14.x'
+          node-version: '20.x'
       - run: cd a2a && yarn install --frozen-lockfile && yarn run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ACCESS2AGRICULTURE }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ACCESS2AG_7B67B }}'
           projectId: access2ag-7b67b
           entryPoint: ./a2a
           target: app
